@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/styles.css">
+        <script src="lib/echarts.js"></script>
+        <script src="visu.js" defer></script>
+        <title>Test de visualisation de requête SPARQL</title>
+    </head>
+
+    <body>
+        <section class="chart-section">
+            <h1>Bar chart example</h1>
+            <div id="barchart" class="chart-div"></div>
+            <barchar></barchar>
+        </section>
+        <hr>
+        <section class="chart-section">
+            <h1>Pie Chart example</h1>
+            <div id="piechart" class="chart-div"></div>
+        </section>
+        <hr>
+        <section class="chart-section">
+            <h1>Node-link Chart example</h1>
+            <div id="nodelink" class="chart-div"></div>
+            <div id="dekalog-1" class="chart-div"></div>
+        </section>
+    </body>
+    <script type="module" defer>
+        const endpoint = "http://54.36.123.165:8890/sparql/";
+        const query = `PREFIX oa:     <http://www.w3.org/ns/oa#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema:  <http://schema.org/>
+SELECT DISTINCT ?name_construction (COUNT(DISTINCT(?name_animal)) as ?nb)  WHERE {
+?annotation1 oa:hasBody ?animal ; oa:hasTarget [ oa:hasSource ?paragraph; oa:hasSelector [ oa:exact ?mention_animal]].
+?animal skos:prefLabel ?name_animal.
+?animal_collection a skos:Collection;
+    skos:prefLabel "Ancient class"@en;
+    skos:member ?animal.
+
+?annotation2 oa:hasBody ?construction;
+        oa:hasTarget [oa:hasSource ?paragraph;
+            oa:hasSelector [oa:exact ?mention_construction]].
+?paragraph schema:text ?text.
+
+?construction skos:prefLabel ?name_construction;
+                    skos:broader+ ?construction_generique.
+?construction_generique skos:prefLabel "house building"@en.
+
+FILTER NOT EXISTS {?x  skos:broader ?animal}
+FILTER (lang(?name_animal) = "en")
+FILTER (lang(?name_construction) = "en")
+}
+GROUP BY ?name_construction`;
+
+        const query_deka = `SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activity) AS ?count) {
+    GRAPH ?g {
+        { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
+        UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
+        UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
+        ?metadata <http://ns.inria.fr/kg/index#curated> ?curated, ?dataset .
+            { ?dataset <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity . }
+            UNION { ?metadata <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity .}
+            FILTER(CONTAINS(str(?activity), ?sparqlNorm))
+            VALUES ?sparqlNorm { "SPARQL10" "SPARQL11" }
+    }
+}
+GROUP BY ?endpoint ?sparqlNorm`;
+
+        let config = {
+            endpoint : endpoint,
+            query : query,
+            type : 'bar',
+            name : 'animal',
+            title : 'Animal per habitat',
+            association : [
+                {
+                    variable : "name_construction",
+                    associatedVariable : "nb"
+                }
+            ]
+        }
+        loadChartViz("barchart", config);
+
+        config = {
+            endpoint : "http://prod-dekalog.inria.fr/sparql",
+            query : query_deka,
+            type : 'graph',
+            title : "Number feature per norm",
+            association : [{
+                name : "sparqlNorm",
+                variable : "endpoint",
+                associatedVariable : "sparqlNorm"
+            }]
+
+        }
+        loadChartViz("dekalog-1", config);
+
+        config = {
+            endpoint : endpoint,
+            query : query,
+            type : 'pie',
+            name : 'animal',
+            title : 'Animal per habitat',
+            association : [
+                {
+                    variable : "name_construction",
+                    associatedVariable : "nb"
+                }
+            ]
+        }
+        loadChartViz("piechart", config);
+
+        config = {
+            endpoint : endpoint,
+            query : query,
+            type : 'graph',
+            name : 'animal',
+            title : 'Animal per habitat',
+            association : [
+                {
+                    variable : "name_construction",
+                    associatedVariable : "nb"
+                }
+            ]
+        }
+        loadChartViz("nodelink", config);
+    </script>
+
+</html>

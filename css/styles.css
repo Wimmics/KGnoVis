@@ -1,0 +1,12 @@
+
+.chart-section {
+    text-align: center;
+}
+
+.chart-div {
+    display: inline-block;
+    width: 1024px;
+    height: 768px;
+    border: rgb(196, 196, 196) thin solid;
+    margin: auto;
+}
