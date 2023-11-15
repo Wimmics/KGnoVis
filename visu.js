@@ -48,6 +48,16 @@ const buildLink = (result, binding_association, nodes) => {
     return values
 }
 
+const nodeAlreadyExist = (node, nodesList) => {
+    let exist = false;
+    nodesList.forEach(n => {
+        if(n.name === node.name){
+            exist = true
+        }
+    })
+    return exist;
+}
+
 const buildNodes = (result, binding_association) => {
     let nodes = []
     let i = 0
@@ -62,8 +72,7 @@ const buildNodes = (result, binding_association) => {
             }
             i++
             
-
-            if(!(nodes.includes(submited_node_1))){
+            if(!(nodeAlreadyExist(submited_node_1, nodes))){
                 nodes.push(submited_node_1)
             } else {
                 i--
@@ -76,7 +85,8 @@ const buildNodes = (result, binding_association) => {
                 value : row[association_rule.associatedVariable]["value"]
             }
             i++
-            if(!(nodes.includes(submited_node_2))){
+
+            if(!(nodeAlreadyExist(submited_node_2, nodes))){
                 nodes.push(submited_node_2)
             }else{
                 i--
@@ -142,7 +152,7 @@ const makeNodeLinkChartOption = (data, option, configuration) => {
             force : {
                 initLayout : null,
                 repulsion : 50,
-                gravity : 0.1
+                gravity : 0.9
             }
         }
     ]
