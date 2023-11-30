@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
     <script src="d3_graph1.js" defer type="module"></script>
     <script src="d3_graph2.js" defer type="module">
-        // Est-ce pareil que id="d3_graph2" class="js" ?
+
     </script>
     <title>Document</title>
 </head>
@@ -15,12 +15,11 @@
     <h1>
         d3 decouverte
     </h1>
-    <div id="svg_wrapper">
-        <svg id="d3_demo"></svg>
+    <div id="svg_wrapper" style="white-space: nowrap;">
+        <svg id="d3_demo", style="display:inline"></svg>
+        <svg id="d3_demo_bis", style="display:inline"></svg>
     </div>
-    <div id="svg2_wrapper">
-        <svg id="d3_demo_bis"></svg>
-    </div>
+
 </body>
 <script type="module" defer>
     /*d3.csv("C:/Users/hcarton/Documents/STID/stid_3eme_annee/Maths/DonnéesMaladieVsAge.csv").then(
