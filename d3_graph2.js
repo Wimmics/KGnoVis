@@ -11,7 +11,7 @@ const data = [
 
 const graph2 = () => {
     const width = 450
-    const height = 500
+    const height = 300
     const svg = d3.select("#d3_demo_bis").attr("width", width).attr("height", height)
 
     const x_scale = d3.scaleBand().domain(data.map(d => d.category)).range([0, width]).padding(0.1)
