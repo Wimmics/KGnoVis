@@ -10,7 +10,7 @@ const data = [
 
 
 const graph2 = () => {
-    const width = 450
+    const width = 400
     const height = 300
     const svg = d3.select("#d3_demo_bis").attr("width", width).attr("height", height)
 

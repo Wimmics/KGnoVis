@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const data = [
-    { category: "A", value1: 10, value2: 5 },
+    { category: "A", value1: 10, value2: 5, value3: 6, value4: 7, value5 : 12},
     { category: "B", value1: 20, value2: 8 },
     { category: "C", value1: 15, value2: 12 },
     { category: "D", value1: 25, value2: 18 }
@@ -10,7 +10,7 @@ const data = [
 
 
 const graph3 = () => {
-    const width = 450
+    const width = 400
     const height = 300
     const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
 
