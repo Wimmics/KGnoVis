@@ -19,7 +19,7 @@ const graph2 = () => {
     const y_scale = d3.scaleLinear().domain([0, d3.max(data, d => Math.max(d.value1, d.value2))]).range([height, 0])    
 
 
-    svg.selectAll("rect").data(data).join("rect").attr("class", "bar1")
+    svg.selectAll("serie1").data(data).join("rect").attr("class", "bar1")
         .attr("x", d => x_scale(d.category)).attr("y", d => y_scale(d.value1))
         .attr("width", x_scale.bandwidth() / 2).attr("height", d => height - y_scale(d.value1))
         .attr("fill", "steelblue")
