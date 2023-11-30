@@ -2,7 +2,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 const loading = () => {
         // set the dimensions and margins of the graph
-        const width = 960;
+        const width = 450;
         const height = 500;
         const svg = d3.select("#d3_demo").attr("width", width).attr("height", height);
 
