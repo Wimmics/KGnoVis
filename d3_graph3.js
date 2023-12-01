@@ -81,13 +81,16 @@ const instantsvg = (donnees) =>  {
       
     const y_scale = d3.scaleLinear().domain([0, donnees.map(d => Math.max(...d.values))]).range([height, 0]) 
 
-    for (let i = 1; i < taille; i++) {
+    for (let i = 0; i < taille; i++) {
+        console.log(donnees[i])
+        console.log(donnees.map(d => d.values))
+        console.log(donnees[i].values)
         svg.selectAll("rect")
-        .data(donnees[Object.keys(donnees)[i]])
+        .data(donnees[i])
         .join("rect")
         .attr("class", "bar")
-        .attr("x", (d, i) => x_scale(d.category) + (i-1)*(x_scale.bandwidth() / taille))
-        .attr("y", d => y_scale(d))
+        .attr("x", (d) => x_scale(d.category) + i*(x_scale.bandwidth() / taille))
+        .attr("y", d => y_scale(d.values))
         .attr("width", x_scale.bandwidth() / taille)
         .attr("height", d => height - y_scale(d))
         //.attr("fill", "steelblue");
