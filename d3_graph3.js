@@ -42,7 +42,7 @@ const graph3 = () => {
 const graph4 = () => {
     const width = 400
     const height = 300
-    const svg = d3.select("d3_demo_3").attr("width", width).attr("height", height)
+    const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
 
     const x_scale = d3.scaleBand().domain(dataset.category).range([0, width]).padding(0.1)
       
@@ -52,6 +52,7 @@ const graph4 = () => {
         .data(dataset.value1)
         .enter()
         .append("rect")
+        .attr("class", "bar")
         .attr("x", (d, i) => x_scale(dataset.category[i]))
         .attr("y", d => y_scale(d))
         .attr("width", x_scale.bandwidth())
