@@ -52,7 +52,7 @@ const graph4 = () => {
         .data(dataset.value1)
         .enter()
         .append("rect")
-        .attr("class", "bar")
+        .attr("class", "")
         .attr("x", (d, i) => x_scale(dataset.category[i]))
         .attr("y", d => y_scale(d))
         .attr("width", x_scale.bandwidth())
@@ -60,4 +60,40 @@ const graph4 = () => {
         .attr("fill", "steelblue");
 }
 
-graph4()
+
+
+const instantsvg = (donnees) =>  {
+    const width = 400
+    const height = 300
+    const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
+
+    const x_scale = d3.scaleBand().domain(donnees.category).range([0, width]).padding(0.1)
+      
+    const y_scale = d3.scaleLinear().domain([0, d3.max(donnees.value1)]).range([height, 0]) 
+
+    for (let i = 1; i < Object.keys(donnees).length; i++) {
+        svg.selectAll("rect")
+        .data(donnees[Object.keys(donnees)[i]])
+        .join("rect")
+        .attr("class", "bar")
+        .attr("x", (d, i) => x_scale(donnees.category[i]))
+        .attr("y", d => y_scale(d))
+        .attr("width", x_scale.bandwidth() / Object.keys(donnees).length)
+        .attr("height", d => height - y_scale(d))
+        //.attr("fill", "steelblue");
+    }
+
+    /*svg.selectAll("rect")
+        .data(donnees.value1)
+        .enter()
+        .append("rect")
+        .attr("class", "")
+        .attr("x", (d, i) => x_scale(donnees.category[i]))
+        .attr("y", d => y_scale(d))
+        .attr("width", x_scale.bandwidth())
+        .attr("height", d => height - y_scale(d))
+        .attr("fill", "steelblue");
+        */
+}
+
+instantsvg(dataset)
