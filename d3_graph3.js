@@ -7,14 +7,14 @@ const data = [
     { category: "D", value1: 25, value2: 18 }
   ]
 
-const dataset = [
-    category = ["A", "B", "C", "D", "E"],
-    value1 = [10, 20, 15, 25, 30],
-    value2 = [5, 8, 12 , 7, 10],
-    value3 = [6, 8, 2, 4, 5],
-    value4 = [20, 30, 10, 12, 18],
-    value5 = [14, 16, 24, 8, 17]
-]
+const dataset = {
+    category : ["A", "B", "C", "D", "E"],
+    value1 : [10, 20, 15, 25, 30],
+    value2 : [5, 8, 12 , 7, 10],
+    value3 : [6, 8, 2, 4, 5],
+    value4 : [20, 30, 10, 12, 18],
+    value5 : [14, 16, 24, 8, 17]
+}
 
 const graph3 = () => {
     const width = 400
@@ -44,14 +44,19 @@ const graph4 = () => {
     const height = 300
     const svg = d3.select("d3_demo_3").attr("width", width).attr("height", height)
 
-    const x_scale = d3.scaleBand().domain(dataset.map(d => d.category)).range([0, width]).padding(0.1)
+    const x_scale = d3.scaleBand().domain(dataset.category).range([0, width]).padding(0.1)
       
-    const y_scale = d3.scaleLinear().domain([0, d3.max(dataset, d => Math.max(d.value1, d.value2))]).range([height, 0]) 
+    const y_scale = d3.scaleLinear().domain([0, d3.max(dataset.value1)]).range([height, 0]) 
 
-    svg.selectAll("value1").data(data).join("rect").attr("class", "bar1")
-    .attr("x", d => x_scale(d.category)).attr("y", d => y_scale(d.value1))
-    .attr("width", x_scale.bandwidth() / 2).attr("height", d => height - y_scale(d.value1))
-    .attr("fill", "green")
+    svg.selectAll("rect")
+        .data(dataset.value1)
+        .enter()
+        .append("rect")
+        .attr("x", (d, i) => x_scale(dataset.category[i]))
+        .attr("y", d => y_scale(d))
+        .attr("width", x_scale.bandwidth())
+        .attr("height", d => height - y_scale(d))
+        .attr("fill", "steelblue");
 }
 
 graph4()
