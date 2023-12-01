@@ -77,9 +77,9 @@ const instantsvg = (donnees) =>  {
 
     const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
 
-    const x_scale = d3.scaleBand().domain(donnees.category).range([0, width]).padding(0.1)
+    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1)
       
-    const y_scale = d3.scaleLinear().domain([0, d3.max(donnees.value1)]).range([height, 0]) 
+    const y_scale = d3.scaleLinear().domain([0, donnees.map(d => Math.max(...d.values))]).range([height, 0]) 
 
     for (let i = 1; i < taille; i++) {
         svg.selectAll("rect")
