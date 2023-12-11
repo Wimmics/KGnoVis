@@ -85,6 +85,7 @@ const instantsvg = (donnees) =>  {
         console.log(donnees[i])
         console.log(donnees.map(d => d.values))
         console.log(donnees[i].values)
+        donnees[i].values.forEach((val) => 
         svg.selectAll("rect")
         .data(donnees[i])
         .join("rect")
@@ -94,6 +95,7 @@ const instantsvg = (donnees) =>  {
         .attr("width", x_scale.bandwidth() / taille)
         .attr("height", d => height - y_scale(d))
         //.attr("fill", "steelblue");
+        )
     }
 
 }
