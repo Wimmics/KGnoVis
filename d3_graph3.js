@@ -24,6 +24,14 @@ const databis = [
     {category :"E", values :  [14, 16, 24, 8, 17]}
 ]
 
+const datatris = [
+    {category : "A", value1 : 10}, {category : "A", value1 : 20}, {category : "A", value1 : 15}, {category : "A", value1 : 25}, {category : "A", value1 : 30},
+    {category : "B", value1 : 5}, {category : "B", value1 : 8}, {category : "B", value1 : 12}, {category : "B", value1 : 7}, {category : "B", value1 : 10}, 
+    {category : "C", value1 : 6}, {category : "C", value1 : 8}, {category : "C", value1 : 2}, {category : "C", value1 : 4}, {category : "C", value1 : 5}, 
+]
+
+// créer fonction qui prend 
+/*
 const graph3 = () => {
     const width = 400
     const height = 300
@@ -47,7 +55,8 @@ const graph3 = () => {
 
 //graph3()
 
-/*const graph4 = () => {
+
+ const graph4 = () => {
     const width = 400
     const height = 300
     const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
@@ -67,37 +76,103 @@ const graph3 = () => {
         .attr("height", d => height - y_scale(d))
         .attr("fill", "steelblue");
 }
-*/
+
+graph4()
 
 
+
+const graph5 = () => {
+    const width = 400
+    const height = 300
+    const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
+
+    const x_scale = d3.scaleBand().domain(databis.map(d => d.category)).range([0, width]).padding(0.1)
+
+    const y_scale = d3.scaleLinear().domain([0, databis.map(d => Math.max(...d.values))]).range([height, 0])
+
+    svg.selectAll("rect")
+    .data(databis[0])
+    .enter()
+    .append("rect")
+    .attr("class", "")
+    .attr("x", d => x_scale(d.category))
+    .attr("y", d => y_scale(d.values))
+    .attr("width", x_scale.bandwidth())
+    .attr("height", d => height - y_scale(d.values))
+    .attr("fill", "steelblue");
+}
+
+graph5()*/
+
+/*
 const instantsvg = (donnees) =>  {
     const width = 400
     const height = 300
-    const taille = Object.keys(donnees).length
+    const taille = donnees.length
 
     const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
 
-    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1)
+    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1) 
       
     const y_scale = d3.scaleLinear().domain([0, donnees.map(d => Math.max(...d.values))]).range([height, 0]) 
 
+// pas faire une boucle mais un groupe avec call
+
     for (let i = 0; i < taille; i++) {
-        console.log(donnees[i])
-        console.log(donnees.map(d => d.values))
-        console.log(donnees[i].values)
-        donnees[i].values.forEach((val) => 
-        svg.selectAll("rect")
-        .data(donnees[i])
+        console.log(donnees.length)
+
+        svg.selectAll("rect.serie" + i)
+        .data(donnees[i].values) // On sélectionne que des valeurs dans l'autre => mets une erreur ici, NaN pour x et height
         .join("rect")
         .attr("class", "bar")
-        .attr("x", (d) => x_scale(d.category) + i*(x_scale.bandwidth() / taille))
+        .attr("x", (d) => x_scale(d.category) + i*(x_scale.bandwidth() / taille)) // j'vais avoir besoin de changer le type et prendre à nouveau
         .attr("y", d => y_scale(d.values))
         .attr("width", x_scale.bandwidth() / taille)
-        .attr("height", d => height - y_scale(d))
-        //.attr("fill", "steelblue");
-        )
+        .attr("height", d => height - y_scale(d.values))
+        .attr("fill", "steelblue")
+        
     }
 
 }
 
-instantsvg(databis)
+instantsvg(databis) */
+
+
+
+const svg_creator = (donnees) => {
+    const width = 400
+    const height = 300
+    const taille = donnees.length
+    const valeur = []
+    donnees.forEach((d) => valeur.push(d.value1))
+
+    const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
+
+    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1) 
+      
+    const y_scale = d3.scaleLinear().domain([0, donnees.map(d => Math.max(...valeur))]).range([height, 0]) 
+    let group = svg.selectAll("g")
+        .data(donnees)
+        .join(
+            enter => enter.append("g")
+                            .attr("class", d => d.value1),
+            update => update,
+            exit => exit.remove()
+        )
+console.log(group)
+    group.selectAll("rect")
+        .data(d => d.value1)
+        .join(
+            enter => enter.append("rect")
+                          .attr("class", "bar")
+                          .attr("x", d => x_scale(d.category) + (x_scale.bandwidth() / taille))
+                          .attr("y", d => y_scale(d.value1))
+                          .attr("width", x_scale.bandwidth() / taille)
+                          .attr("height", d => height - y_scale(d.value1))
+                          .attr("fill", "steelblue"),
+            update => update,
+            exit => exit.remove()
+        )
+}  
+
+svg_creator(datatris)
