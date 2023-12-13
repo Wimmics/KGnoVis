@@ -17,11 +17,11 @@ const dataset = {
 }
 
 const databis = [
-    {category :"A", values : [10, 20, 15, 25, 30]},
-    {category :"B", values : [5, 8, 12 , 7, 9]},
-    {category :"C", values :  [6, 8, 2, 4, 5]},
-    {category :"D", values :  [20, 30, 10, 12, 18]},
-    {category :"E", values :  [14, 16, 24, 8, 17]}
+    {category :"A", values : [10, 20, 15, 25, 30], fill : "SteelBlue"},
+    {category :"B", values : [5, 8, 12 , 7, 9], fill : "red"},
+    {category :"C", values :  [6, 8, 2, 4, 5], fill : "yellow"},
+    {category :"D", values :  [20, 30, 10, 12, 18], fill : "green"},
+    {category :"E", values :  [14, 16, 24, 8, 17], fill : "black"}
 ]
 
 const datatris = [
@@ -190,19 +190,17 @@ const svg_creator = (donnees) => {
     const taille = donnees.length
     let exploitable = []
     donnees.forEach(d => {
-         for (let i = 0; i < d.values.length ; i++) {
-            exploitable.push({"Category" : d.category,
-                                "Values" : {"value" : d.values[i], "parents" : d.category}
-                            })
-                        }
-                    })
-
+        let object = {"Category" : d.category}
+        object["Value"] = []
+        for (let i = 0; i < d.values.length ; i++) {
+            object.Value.push({"value" : d.values[i], "parents" : d.category, "color" : d.fill})
+        }
+        exploitable.push(object)       
+        })
     const svg = d3.select("#d3_demo_3").attr("width", width).attr("height", height)
 
-    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1)
-    console.log(exploitable) 
-      
-    const y_scale = d3.scaleLinear().domain([0, donnees.map(d => Math.max(...d.values))]).range([height, 0]) 
+    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1)      
+    const y_scale = d3.scaleLinear().domain([0, Math.max(...donnees.map(d => Math.max(...d.values)))]).range([height, 0]) 
     let group = svg.selectAll("g")
         .data(exploitable)
         .join(
@@ -213,17 +211,18 @@ const svg_creator = (donnees) => {
         )
 
     group.selectAll("rect")
-        .data(d => d.Values)
+        .data(d => d.Value)
         .join(
             enter => enter.append("rect")
                           .attr("class", "bar"),
             update => update,
             exit => exit.remove()
-        ).attr("x", x_scale(d.parents) + (x_scale.bandwidth() / taille))
+        ).attr("x", d => x_scale(d.parents) + (x_scale.bandwidth() / taille))
         .attr("y", d => y_scale(d.value))
         .attr("width", x_scale.bandwidth() / taille)
         .attr("height", d => height - y_scale(d.value))
+        .attr("fill", d => d.color)
 
 }  
 
-svg_creator(datatest)
+svg_creator(databis)
