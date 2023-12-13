@@ -188,12 +188,13 @@ const svg_creator = (donnees) => {
     const width = 400
     const height = 300
     const taille = donnees.length
+    const varPadding = 1
     let exploitable = []
     donnees.forEach(d => {
         let object = {"Category" : d.category}
         object["Value"] = []
         for (let i = 0; i < d.values.length ; i++) {
-            object.Value.push({"value" : d.values[i], "parents" : d.category, "color" : d.fill})
+            object.Value.push({"value" : d.values[i], "parents" : d.category, "color" : d.fill, "incr" : i})
         }
         exploitable.push(object)       
         })
@@ -217,12 +218,14 @@ const svg_creator = (donnees) => {
                           .attr("class", "bar"),
             update => update,
             exit => exit.remove()
-        ).attr("x", d => x_scale(d.parents) + (x_scale.bandwidth() / taille))
+        ).attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
         .attr("y", d => y_scale(d.value))
-        .attr("width", x_scale.bandwidth() / taille)
+        .attr("width", (x_scale.bandwidth() / taille) - varPadding)
         .attr("height", d => height - y_scale(d.value))
         .attr("fill", d => d.color)
-
+        console.log(x_scale.bandwidth())
+        console.log(taille)
 }  
 
 svg_creator(databis)
