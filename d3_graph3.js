@@ -148,7 +148,7 @@ const svg_creator = (donnees) => {
         }
         exploitable.push(object)       
         })
-    const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
+    const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom + 10)
 
     const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1)      
     const y_scale = d3.scaleLinear().domain([0, domaine]).range([height, 0]) 
