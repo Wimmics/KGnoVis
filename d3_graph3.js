@@ -1,11 +1,11 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const databis = [
-    {category :"A", values : [10, 20, 15, 25, 30], fill : "SteelBlue"},
-    {category :"B", values : [5, 8, 12 , 7, 9], fill : "red"},
-    {category :"C", values :  [6, 8, 2, 4, 5], fill : "orange"},
-    {category :"D", values :  [20, 30, 10, 12, 18], fill : "green"},
-    {category :"E", values :  [14, 16, 24, 8, 17], fill : "black"}
+    {category :"Bleu", values : [10, 20, 15, 25, 30], fill : "SteelBlue"},
+    {category :"Rouge", values : [5, 8, 12 , 7, 9], fill : "red"},
+    {category :"Orange", values :  [6, 8, 2, 4, 5], fill : "orange"},
+    {category :"Vert", values :  [20, 30, 10, 12, 18], fill : "green"},
+    {category :"Noir", values :  [14, 16, 24, 8, 17], fill : "black"}
 ]
 
 // Si données à charger, faire une promesse pour récupérer
@@ -190,7 +190,7 @@ const svg_creator = (donnees) => {
         // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
         .attr("y", d => y_scale(d.value))
         .attr("width", (x_scale.bandwidth() / taille) - varPadding)
-        .attr("height", d => height - y_scale(d.value) + 9) // C'est en changeant ici que je place la hauteur de base des graphs.
+        .attr("height", d => height - y_scale(d.value) - 10) // C'est en changeant ici que je place la hauteur de base des graphs.
         .attr("fill", d => d.color)
 
         // Un exemple met x_scale et y_scale dans le groupe
@@ -202,16 +202,16 @@ const svg_creator = (donnees) => {
         svg.selectAll("mydots")
         .data(keys).enter()
         .append("circle")
-        .attr("cx", 100)
-        .attr("cy", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("cx", function(d,i){ return 15 + i*75})
+        .attr("cy", height) // 100 is where the first dot appears. 25 is the distance between dots
         .attr("r", 7)
         .style("fill", (d,i) => color[i])
 
         svg.selectAll("mylabels")
         .data(keys).enter()
         .append("text")
-        .attr("x", 120)
-        .attr("y", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("x", function(d,i){ return 25 + i*75})
+        .attr("y", height) // 100 is where the first dot appears. 25 is the distance between dots
         .style("fill", (d,i) => color[i])
         .text(function(d){ return d})
         .attr("text-anchor", "left")
