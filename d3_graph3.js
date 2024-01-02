@@ -136,19 +136,29 @@ const svg_creator = (donnees) => {
     const width = 380
     const height = 290
     const taille = donnees.length
-    const margin = {left : 0.1, top : 0.1, bottom : 0.1, right : 0.1}
+    const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const varPadding = 1
     const domaine = Math.max(...donnees.map(d => Math.max(...d.values)))
     let exploitable = []
+    let keys = []
+    let color = []
+    //var color = d3.scaleOrdinal().domain(keys).range(d3.schemeSet2) //Récupère une couleur par catégorie
+
     donnees.forEach(d => {
         let object = {"Category" : d.category}
         object["Value"] = []
         for (let i = 0; i < d.values.length ; i++) {
             object.Value.push({"value" : d.values[i], "parents" : d.category, "color" : d.fill, "incr" : i})
         }
-        exploitable.push(object)       
+        let couleurs = {"color" : d.fill}
+        exploitable.push(object)
+        keys.push(object.Category)
+        color.push(couleurs.color)
         })
-    const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom + 10)
+    
+        console.log(color)
+
+    const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
     const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1)      
     const y_scale = d3.scaleLinear().domain([0, domaine]).range([height, 0]) 
@@ -180,13 +190,32 @@ const svg_creator = (donnees) => {
         // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
         .attr("y", d => y_scale(d.value))
         .attr("width", (x_scale.bandwidth() / taille) - varPadding)
-        .attr("height", d => height - y_scale(d.value))
+        .attr("height", d => height - y_scale(d.value) + 9) // C'est en changeant ici que je place la hauteur de base des graphs.
         .attr("fill", d => d.color)
 
-        // Un exemple met x_scle et y_scale dans le groupe
+        // Un exemple met x_scale et y_scale dans le groupe
         
         console.log(x_scale.bandwidth())
         console.log(taille)
+
+        
+        svg.selectAll("mydots")
+        .data(keys).enter()
+        .append("circle")
+        .attr("cx", 100)
+        .attr("cy", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("r", 7)
+        .style("fill", (d,i) => color[i])
+
+        svg.selectAll("mylabels")
+        .data(keys).enter()
+        .append("text")
+        .attr("x", 120)
+        .attr("y", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", (d,i) => color[i])
+        .text(function(d){ return d})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
 
 
 }  
