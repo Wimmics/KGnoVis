@@ -243,13 +243,14 @@ const svg_creator = (donnees) => {
         .style("alignment-baseline", "middle")
         .attr("fill", d => "black")
 */
-        svg.selectAll("scale")
-        .data(val[i])
+        group.selectAll("scale")
+        .data(d => d.Value)
         console.log(group)
         .join(
             enter => enter.append("scale")
-                            .text((d, i) = val[i])
-                            .attr("class", "text"),
+                            .attr("class", "text")
+                            .text(d => d.value),
+                            
             update => update,
             exit => exit.remove()
         )
