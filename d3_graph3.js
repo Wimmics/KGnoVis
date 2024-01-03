@@ -9,6 +9,8 @@ const databis = [
 ]
 const val = [10, 20, 15, 25, 30, 5, 8, 12, 7, 9, 6, 8, 2, 4, 5, 20, 30, 10, 12, 18, 14, 16, 24, 8, 17]
 
+
+
 // Si données à charger, faire une promesse pour récupérer
 
 /*
@@ -159,6 +161,14 @@ const svg_creator = (donnees) => {
         color.push(couleurs.color)
 
         })
+        console.log(exploitable)
+        var allValues = exploitable.map(function(d) {
+            return d.Value.map(function(v) {
+              return v.value
+        
+            })})
+        
+        console.log(allValues)
 
 
     const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
@@ -243,14 +253,13 @@ const svg_creator = (donnees) => {
         .style("alignment-baseline", "middle")
         .attr("fill", d => "black")
 */
+        console.log(allValues[1])
         group.selectAll("scale")
-        .data(d => d.Value)
-        console.log(group)
+        .data(allValues)
         .join(
             enter => enter.append("scale")
-                            .attr("class", "text")
-                            .text(d => d.value),
-                            
+                            .text((d, i) => allValues[i]) //allValues me donne toutes mes valeurs, mais sous forme de liste séparée par catégorie. Je vois 2 possibilités, soit je réalise allvalue dans le dataset, soit je récupère par groupe de 5.
+                            .attr("class", "text"),                            
             update => update,
             exit => exit.remove()
         )
@@ -282,4 +291,15 @@ var color = d3.scaleOrdinal()
 */
 
 
-  
+// call = créer une fonction puis la réutiliser plus tard
+
+// Je veux une fonction qui récupère chaque valeur, puis la met dans une liste, afin de pouvoir prendre une valeur au choix dans cette liste
+
+const prend_valeur = (donnees) => {
+    let val = []
+    console.log(donnees.values)
+}
+
+
+
+//prend_valeur(databis)
