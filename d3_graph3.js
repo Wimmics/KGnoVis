@@ -7,6 +7,7 @@ const databis = [
     {category :"Vert", values :  [20, 30, 10, 12, 18], fill : "green"},
     {category :"Noir", values :  [14, 16, 24, 8, 17], fill : "black"}
 ]
+const val = [10, 20, 15, 25, 30, 5, 8, 12, 7, 9, 6, 8, 2, 4, 5, 20, 30, 10, 12, 18, 14, 16, 24, 8, 17]
 
 // Si données à charger, faire une promesse pour récupérer
 
@@ -173,8 +174,6 @@ const svg_creator = (donnees) => {
             update => update,
             exit => exit.remove()
         )
-        console.log(exploitable)
-        console.log(group)
     
     /*group.append("g")
         .attr("transform", "scale(0.5)") // N'affiche aucun changement, ptet car appliqué à tout, il me faudrait l'échelle pour vérifier
@@ -196,8 +195,6 @@ const svg_creator = (donnees) => {
         .attr("width", (x_scale.bandwidth() / taille) - varPadding)
         .attr("height", d => height - y_scale(d.value) - 10) // C'est en changeant ici que je place la hauteur de base des graphs.
         .attr("fill", d => d.color)
-
-        console.log(group)
 
         // Un exemple met x_scale et y_scale dans le groupe
         
@@ -235,7 +232,7 @@ const svg_creator = (donnees) => {
         // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
         .attr("y", d => height - (y_scale(d.value) + 5))
         .attr("fill", d => "black")
-*/
+
         svg.selectAll("scale")
         .data(group)
         .enter().append("scale").text(d => d.value)
@@ -245,8 +242,23 @@ const svg_creator = (donnees) => {
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
         .attr("fill", d => "black")
-
-
+*/
+        svg.selectAll("scale")
+        .data(val[i])
+        console.log(group)
+        .join(
+            enter => enter.append("scale")
+                            .text((d, i) = val[i])
+                            .attr("class", "text"),
+            update => update,
+            exit => exit.remove()
+        )
+        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
+        .attr("y", d => height - (y_scale(d.value) + 5))
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .attr("fill", d => "black")
 }  
 
 
