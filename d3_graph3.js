@@ -156,7 +156,7 @@ const svg_creator = (donnees) => {
         color.push(couleurs.color)
         })
     
-        console.log(color)
+        //console.log(exploitable)
 
     const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
@@ -195,8 +195,8 @@ const svg_creator = (donnees) => {
 
         // Un exemple met x_scale et y_scale dans le groupe
         
-        console.log(x_scale.bandwidth())
-        console.log(taille)
+        //console.log(x_scale.bandwidth())
+        //console.log(taille)
 
         
         svg.selectAll("mydots")
@@ -217,6 +217,29 @@ const svg_creator = (donnees) => {
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
 
+        /*
+        group.selectAll("text")
+        .data(d => d.Value).enter()
+        .append("text").text((d, i) => d.value[i])
+        .attr("x", (d, i) => i * 60 + 20) // Positionner le texte au milieu de chaque barre
+        .attr("y", (d) => height - d * 3 - 5) // Positionner le texte au-dessus de chaque barre pour une meilleure lisibilité
+        .attr("text-anchor", "middle") // Centrer le texte par rapport à son x
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "12px")
+        .attr("fill", "white");*/
+
+        group.selectAll("text")
+        .data(d => d.Value)
+        .join(
+            enter => enter.append("rect").text((d, i) => d.value[i])
+                          .attr("class", "bar"),
+            update => update,
+            exit => exit.remove()
+        )
+        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
+        .attr("y", d => height - (y_scale(d.value) + 5))
+        .attr("fill", d => "black")
 
 }  
 
