@@ -142,21 +142,23 @@ const svg_creator = (donnees) => {
     let exploitable = []
     let keys = []
     let color = []
+
     //var color = d3.scaleOrdinal().domain(keys).range(d3.schemeSet2) //Récupère une couleur par catégorie
 
     donnees.forEach(d => {
         let object = {"Category" : d.category}
         object["Value"] = []
+        let couleurs = {"color" : d.fill}
         for (let i = 0; i < d.values.length ; i++) {
             object.Value.push({"value" : d.values[i], "parents" : d.category, "color" : d.fill, "incr" : i})
         }
-        let couleurs = {"color" : d.fill}
+
         exploitable.push(object)
         keys.push(object.Category)
         color.push(couleurs.color)
+
         })
-    
-        //console.log(exploitable)
+
 
     const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
@@ -171,6 +173,8 @@ const svg_creator = (donnees) => {
             update => update,
             exit => exit.remove()
         )
+        console.log(exploitable)
+        console.log(group)
     
     /*group.append("g")
         .attr("transform", "scale(0.5)") // N'affiche aucun changement, ptet car appliqué à tout, il me faudrait l'échelle pour vérifier
@@ -192,6 +196,8 @@ const svg_creator = (donnees) => {
         .attr("width", (x_scale.bandwidth() / taille) - varPadding)
         .attr("height", d => height - y_scale(d.value) - 10) // C'est en changeant ici que je place la hauteur de base des graphs.
         .attr("fill", d => d.color)
+
+        console.log(group)
 
         // Un exemple met x_scale et y_scale dans le groupe
         
@@ -216,23 +222,12 @@ const svg_creator = (donnees) => {
         .text(function(d){ return d})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
-
-        /*
-        group.selectAll("text")
-        .data(d => d.Value).enter()
-        .append("text").text((d, i) => d.value[i])
-        .attr("x", (d, i) => i * 60 + 20) // Positionner le texte au milieu de chaque barre
-        .attr("y", (d) => height - d * 3 - 5) // Positionner le texte au-dessus de chaque barre pour une meilleure lisibilité
-        .attr("text-anchor", "middle") // Centrer le texte par rapport à son x
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "12px")
-        .attr("fill", "white");*/
-
+/*
         group.selectAll("text")
         .data(d => d.Value)
         .join(
-            enter => enter.append("rect").text((d, i) => d.value[i])
-                          .attr("class", "bar"),
+            enter => enter.append("text").text((d, i) => d.value[i])
+                          .attr("class", "text"),
             update => update,
             exit => exit.remove()
         )
@@ -240,6 +235,17 @@ const svg_creator = (donnees) => {
         // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
         .attr("y", d => height - (y_scale(d.value) + 5))
         .attr("fill", d => "black")
+*/
+        svg.selectAll("scale")
+        .data(group)
+        .enter().append("scale").text(d => d.value)
+        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
+        .attr("y", d => height - (y_scale(d.value) + 5))
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .attr("fill", d => "black")
+
 
 }  
 
