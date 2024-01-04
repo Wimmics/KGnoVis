@@ -308,16 +308,15 @@ const svg_creator = (donnees) => {
 
         console.log(group)
 */
-
     group.selectAll("text")
         .data(d => d.Value)
         .join(
-            enter => enter.append("text").text("a")
+            enter => enter.append("text").text((d => d.value))
                           .attr("class", "text"),
             update => update,
             exit => exit.remove()
         )
-        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille) + 2) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
         // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
         .attr("y", d => y_scale(d.value) - 2)
         .attr("fill", d => "black")
