@@ -5,7 +5,7 @@ const databis = [
     {category :"Rouge", values : [5, 8, 12 , 7, 9], fill : "red"},
     {category :"Orange", values :  [6, 8, 2, 4, 5], fill : "orange"},
     {category :"Vert", values :  [20, 30, 10, 12, 18], fill : "green"},
-    {category :"Noir", values :  [14, 16, 24, 8, 17], fill : "black"}
+    {category :"Crimson", values :  [14, 16, 24, 8, 17], fill : "crimson"}
 ]
 const val = [10, 20, 15, 25, 30, 5, 8, 12, 7, 9, 6, 8, 2, 4, 5, 20, 30, 10, 12, 18, 14, 16, 24, 8, 17]
 
@@ -182,7 +182,7 @@ const svg_creator = (donnees) => {
     const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
     const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1)      
-    const y_scale = d3.scaleLinear().domain([0, domaine]).range([height, 0]) 
+    const y_scale = d3.scaleLinear().domain([0, domaine]).range([height, 15]) 
 
     let group = svg.selectAll("g")
         .data(exploitable)
@@ -294,7 +294,7 @@ const svg_creator = (donnees) => {
         .attr("fill", d => "black")
 
     console.log(texte)
-*/
+
     group.append("scale")
         .text(function(d, i) {
             return d
@@ -307,7 +307,20 @@ const svg_creator = (donnees) => {
         .attr("fill", d => "black")
 
         console.log(group)
+*/
 
+    group.selectAll("text")
+        .data(d => d.Value)
+        .join(
+            enter => enter.append("text").text("a")
+                          .attr("class", "text"),
+            update => update,
+            exit => exit.remove()
+        )
+        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille) + 2) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
+        .attr("y", d => y_scale(d.value) - 2)
+        .attr("fill", d => "black")
 }
 
 
