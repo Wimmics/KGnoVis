@@ -1,14 +1,16 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const databis = [
-    {category :"Bleu", values : [10, 20, 15, 25, 30], fill : "SteelBlue"},
-    {category :"Rouge", values : [5, 8, 12 , 7, 9], fill : "red"},
-    {category :"Orange", values :  [6, 8, 2, 4, 5], fill : "orange"},
-    {category :"Vert", values :  [20, 30, 10, 12, 18], fill : "green"},
-    {category :"Crimson", values :  [14, 16, 24, 8, 17], fill : "crimson"}
+    {category :"Clouds", values : [10, 20, 15, 25, 30], fill : "black"},
+    {category :"Flower", values : [5, 8, 12 , 7, 9], fill : "crimson"},
+    {category :"Snow", values :  [6, 8, 2, 4, 5], fill : "silver"},
+    {category :"Wind", values :  [20, 30, 10, 12, 18], fill : "gold"},
+    {category :"Moon", values :  [14, 16, 24, 8, 17], fill : "lightblue"}
 ]
 
-const svg_creator = (donnees) => {
+const color = ["black", "crimson", "silver", "gold", "lightblue"]
+
+const svg_creator = (donnees, couleurs) => {
 
     // Création des constantes du graphique et de ses contours
     const width = 380
@@ -64,7 +66,8 @@ const svg_creator = (donnees) => {
         .attr("y", d => y_scale(d.value))
         .attr("width", (x_scale.bandwidth() / taille) - varPadding)
         .attr("height", d => height - y_scale(d.value) - 10)
-        .attr("fill", d => d.color)
+        .attr("fill", (d,i) => couleurs[i])
+        console.log(couleurs)
 
     // Légende
 
@@ -107,4 +110,6 @@ const svg_creator = (donnees) => {
 
 }
 
-svg_creator(databis)
+svg_creator(databis, color)
+
+// Prochaine tâche : mouseover
