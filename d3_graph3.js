@@ -316,6 +316,9 @@ const svg_creator = (donnees) => {
             update => update,
             exit => exit.remove()
         )
+	    .attr("fill","black")
+        .attr("text-anchor", "start")
+        .style("font", "12px times")
         .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
         // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
         .attr("y", d => y_scale(d.value) - 2)
