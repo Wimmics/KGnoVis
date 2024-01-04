@@ -9,7 +9,14 @@ const databis = [
 ]
 const val = [10, 20, 15, 25, 30, 5, 8, 12, 7, 9, 6, 8, 2, 4, 5, 20, 30, 10, 12, 18, 14, 16, 24, 8, 17]
 
+function toutes_valeurs(donnees) {exploitable.map(function(d) {
+    return d.Value.map(function(v) {
+      return v.value
+        })
+    })
+}
 
+console.log(toutes_valeurs)
 
 // Si données à charger, faire une promesse pour récupérer
 
@@ -160,16 +167,17 @@ const svg_creator = (donnees) => {
         keys.push(object.Category)
         color.push(couleurs.color)
 
-        })
-        console.log(exploitable)
-        var allValues = exploitable.map(function(d) {
-            return d.Value.map(function(v) {
-              return v.value
-        
-            })})
-        
-        console.log(allValues)
+    })
 
+    console.log(exploitable)
+
+    var allValues = exploitable.map(function(d) {
+        return d.Value.map(function(v) {
+          return v.value 
+        })
+    })
+        
+    console.log(allValues)
 
     const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
@@ -212,7 +220,7 @@ const svg_creator = (donnees) => {
         //console.log(taille)
 
         
-        svg.selectAll("mydots")
+    svg.selectAll("mydots")
         .data(keys).enter()
         .append("circle")
         .attr("cx", function(d,i){ return 15 + i*75})
@@ -220,7 +228,7 @@ const svg_creator = (donnees) => {
         .attr("r", 7)
         .style("fill", (d,i) => color[i])
 
-        svg.selectAll("mylabels")
+    svg.selectAll("mylabels")
         .data(keys).enter()
         .append("text")
         .attr("x", function(d,i){ return 25 + i*75})
@@ -230,7 +238,7 @@ const svg_creator = (donnees) => {
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
 /*
-        group.selectAll("text")
+    group.selectAll("text")
         .data(d => d.Value)
         .join(
             enter => enter.append("text").text((d, i) => d.value[i])
@@ -243,7 +251,7 @@ const svg_creator = (donnees) => {
         .attr("y", d => height - (y_scale(d.value) + 5))
         .attr("fill", d => "black")
 
-        svg.selectAll("scale")
+    svg.selectAll("scale")
         .data(group)
         .enter().append("scale").text(d => d.value)
         .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
@@ -252,14 +260,16 @@ const svg_creator = (donnees) => {
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
         .attr("fill", d => "black")
-*/
-        console.log(allValues[1])
-        group.selectAll("scale")
-        .data(allValues)
+
+    console.log(allValues[1])
+    group.selectAll("scale")
+        .data(d => d)
         .join(
             enter => enter.append("scale")
-                            .text((d, i) => allValues[i]) //allValues me donne toutes mes valeurs, mais sous forme de liste séparée par catégorie. Je vois 2 possibilités, soit je réalise allvalue dans le dataset, soit je récupère par groupe de 5.
-                            .attr("class", "text"),                            
+                            .text(d => d.Value.map(function(v) {
+                                  return v.value
+                                })) //allValues me donne toutes mes valeurs, mais sous forme de liste séparée par catégorie. Je vois 2 possibilités, soit je réalise allvalue dans le dataset, soit je récupère par groupe de 5.
+                            .attr("class", "text"),                           
             update => update,
             exit => exit.remove()
         )
@@ -269,7 +279,37 @@ const svg_creator = (donnees) => {
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
         .attr("fill", d => "black")
-}  
+
+    var texte = group.selectAll("scale").data(d => d.Value)
+    texte.enter()
+        .append("scale")
+        .text(function(d) {
+            return d.data.value
+        })
+        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
+        .attr("y", d => height - (y_scale(d.value) + 5))
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .attr("fill", d => "black")
+
+    console.log(texte)
+*/
+    group.append("scale")
+        .text(function(d, i) {
+            return d
+        })
+        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
+        .attr("y", d => height - (y_scale(d.value) + 5))
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .attr("fill", d => "black")
+
+        console.log(group)
+
+}
+
 
 
 // Afficher les catégories en dessous des colonnes
