@@ -58,37 +58,72 @@ const nodeAlreadyExist = (node, nodesList) => {
     return exist;
 }
 
+const increaseSizeOfNode = (node, nodesList, size) => {
+    let updateList = []
+
+    nodesList.forEach(n => {
+        if(n.name === node.name){
+            updateList.push({
+                id : n.id,
+                name : n.name,
+                value : n.value,
+                symbolSize: n.symbolSize + size,
+                itemStyle : n.itemStyle,
+                label : n.label
+            })
+        }else{
+            updateList.push(n)
+        }
+    })
+
+    return updateList
+}
+
 const buildNodes = (result, binding_association) => {
     let nodes = []
     let i = 0
+
     result["results"]["bindings"].forEach(row => {
         binding_association.forEach(association_rule => {
 
             let submited_node_1 = {
                 id : i,
-                //id : row[association_rule.variable]["value"],
                 name : row[association_rule.variable]["value"],
-                value : row[association_rule.variable]["value"]
+                value : row[association_rule.variable]["value"],
+                symbolSize : 10,
+                itemStyle : {
+                    color : "#c71969",
+                    borderType : 'solid',
+                    borderColor : "grey"
+                }
             }
             i++
             
             if(!(nodeAlreadyExist(submited_node_1, nodes))){
                 nodes.push(submited_node_1)
             } else {
+                nodes = increaseSizeOfNode(submited_node_1, nodes, 1)
                 i--
             }
 
             let submited_node_2 = {
                 id : i,
-                //id : row[association_rule.associatedVariable]["value"],
                 name : row[association_rule.associatedVariable]["value"],
-                value : row[association_rule.associatedVariable]["value"]
+                value : row[association_rule.associatedVariable]["value"],
+                symbolSize : 10,
+                itemStyle : {
+                    color: "green",
+                    borderType : 'solid',
+                    borderColor : "black"
+                },
+                label : {show : true}
             }
             i++
 
             if(!(nodeAlreadyExist(submited_node_2, nodes))){
                 nodes.push(submited_node_2)
             }else{
+                nodes = increaseSizeOfNode(submited_node_2, nodes, 1)
                 i--
             }
             
@@ -149,14 +184,59 @@ const makeNodeLinkChartOption = (data, option, configuration) => {
             data: nodes,
             links : links,
             layout : 'force',
+            roam : true,
+            emphasis : {
+                focus : 'adjacency',
+                scale : true
+            },
             force : {
                 initLayout : null,
-                repulsion : 50,
-                gravity : 0.9
+                repulsion : 250,
+                gravity : 0.2
             }
         }
     ]
     console.log(option)
+}
+
+const makeTreeMapChartOption = (data, option, configuration) => {
+    option["series"] = [
+        {
+            type : 'treemap',
+            data : [
+                {
+                    name : "nodeA",
+                    value : 10,
+                    children : [
+                        {
+                            name : "nodeA-A",
+                            value : 4
+                        },
+                        {
+                            name : "nodeA-B",
+                            value : 6
+                        }
+                    ]
+                },
+                {
+                    name : "nodeB",
+                    value : 20,
+                    children : [
+                        {
+                            name : "nodeB-A",
+                            value : 15,
+                            children : [
+                                {
+                                    name : "nodeB-A-A",
+                                    value : 9
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
 
 const generateChart = (data, configuration) => {
@@ -167,6 +247,8 @@ const generateChart = (data, configuration) => {
         makePieChartOption(data, option, configuration)
     } else if (configuration.type === 'graph'){
         makeNodeLinkChartOption(data, option, configuration)
+    } else if (configuration.type === 'treemap'){
+        makeTreeMapChartOption(data, option, configuration)
     }
     return option
 

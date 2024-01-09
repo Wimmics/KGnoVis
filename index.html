@@ -3,12 +3,66 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/prism.css">
         <script src="lib/echarts.js"></script>
         <script src="visu.js" defer></script>
+        <script src="lib/prism.js" defer></script>
+        <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
         <title>Test de visualisation de requête SPARQL</title>
     </head>
 
     <body>
+        <section class="box">
+            <div class="box-left">
+                <h1>SPARQL Request Dekalog 1 : Nombre de features supportées par les endpoints pour les 2 versions de la norme SPARQL</h1>
+                <p>
+                    <u><b>Visus:</b></u> Double colonne pour chaque endpoint, une colonne pour le nombre avec SPARQL 10, une autre avec 11. Courbes de l'évolution des valeurs de SPARQL 10 et 11 en ordonnant les endpoints par valeurs de SPARQL 10 croissante.
+                </p>
+                <p>
+                    <u><b>Remarque:</b></u> Peut être un peu compliqué, tu peux séparer pour ne faire la visu que d'une seule valeur en modifiant le VALUES et en ignorant la valeur de ?sparqlNorm
+                </p>
+            </div>
+            <div class="box-right">
+                <pre class="code-block">
+<code class="language-sparql line-numbers">SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activity) AS ?count) {
+    GRAPH ?g {
+        { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
+        UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
+        UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
+        ?metadata <http://ns.inria.fr/kg/index#curated> ?curated, ?dataset .
+        { ?dataset <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity . }
+        UNION { ?metadata <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity .}
+        FILTER(CONTAINS(str(?activity), ?sparqlNorm))
+        VALUES ?sparqlNorm { "SPARQL10" "SPARQL11" }
+    }
+}
+GROUP BY ?endpoint ?sparqlNorm</code>
+                </pre>
+            </div>
+        </section>
+        <section class="box">
+            <div class="box-left">
+                <pre class="code-block">
+<code class="language-javascript line-numbers">const config = {
+    endpoint : "http://prod-dekalog.inria.fr/sparql",
+    query : query_deka,
+    type : 'bar',
+    title : "Number feature per norm",
+    association : [{
+        name : "sparqlNorm",
+        variable : "endpoint",
+        associatedVariable : "count"
+    }]
+
+}
+loadChartViz("dekalog-1", config);</code>
+                </pre>
+            </div>
+            <div class="box-right">
+                <div id="dekalog-1" class="chart-div"></div>
+            </div>
+        </section>
+        <hr>
         <section class="chart-section">
             <h1>Bar chart example</h1>
             <div id="barchart" class="chart-div"></div>
@@ -23,7 +77,11 @@
         <section class="chart-section">
             <h1>Node-link Chart example</h1>
             <div id="nodelink" class="chart-div"></div>
-            <div id="dekalog-1" class="chart-div"></div>
+            
+        </section>
+        <section class="chart-section">
+            <h1>Tree map example</h1>
+            <div id="tree_map" class="chart-div"></div>
         </section>
     </body>
     <script type="module" defer>
@@ -85,12 +143,12 @@ GROUP BY ?endpoint ?sparqlNorm`;
         config = {
             endpoint : "http://prod-dekalog.inria.fr/sparql",
             query : query_deka,
-            type : 'graph',
+            type : 'bar',
             title : "Number feature per norm",
             association : [{
                 name : "sparqlNorm",
                 variable : "endpoint",
-                associatedVariable : "sparqlNorm"
+                associatedVariable : "count"
             }]
 
         }
@@ -125,6 +183,22 @@ GROUP BY ?endpoint ?sparqlNorm`;
             ]
         }
         loadChartViz("nodelink", config);
+
+        config = {
+            endpoint : endpoint,
+            query : query,
+            type: 'treemap',
+            association : [
+                {
+                    variable : "",
+                    associatedVariable : ""
+                }
+            ]
+        }
+        loadChartViz("tree_map", config)
+
+        
+        
     </script>
 
 </html>
