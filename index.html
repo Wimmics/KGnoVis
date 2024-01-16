@@ -12,7 +12,11 @@
     </head>
 
     <body>
+        <section class="chart-section">
+            <h1>Exemple de Barchart: Une variable pour les catégories</h1>
+        </section>
         <section class="box">
+            
             <div class="box-left">
                 <h1>SPARQL Request Dekalog 1 : Nombre de features supportées par les endpoints pour les 2 versions de la norme SPARQL</h1>
                 <p>
@@ -43,20 +47,33 @@ GROUP BY ?endpoint ?sparqlNorm</code>
         <section class="box">
             <div class="box-left">
                 <pre class="code-block">
-<code class="language-javascript line-numbers">const config = {
+<code class="language-javascript line-numbers">const parameters = {
     endpoint : "http://prod-dekalog.inria.fr/sparql",
     query : query_deka,
     type : 'bar',
     title : "Number feature per norm",
-    association : [{
-        name : "sparqlNorm",
-        variable : "endpoint",
-        associatedVariable : "count"
+    config : [{
+        category : "sparqlNorm",
+        label : "endpoint",
+        value : "count"
     }]
 
 }
-loadChartViz("dekalog-1", config);</code>
+loadChartViz("dekalog-1", parameters); </code>
                 </pre>
+                <p>
+                    <b><u>Notes:</u></b> Cette requête nécessite une harmonisation/homogénisation et une complétion pour être utilisé via ECharts.
+                    Le principal problème rencontré est que, lors du résultat de la requête SPARQL, toutes les catégories ne sont pas forcément
+                    renseignées par une valeur et sont donc absentes du résulat (ex: endpoint dont la "sparqlNorm" 10 ou 11 n'est pas supportée).
+                    Ces absences crée un décalage dans le barchart qui affiche pour un même label deux endpoint différent.<br>
+                    Ce problème est présent aussi avec D3JS, et ce, principalement car le problème provient de l'utilisation de tableau de valeur
+                    qui ne lie pas chaque valeur à son label et a sa catégorie.<br><br>
+                    <b><u>Rappel:</u></b> Un label est une valeur en absice, ici un endpoint, et une catégorie est une série de valeur,
+                    ici la norme SPARQL.<br><br>
+                    <b><u>Solution:</u></b> Une solution pour palier a ce problème consite à définir un traitement intermédiaire à la visualisation, 
+                consitant en deux étapes: (1) l'extraction et la liaison des labels avec la catégorie et (2) la complétion pour chaque catégories manquantes
+                avec une valeur 0.
+                </p>
             </div>
             <div class="box-right">
                 <div id="dekalog-1" class="chart-div"></div>
@@ -64,9 +81,76 @@ loadChartViz("dekalog-1", config);</code>
         </section>
         <hr>
         <section class="chart-section">
-            <h1>Bar chart example</h1>
-            <div id="barchart" class="chart-div"></div>
-            <barchar></barchar>
+            <h1>Exemple de barchart: plusieurs variables pour les catégories</h1>
+        </section>
+        <section class="box">
+            <div class="box-left">
+                <h1>Exemple 2: Courbes simples des nombres de classes, triples, propriétés, etc</h1>
+                <p>
+                    <b><u>Visualisation: </u></b> Courbes, barchat ou <strike>Treemap</strike> (pas adapté)
+                </p>
+                <p>
+                    <b><u>Remarques: </u></b>Tu peux remplacer "&lsaquo;http://rdfs.org/ns/void#triples&rsaquo;" par "&lsaquo;http://rdfs.org/ns/void#classes&rsaquo;", ou "&lsaquo;http://rdfs.org/ns/void#properties&rsaquo;".
+                </p>
+            </div>
+            <div class="box-right">
+                <pre class="code-block">
+<code class="language-sparql line-numbers">SELECT DISTINCT ?endpointUrl 
+    (MAX(?rawO) AS ?triples)  (MAX(?raw1) AS ?classes)  (MAX(?raw2) AS ?properties) {
+    GRAPH ?g {
+        { ?curated &lsaquo;http://www.w3.org/ns/sparql-service-description#endpoint&rsaquo; ?endpointUrl . }
+        UNION { ?curated &lsaquo;http://rdfs.org/ns/void#sparqlEndpoint&rsaquo; ?endpointUrl . }
+        UNION { ?curated &lsaquo;http://www.w3.org/ns/dcat#endpointURL&rsaquo; ?endpointUrl . }
+        ?metadata &lsaquo;http://ns.inria.fr/kg/index#curated&rsaquo; ?curated .
+        ?curated &lsaquo;http://rdfs.org/ns/void#triples&rsaquo; ?rawO .
+        ?curated &lsaquo;http://rdfs.org/ns/void#classes&rsaquo; ?raw1 .
+    	?curated &lsaquo;http://rdfs.org/ns/void#properties&rsaquo; ?raw2 .
+    }
+} GROUP BY ?endpointUrl</code>
+                </pre>
+            </div>
+        </section>
+        <section class="box">
+            <div class="box-left">
+                <pre class="code-block">
+<code class="language-javascript line-numbers">const parameters2 = {
+    endpoint: "http://prod-dekalog.inria.fr/sparql",
+    query: query_deka2,
+    type: "barchart",
+    title: "Barchart of number of classes, properties and triples per endpoint",
+    config: [{
+        category : "nb triples",
+        label : "endpoint",
+        value : "triples"
+    },
+    {
+        category : "nb classes",
+        label : "endpoint",
+        value : "classes"
+    },
+    {
+        category : "nb properties",
+        label : "endpoint",
+        value : "properties"
+    }
+]
+}
+loadChartViz("dekalog-2", parameters2)</code>
+                </pre>
+                <p>
+                    <b><u>Remarques:</u></b> La visualisation la plus pertinante pour ce cas-là est un barchart.
+                    Il n'y a pas de notion de hiérarchie utilisable pour le treemap, ce qui exclue cette visualisation.
+                    Concernant la visualisation en courbes, 3 valeurs sont retournées par le résultat SPARQL
+                    qui correspondraient à 3 catégories de valeurs (triplets, classes et propriétés).
+                </p>
+                <p>
+                    <b><u>Notes:</u></b> Aucune variable permet de nommer la catégorie, l'utilisateur peut renseigner une chaine de caractères
+                    pour spécifier la catégorie (ex: "nb triples", "nb classes" et "nb properties"). Cette chaine ne doit pas être une variable dans les résultats SPARQL.
+                </p>
+            </div>
+            <div class="box-right">
+                <div id="dekalog-2" class="chart-div"></div>
+            </div>
         </section>
         <hr>
         <section class="chart-section">
@@ -123,82 +207,57 @@ GROUP BY ?name_construction`;
             VALUES ?sparqlNorm { "SPARQL10" "SPARQL11" }
     }
 }
-GROUP BY ?endpoint ?sparqlNorm`;
+GROUP BY ?endpoint ?sparqlNorm
+ORDER BY ?endpoint ?sparqlNorm`;
 
-        let config = {
-            endpoint : endpoint,
-            query : query,
-            type : 'bar',
-            name : 'animal',
-            title : 'Animal per habitat',
-            association : [
-                {
-                    variable : "name_construction",
-                    associatedVariable : "nb"
-                }
-            ]
-        }
-        loadChartViz("barchart", config);
+        const query_deka2 = `SELECT DISTINCT ?endpointUrl (MAX(?rawO) AS ?o) {
+    GRAPH ?g {
+        { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpointUrl . }
+        UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpointUrl . }
+        UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpointUrl . }
+        ?metadata <http://ns.inria.fr/kg/index#curated> ?curated .
+        ?curated <http://rdfs.org/ns/void#triples> ?rawO .
+    }
+} GROUP BY ?endpointUrl`
 
-        config = {
+
+        const parameters = {
             endpoint : "http://prod-dekalog.inria.fr/sparql",
             query : query_deka,
             type : 'bar',
             title : "Number feature per norm",
-            association : [{
-                name : "sparqlNorm",
-                variable : "endpoint",
-                associatedVariable : "count"
+            config : [{
+                category : "sparqlNorm",
+                label : "endpoint",
+                value : "count"
             }]
 
         }
-        loadChartViz("dekalog-1", config);
+        loadChartViz("dekalog-1", parameters);
 
-        config = {
-            endpoint : endpoint,
-            query : query,
-            type : 'pie',
-            name : 'animal',
-            title : 'Animal per habitat',
-            association : [
-                {
-                    variable : "name_construction",
-                    associatedVariable : "nb"
-                }
-            ]
+        const parameters2 = {
+            endpoint: "http://prod-dekalog.inria.fr/sparql",
+            query: query_deka2,
+            type: "barchart",
+            title: "Barchart of number of classes, properties and triples per endpoint",
+            config: [{
+                category : "nb triples",
+                label : "endpoint",
+                value : "triples"
+            },
+            {
+                category : "nb classes",
+                label : "endpoint",
+                value : "classes"
+            },
+            {
+                category : "nb properties",
+                label : "endpoint",
+                value : "properties"
+            }
+        ]
         }
-        loadChartViz("piechart", config);
-
-        config = {
-            endpoint : endpoint,
-            query : query,
-            type : 'graph',
-            name : 'animal',
-            title : 'Animal per habitat',
-            association : [
-                {
-                    variable : "name_construction",
-                    associatedVariable : "nb"
-                }
-            ]
-        }
-        loadChartViz("nodelink", config);
-
-        config = {
-            endpoint : endpoint,
-            query : query,
-            type: 'treemap',
-            association : [
-                {
-                    variable : "",
-                    associatedVariable : ""
-                }
-            ]
-        }
-        loadChartViz("tree_map", config)
-
-        
-        
+        loadChartViz("dekalog-2", parameters2)
     </script>
 
 </html>
