@@ -3,22 +3,64 @@ const executeSPARQLRequest = async (endpoint, query) => {
     return await fetch(url).then( response => response.json()).then(data => {return data})
 }
 
-const buildSeries = (result, binding_association) => {
-    let values = []
-    
-    result["results"]["bindings"].forEach(row => {
-        binding_association.forEach(association_rule => {
-            let name = association_rule.hasOwnProperty("name") ? row[association_rule.name]["value"] : row[association_rule.variable]["value"];
-            values.push(
-                {
-                    id: row[association_rule.variable]["value"],
-                    name : name,
-                    value: row[association_rule.associatedVariable]["value"],
-                }
-            )
-        })
+/**
+ * This function link data label with data category to be sorted as intended
+ * Values in sparql can be not orderer or missing
+ * @param {SPARQL_result} results 
+ * @param {Vizu_variables_parameters} config 
+ * @returns data
+ */
+const labelCategoryLinking = (results, config) => {
+    let data = {}
+    results.forEach(row => {
+
+        key = config.label?row[config.label]["value"]:""
+
+        /**
+         * If key already exist, add new category value
+         * Else, add new category
+         */
+        if(data.hasOwnProperty(key)){
+            data[key][row[config.category]["value"]] = row[config.value]["value"]
+        }else{
+            data[key] = {}
+            category = row[config.category]["value"]
+            value = row[config.value]["value"]
+            data[key][category] = value
+        }  
     })
-    return values
+    return data
+}
+
+const buildSeries = (result, config) => {
+    let series = []
+    let label = []
+
+    data = labelCategoryLinking(result["results"]["bindings"], config[0])
+    
+    for(let key in data){
+
+        label.push(key)
+
+        for(let subkey in data[key]){
+            let element = series.find(elt => elt.name === subkey)
+            if(element){
+                element.data.push({name : key, value: parseInt(data[key][subkey])})
+            }else{
+                series.push({
+                    name: subkey,
+                    type : 'bar',
+                    colorBy: 'series',
+                    emphasis : {
+                        focus : 'series'
+                    },
+                    data: [{name: key, value: parseInt(data[key][subkey])}]
+                })
+            }
+
+        }
+    }
+    return [label, series]
 }
 
 const buildLink = (result, binding_association, nodes) => {
@@ -132,10 +174,14 @@ const buildNodes = (result, binding_association) => {
     return nodes
 }
 
-const makeMandatoryOption = (configuration) => {
+const makeMandatoryOption = (parameters) => {
     return {
         title : {
-            text : configuration.title
+            text : parameters.title
+        },
+        dataZoom: {
+            type: 'inside',
+            
         },
         tooltip : {},
         legend : {
@@ -144,42 +190,38 @@ const makeMandatoryOption = (configuration) => {
     }
 }
 
-const makeBarChartOption = (data, option, configuration) => {
+const makeBarChartOption = (data, option, parameters) => {
 
-    series_value = buildSeries(data, configuration.association);
+    series_value = buildSeries(data, parameters.config);
     //label = buildSeries(data, configuration.association)
+    console.log(series_value[0])
 
-    option["xAxis"] = {
-        type: 'category',
-        data : []
-    }
-    option["yAxis"] = {}
-    option["series"] = [
-        {
-            name: configuration.name,
-            type: 'bar',
-            data: series_value
-        }
-    ]
+    option["yAxis"] = [{
+        type: 'value'
+    }]
+    option["xAxis"] = [{
+        type : "category",
+    }]
+    option["series"] = series_value[1]
 }
 
-const makePieChartOption = (data, option, configuration) => {
-    series_value = buildSeries(data, configuration.association)
+const makePieChartOption = (data, option, parameters) => {
+    series_value = buildSeries(data, parameters.association)
     option["series"] = [
         {
-            name: configuration.name,
+            name: parameters.name,
             type : 'pie',
             data : series_value
         }
     ]
 }
 
-const makeNodeLinkChartOption = (data, option, configuration) => {
-    nodes = buildNodes(data, configuration.association)
-    links = buildLink(data, configuration.association, nodes)
+const makeNodeLinkChartOption = (data, option, parameters) => {
+    nodes = buildNodes(data, parameters.config)
+    links = buildLink(data, parameters.config, nodes)
     option["series"] = [
         {
-            name : configuration.name,
+            name : parameters.name,
             type : 'graph',
             data: nodes,
             links : links,
@@ -196,17 +238,26 @@ const makeNodeLinkChartOption = (data, option, configuration) => {
             }
         }
     ]
-    console.log(option)
 }
 
-const makeTreeMapChartOption = (data, option, configuration) => {
+const makeTreeMapChartOption = (data, option, parameters) => {
     option["series"] = [
         {
             type : 'treemap',
+            label: {
+                show: true,
+                formatter: '{b}'
+              },
+              upperLabel: {
+                show: true,
+                height: 30
+              },
+              itemStyle: {
+                borderColor: '#fff'
+              },
             data : [
                 {
                     name : "nodeA",
-                    value : 10,
                     children : [
                         {
                             name : "nodeA-A",
@@ -220,7 +271,6 @@ const makeTreeMapChartOption = (data, option, configuration) => {
                 },
                 {
                     name : "nodeB",
-                    value : 20,
                     children : [
                         {
                             name : "nodeB-A",
@@ -239,29 +289,29 @@ const makeTreeMapChartOption = (data, option, configuration) => {
     ]
 }
 
-const generateChart = (data, configuration) => {
-    let option = makeMandatoryOption(configuration)
-    if (configuration.type === 'bar'){
-        makeBarChartOption(data, option, configuration)
-    } else if(configuration.type === 'pie') {
-        makePieChartOption(data, option, configuration)
-    } else if (configuration.type === 'graph'){
-        makeNodeLinkChartOption(data, option, configuration)
-    } else if (configuration.type === 'treemap'){
-        makeTreeMapChartOption(data, option, configuration)
+const generateChart = (data, parameters) => {
+    let option = makeMandatoryOption(parameters)
+    if (parameters.type === 'bar'){
+        makeBarChartOption(data, option, parameters)
+    } else if(parameters.type === 'pie') {
+        makePieChartOption(data, option, parameters)
+    } else if (parameters.type === 'graph'){
+        makeNodeLinkChartOption(data, option, parameters)
+    } else if (parameters.type === 'treemap'){
+        makeTreeMapChartOption(data, option, parameters)
     }
     return option
 
 
 }
 
-const loadChartViz = async (context, configuration) => {
+const loadChartViz = async (context, parameters) => {
     let nodeChart = echarts.init(document.getElementById(context))
     nodeChart.showLoading();
 
-    data = await executeSPARQLRequest(configuration.endpoint, configuration.query);
+    data = await executeSPARQLRequest(parameters.endpoint, parameters.query);
 
-    let option = generateChart(data, configuration)
+    let option = generateChart(data, parameters)
 
     nodeChart.hideLoading();
     nodeChart.setOption(option)
