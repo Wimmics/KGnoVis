@@ -27,6 +27,8 @@ const dataset = {
   ]
 }
 
+// Le dataset doit comporter 2 listes, 1 avec les différents points (noeuds) et 1 avec les différents liens entre ces noeuds (arêtes)
+
 
 const margin = {top: 10, right: 10, bottom: 10, left: 10}
 const width = 400 - margin.left - margin.right
@@ -46,7 +48,7 @@ function test_node_link(data) {
     .selectAll("line")
     .data(data.links)
     .join("line")
-      .style("stroke", "#aaa")
+      .style("stroke", "red")
 
   // Initialize the nodes
   const node = svg
@@ -54,7 +56,7 @@ function test_node_link(data) {
     .data(data.nodes)
     .join("circle")
       .attr("r", 20)
-      .style("fill", "#69b3a2")
+      .style("fill", "steelblue")
 
   // Let's list the force we wanna apply on the network
   const simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
@@ -62,7 +64,7 @@ function test_node_link(data) {
             .id(function(d) { return d.id; })                     // This provide  the id of a node
             .links(data.links)                                    // and this the list of links
       )
-      .force("charge", d3.forceManyBody().strength(-200))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
       .on("end", ticked)
 
