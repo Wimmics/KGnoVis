@@ -5,7 +5,7 @@
  * @param {Vizu_variables_parameters} config 
  * @returns 
  */
-const labelExtraction = (results,config) => {
+const labelExtraction = (results, config) => {
     const categories = [];
     results.forEach(row => {
         if(!categories.includes(row[config.category]["value"])){

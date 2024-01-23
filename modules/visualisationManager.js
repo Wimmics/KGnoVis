@@ -5,6 +5,13 @@ import {
     makePieChartOption
  } from "./modulesDependencies.js";
 
+ /**
+  * This function add mandatory field for the visualisation object such as:
+  * - The title of the visualisation
+  * - The possibility to zoom
+  * - The display of the legend
+  * @param {Parameters_object} parameters 
+  */
 const makeMandatoryOption = (parameters) => {
     return {
         title : {
@@ -21,6 +28,12 @@ const makeMandatoryOption = (parameters) => {
     }
 }
 
+/**
+ * This function generate the intended visualisation
+ * @param {SPARQL_Result} data 
+ * @param {Parameters_object} parameters 
+ * @returns {Object_option}
+ */
 const generateChart = (data, parameters) => {
     let option = makeMandatoryOption(parameters)
     if (parameters.type === 'bar'){
@@ -37,6 +50,11 @@ const generateChart = (data, parameters) => {
 
 }
 
+/**
+ * Base function that load chart generation process
+ * @param {HTMLTagID} context 
+ * @param {Parameters_object} parameters 
+ */
 const loadChartViz = async (context, parameters) => {
     let nodeChart = echarts.init(document.getElementById(context))
     nodeChart.showLoading();
