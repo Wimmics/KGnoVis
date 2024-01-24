@@ -1,15 +1,27 @@
 /**
+ * This function check if a given category name is a SPARQL variable/binding
+ * @param {Header_SPARQL_Result} header 
+ * @param {Category_Name} name 
+ * @returns boolean
+ */
+const isSparqlVariable = (header, name) => {
+    if(header["vars"].includes(name)){
+        return true;
+    }
+    return false;
+}
+/**
  * This function extract all categories in the sparql result in a variable
  * Usage: get all category to harmononize and complete barchart to avoid missing and/or misaligne values
  * @param {SPARQL_Result} results 
  * @param {Vizu_variables_parameters} config 
  * @returns 
  */
-const labelExtraction = (results, config) => {
+const labelExtraction = (results, category) => {
     const categories = [];
     results.forEach(row => {
-        if(!categories.includes(row[config.category]["value"])){
-            categories.push(row[config.category]["value"])
+        if(!categories.includes(row[category]["value"])){
+            categories.push(row[category]["value"])
         }
     });
     return categories
@@ -24,20 +36,36 @@ const labelExtraction = (results, config) => {
  */
 const labelCategoryLinking = (results, config) => {
     let data = {}
-    let categories = labelExtraction(results, config);
+    let header = results["head"]
+    let body = results["results"]["bindings"]
+    let categories = []
 
-    results.forEach(row => {
-
-        let key = config.label?row[config.label]["value"]:""
-
-        if(!data.hasOwnProperty(key)){
-            data[key] = {}
-            categories.forEach( category => {
-                data[key][category] = 0
-            })
+    config.forEach(conf => {
+        if(isSparqlVariable(header, conf.category)){
+            categories.push(...labelExtraction(body, conf.category));
+        }else{
+            categories.push(conf.category);
         }
-        data[key][row[config.category]["value"]] = row[config.value]["value"]
     })
+
+    for(const row of body){
+        for(const conf of config){
+            let key = conf.label ? row[conf.label]["value"]:""
+
+            if(!data.hasOwnProperty(key)){
+                data[key] = {}
+                categories.forEach( category => {
+                    data[key][category] = 0
+                })
+            }
+
+            if(isSparqlVariable(header, conf.category)){
+                data[key][row[conf.category]["value"]] = row[conf.value]["value"]
+            }else{
+                data[key][conf.category] = row[conf.value]["value"]
+            }
+        }
+    }
     return data
 }
 
@@ -53,7 +81,7 @@ const buildSeries = (results, config) => {
     let series = []
     let label = []
 
-    let data = labelCategoryLinking(results["results"]["bindings"], config[0])
+    let data = labelCategoryLinking(results, config)
     
     for(let key in data){
 
@@ -81,17 +109,18 @@ const buildSeries = (results, config) => {
 }
 
 const makeBarChartOption = (data, option, parameters) => {
-
-    let series_value = buildSeries(data, parameters.config);
-    console.log(series_value[0])
+    const [label, series_value] = buildSeries(data, parameters.config);
+    console.log(series_value)
 
     option["yAxis"] = [{
-        type: 'value'
+        type: 'value',
+        scale: true
     }]
     option["xAxis"] = [{
         type : "category",
+        data: label
     }]
-    option["series"] = series_value[1]
+    option["series"] = series_value
 }
 
 export { makeBarChartOption };

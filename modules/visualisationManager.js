@@ -3,10 +3,10 @@ import {
     makeBarChartOption,
     makeNodeLinkChartOption,
     makePieChartOption
- } from "./modulesDependencies.js";
+ } from "./visualisationManagerDependencies.js";
 
  /**
-  * This function add mandatory field for the visualisation object such as:
+  * This function add **mandatory field** for the visualisation object such as:
   * - The title of the visualisation
   * - The possibility to zoom
   * - The display of the legend
