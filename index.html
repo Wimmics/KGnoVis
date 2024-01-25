@@ -92,7 +92,7 @@ loadChartViz("dekalog-1", parameters); </code>
                     <b><u>Visualisation: </u></b> Courbes, barchat ou <strike>Treemap</strike> (pas adapté)
                 </p>
                 <p>
-                    <b><u>Remarques: </u></b>Tu peux remplacer "&lsaquo;http://rdfs.org/ns/void#triples&rsaquo;" par "&lsaquo;http://rdfs.org/ns/void#classes&rsaquo;", ou "&lsaquo;http://rdfs.org/ns/void#properties&rsaquo;".
+                    <b><u>Remarques: </u></b>Tu peux remplacer "&lt;http://rdfs.org/ns/void#triples&gt;" par "&lt;http://rdfs.org/ns/void#classes&gt;", ou "&lt;http://rdfs.org/ns/void#properties&gt;".
                 </p>
             </div>
             <div class="box-right">
@@ -100,13 +100,13 @@ loadChartViz("dekalog-1", parameters); </code>
 <code class="language-sparql line-numbers">SELECT DISTINCT ?endpointUrl 
     (MAX(?rawO) AS ?triples)  (MAX(?raw1) AS ?classes)  (MAX(?raw2) AS ?properties) {
     GRAPH ?g {
-        { ?curated &lsaquo;http://www.w3.org/ns/sparql-service-description#endpoint&rsaquo; ?endpointUrl . }
-        UNION { ?curated &lsaquo;http://rdfs.org/ns/void#sparqlEndpoint&rsaquo; ?endpointUrl . }
-        UNION { ?curated &lsaquo;http://www.w3.org/ns/dcat#endpointURL&rsaquo; ?endpointUrl . }
-        ?metadata &lsaquo;http://ns.inria.fr/kg/index#curated&rsaquo; ?curated .
-        ?curated &lsaquo;http://rdfs.org/ns/void#triples&rsaquo; ?rawO .
-        ?curated &lsaquo;http://rdfs.org/ns/void#classes&rsaquo; ?raw1 .
-    	?curated &lsaquo;http://rdfs.org/ns/void#properties&rsaquo; ?raw2 .
+        { ?curated &lt;http://www.w3.org/ns/sparql-service-description#endpoint&gt; ?endpointUrl . }
+        UNION { ?curated &lt;http://rdfs.org/ns/void#sparqlEndpoint&gt; ?endpointUrl . }
+        UNION { ?curated &lt;http://www.w3.org/ns/dcat#endpointURL&gt; ?endpointUrl . }
+        ?metadata &lt;http://ns.inria.fr/kg/index#curated&gt; ?curated .
+        ?curated &lt;http://rdfs.org/ns/void#triples&gt; ?rawO .
+        ?curated &lt;http://rdfs.org/ns/void#classes&gt; ?raw1 .
+    	?curated &lt;http://rdfs.org/ns/void#properties&gt; ?raw2 .
     }
 } GROUP BY ?endpointUrl</code>
                 </pre>
@@ -118,21 +118,23 @@ loadChartViz("dekalog-1", parameters); </code>
 <code class="language-javascript line-numbers">const parameters2 = {
     endpoint: "http://prod-dekalog.inria.fr/sparql",
     query: query_deka2,
-    type: "barchart",
+    type: "bar",
     title: "Barchart of number of classes, properties and triples per endpoint",
+    scale: "log",
+    display: "row",
     config: [{
         category : "nb triples",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "triples"
     },
     {
         category : "nb classes",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "classes"
     },
     {
         category : "nb properties",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "properties"
     }
 ]
