@@ -1,4 +1,4 @@
-import * as dependencies from "./modules/modulesDependencies.js";
+//import * as dependencies from "./modules/modulesDependencies.js";
 import loadChartViz from "./modules/visualisationManager.js";
 
 
@@ -43,13 +43,16 @@ UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
 GROUP BY ?endpoint ?sparqlNorm
 ORDER BY ?endpoint ?sparqlNorm`;
 
-const query_deka2 = `SELECT DISTINCT ?endpointUrl (MAX(?rawO) AS ?o) {
+const query_deka2 = `SELECT DISTINCT ?endpointUrl (MAX(?rawO) AS ?triples)  (MAX(?raw1) AS ?classes)  (MAX(?raw2) AS ?properties) {
 GRAPH ?g {
 { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpointUrl . }
 UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpointUrl . }
 UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpointUrl . }
 ?metadata <http://ns.inria.fr/kg/index#curated> ?curated .
 ?curated <http://rdfs.org/ns/void#triples> ?rawO .
+?curated <http://rdfs.org/ns/void#triples> ?rawO .
+?curated <http://rdfs.org/ns/void#classes> ?raw1 .
+?curated <http://rdfs.org/ns/void#properties> ?raw2 .
 }
 } GROUP BY ?endpointUrl`
 
@@ -70,21 +73,23 @@ loadChartViz("dekalog-1", parameters);
 const parameters2 = {
     endpoint: "http://prod-dekalog.inria.fr/sparql",
     query: query_deka2,
-    type: "barchart",
+    type: "bar",
     title: "Barchart of number of classes, properties and triples per endpoint",
+    scale: "log",
+    display: "row",
     config: [{
         category : "nb triples",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "triples"
     },
     {
         category : "nb classes",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "classes"
     },
     {
         category : "nb properties",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "properties"
     }
 ]
