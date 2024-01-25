@@ -110,16 +110,24 @@ const buildSeries = (results, config) => {
 
 const makeBarChartOption = (data, option, parameters) => {
     const [label, series_value] = buildSeries(data, parameters.config);
-    console.log(series_value)
 
-    option["yAxis"] = [{
-        type: 'value',
-        scale: true
-    }]
-    option["xAxis"] = [{
-        type : "category",
-        data: label
-    }]
+    if(parameters.display === "row"){
+        option["xAxis"] = [{
+            type: parameters.hasOwnProperty("scale")?parameters.scale:"value"
+        }]
+        option["yAxis"] = [{
+            type : "category",
+            data: label,
+        }]
+    }else{
+        option["yAxis"] = [{
+            type: parameters.hasOwnProperty("scale")?parameters.scale:"value"
+        }]
+        option["xAxis"] = [{
+            type : "category",
+            data: label,
+        }]
+    }
     option["series"] = series_value
 }
 
