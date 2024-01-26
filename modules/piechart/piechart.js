@@ -5,18 +5,28 @@
  * @returns 
  */
 const buildSeries = (results, config) => {
-    let label = []
     let data = []
-    //TODO: Implementation
+    for(const row of results["results"]["bindings"]){
+        for(const conf of config){
+            data.push({
+                name:row[conf.label]["value"],
+                value: row[conf.value]["value"]
+            })
+        }
+    }
+
     return data
 }
 
 const makePieChartOption = (data, option, parameters) => {
-    series_value = buildSeries(data, parameters.association)
+    const series_value = buildSeries(data, parameters.config)
+
     option["series"] = [
         {
-            name: parameters.name,
+            name: parameters.label,
+            radius: "40%",
             type : 'pie',
+            center: ['30%', '50%'],
             data : series_value
         }
     ]
