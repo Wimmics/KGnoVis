@@ -22,8 +22,17 @@ const makeMandatoryOption = (parameters) => {
             
         },
         tooltip : {},
+        animation: false,
         legend : {
-            right : 'right'
+            right : 'right',
+            type: 'scroll',
+            orient: 'vertical',
+            textStyle : {
+                fontSize: 10,
+                width: '150',
+                overflow: 'truncate',
+                ellipsis: "..."
+            }
         }
     }
 }

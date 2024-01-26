@@ -1,38 +1,37 @@
-const buildLink = (result, binding_association, nodes) => {
+const buildLink = (result, config, nodes) => {
     let values = []
-
-    result["results"]["bindings"].forEach(row => {
-        binding_association.forEach(association_rule => {
+    for(const row of result["results"]["bindings"]){
+        for(const conf of config){
             let id_source
             nodes.forEach(node => {
-                if(node.name === row[association_rule.variable]["value"]){
+                if(node.name === row[conf.source]["value"]){
                     id_source = node.id
                 }
             })
 
             let id_target
             nodes.forEach(node => {
-                if(node.name === row[association_rule.associatedVariable]["value"]){
+                if(node.name === row[conf.target]["value"]){
                     id_target = node.id
                 }
             })
-
             values.push(
-                {source : id_source, target: id_target}
+                {source : id_source, target: id_target, label: {show: false, formatter: "{c}"}, value: row[conf.label]["value"]}
             )
-        })
-    })
+        }
+    }
+
     return values
 }
 
 const nodeAlreadyExist = (node, nodesList) => {
-    let exist = false;
-    nodesList.forEach(n => {
-        if(n.name === node.name){
-            exist = true
+
+    for(let n of nodesList){
+        if(n.id === node.id){
+            return true
         }
-    })
-    return exist;
+    }
+    return false;
 }
 
 const increaseSizeOfNode = (node, nodesList, size) => {
@@ -56,38 +55,34 @@ const increaseSizeOfNode = (node, nodesList, size) => {
     return updateList
 }
 
-const buildNodes = (result, binding_association) => {
-    let nodes = []
-    let i = 0
+const buildNodes = (result, config) => {
+    const nodes = []
 
-    result["results"]["bindings"].forEach(row => {
-        binding_association.forEach(association_rule => {
+    for(const row of result["results"]["bindings"]){
+        for(const conf of config){
 
             let submited_node_1 = {
-                id : i,
-                name : row[association_rule.variable]["value"],
-                value : row[association_rule.variable]["value"],
-                symbolSize : 10,
+                id : row[conf.source]["value"],
+                name : row[conf.source]["value"],
+                category: 0,
+                symbolSize : 40,
                 itemStyle : {
                     color : "#c71969",
                     borderType : 'solid',
                     borderColor : "grey"
-                }
+                },
+                label : {show : true}
             }
-            i++
-            
+
             if(!(nodeAlreadyExist(submited_node_1, nodes))){
                 nodes.push(submited_node_1)
-            } else {
-                nodes = increaseSizeOfNode(submited_node_1, nodes, 1)
-                i--
             }
 
             let submited_node_2 = {
-                id : i,
-                name : row[association_rule.associatedVariable]["value"],
-                value : row[association_rule.associatedVariable]["value"],
-                symbolSize : 10,
+                id : row[conf.target]["value"],
+                name : row[conf.target]["value"],
+                category: 1,
+                symbolSize : 40,
                 itemStyle : {
                     color: "green",
                     borderType : 'solid',
@@ -95,38 +90,35 @@ const buildNodes = (result, binding_association) => {
                 },
                 label : {show : true}
             }
-            i++
 
             if(!(nodeAlreadyExist(submited_node_2, nodes))){
                 nodes.push(submited_node_2)
-            }else{
-                nodes = increaseSizeOfNode(submited_node_2, nodes, 1)
-                i--
             }
-            
-        })
-    })
+        }
+    }
     return nodes
 }
 
 const makeNodeLinkChartOption = (data, option, parameters) => {
-    nodes = buildNodes(data, parameters.config)
-    links = buildLink(data, parameters.config, nodes)
+    const nodes = buildNodes(data, parameters.config)
+    const edges = buildLink(data, parameters.config, nodes)
+    const categories = [parameters.config[0].source, parameters.config[0].target]
     option["series"] = [
         {
-            name : parameters.name,
+            name : parameters.titre,
             type : 'graph',
             data: nodes,
-            links : links,
+            links : edges,
             layout : 'force',
             roam : true,
+            categories: categories,
             emphasis : {
                 focus : 'adjacency',
                 scale : true
             },
             force : {
                 initLayout : null,
-                repulsion : 250,
+                repulsion : 1000,
                 gravity : 0.2
             }
         }
