@@ -1,4 +1,9 @@
 
+body {
+    padding: 0;
+    margin: 0;
+    padding: 1rem;
+}
 .chart-section {
     text-align: center;
 }
@@ -25,7 +30,7 @@
 
 .box-left, .box-right {
     width: 50%;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 .box-left{
