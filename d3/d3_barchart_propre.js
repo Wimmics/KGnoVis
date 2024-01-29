@@ -7,6 +7,8 @@ const databis = [
     {category :"Wind", values :  [20, 30, 10, 12, 18], fill : "gold"},
     {category :"Moon", values :  [14, 16, 24, 8, 17], fill : "lightblue"}
 ]
+
+const color = ["black", "crimson", "silver", "gold", "steelblue"]
 /*
 function handleMouseOver() {
     d3.select(this).attr({fill : "green"})
@@ -16,8 +18,9 @@ function handleMouseOut() {
     d3.select(this).attr({fill : color})
 }
 */
+// Mettre un "if" couleurs = None : alors création de color, sinon on garde couleurs.
 
-const svg_creator = (donnees) => {
+const svg_creator = (donnees, couleurs = [0]) => {
 
     // Création des constantes du graphique et de ses contours
     const width = 380
@@ -39,16 +42,24 @@ const svg_creator = (donnees) => {
     donnees.forEach(d => {
         let object = {"Category" : d.category}
         object["Value"] = []
-        let couleurs = {"color" : d.fill}
+
         for (let i = 0; i < d.values.length ; i++) {
             object.Value.push({"value" : d.values[i], "parents" : d.category, "color" : d.fill, "incr" : i})
         }
 
         exploitable.push(object)
         keys.push(object.Category)
-        color.push(couleurs.color)
-
+        if (couleurs[0] === 0) {
+            let couleurs = {"color" : d.fill}
+            color.push(couleurs.color)
+        } else {
+            color = couleurs
+        }
     })
+
+    let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(couleurs)
+
+    console.log(echelle_couleurs("Flower"))
 
     let group = svg.selectAll("g")
         .data(exploitable)
@@ -73,7 +84,7 @@ const svg_creator = (donnees) => {
         .attr("y", d => y_scale(d.value))
         .attr("width", (x_scale.bandwidth() / taille) - varPadding)
         .attr("height", d => height - y_scale(d.value) - 10)
-        .attr("fill", (d,i) => color[i])
+        .style("fill", d => echelle_couleurs(d.parents))
         //.on("mouseover", handleMouseOver)
         //.on("mouseout", handleMouseOut)
 
@@ -93,7 +104,6 @@ const svg_creator = (donnees) => {
         .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
         // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
         .attr("y", d => y_scale(d.value) - 2)
-
 
     // Légende
 
@@ -138,6 +148,6 @@ const svg_creator = (donnees) => {
 */
 }
 
-svg_creator(databis)
+svg_creator(databis, color)
 
 // Prochaine tâche : mouseover
