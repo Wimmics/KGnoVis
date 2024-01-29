@@ -19,10 +19,8 @@ const makeMandatoryOption = (parameters) => {
         },
         dataZoom: {
             type: 'inside',
-            
         },
         tooltip : {},
-        animation: false,
         legend : {
             right : 'right',
             type: 'scroll',

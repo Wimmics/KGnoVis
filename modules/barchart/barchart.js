@@ -81,7 +81,7 @@ const buildSeries = (results, config) => {
     let series = []
     let label = []
 
-    let data = labelCategoryLinking(results, config)
+    let data = labelCategoryLinking(results, config.config)
     
     for(let key in data){
 
@@ -92,7 +92,8 @@ const buildSeries = (results, config) => {
             if(element){
                 element.data.push({name : key, value: parseInt(data[key][subkey])})
             }else{
-                series.push({
+                console.log(config)
+                let obj = {
                     name: subkey,
                     type : 'bar',
                     colorBy: 'series',
@@ -100,7 +101,11 @@ const buildSeries = (results, config) => {
                         focus : 'series'
                     },
                     data: [{name: key, value: parseInt(data[key][subkey])}]
-                })
+                }
+                if(config.stacked){
+                    obj["stack"] = "total";
+                }
+                series.push(obj)
             }
 
         }
@@ -109,7 +114,7 @@ const buildSeries = (results, config) => {
 }
 
 const makeBarChartOption = (data, option, parameters) => {
-    const [label, series_value] = buildSeries(data, parameters.config);
+    const [label, series_value] = buildSeries(data, parameters);
 
     if(parameters.display === "row"){
         option["xAxis"] = [{
