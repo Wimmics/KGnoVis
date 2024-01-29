@@ -4,10 +4,12 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/prism.css">
-        <script src="lib/echarts.js"></script>
-        <script src="visu.js" defer></script>
+        <script src="lib/echarts.js" defer></script>
+
+        <!--<script src="visu.js" defer></script>-->
         <script src="lib/prism.js" defer></script>
         <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
+        <script type="module" src="main.js" defer></script>
         <title>Test de visualisation de requête SPARQL</title>
     </head>
 
@@ -18,7 +20,7 @@
         <section class="box">
             
             <div class="box-left">
-                <h1>SPARQL Request Dekalog 1 : Nombre de features supportées par les endpoints pour les 2 versions de la norme SPARQL</h1>
+                <h2>SPARQL Request Dekalog 1 : Nombre de features supportées par les endpoints pour les 2 versions de la norme SPARQL</h2>
                 <p>
                     <u><b>Visus:</b></u> Double colonne pour chaque endpoint, une colonne pour le nombre avec SPARQL 10, une autre avec 11. Courbes de l'évolution des valeurs de SPARQL 10 et 11 en ordonnant les endpoints par valeurs de SPARQL 10 croissante.
                 </p>
@@ -28,7 +30,7 @@
             </div>
             <div class="box-right">
                 <pre class="code-block">
-<code class="language-sparql line-numbers">SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activity) AS ?count) {
+<code class="language-sparql line-numbers" id="sparql-dekalog1">SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activity) AS ?count) {
     GRAPH ?g {
         { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
         UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
@@ -47,19 +49,7 @@ GROUP BY ?endpoint ?sparqlNorm</code>
         <section class="box">
             <div class="box-left">
                 <pre class="code-block">
-<code class="language-javascript line-numbers">const parameters = {
-    endpoint : "http://prod-dekalog.inria.fr/sparql",
-    query : query_deka,
-    type : 'bar',
-    title : "Number feature per norm",
-    config : [{
-        category : "sparqlNorm",
-        label : "endpoint",
-        value : "count"
-    }]
-
-}
-loadChartViz("dekalog-1", parameters); </code>
+<code class="language-javascript line-numbers" id="parameters-dekalog1"></code>
                 </pre>
                 <p>
                     <b><u>Notes:</u></b> Cette requête nécessite une harmonisation/homogénisation et une complétion pour être utilisé via ECharts.
@@ -85,12 +75,12 @@ loadChartViz("dekalog-1", parameters); </code>
         </section>
         <section class="box">
             <div class="box-left">
-                <h1>Exemple 2: Courbes simples des nombres de classes, triples, propriétés, etc</h1>
+                <h2>Exemple 2: Courbes simples des nombres de classes, triples, propriétés, etc</h2>
                 <p>
                     <b><u>Visualisation: </u></b> Courbes, barchat ou <strike>Treemap</strike> (pas adapté)
                 </p>
                 <p>
-                    <b><u>Remarques: </u></b>Tu peux remplacer "&lsaquo;http://rdfs.org/ns/void#triples&rsaquo;" par "&lsaquo;http://rdfs.org/ns/void#classes&rsaquo;", ou "&lsaquo;http://rdfs.org/ns/void#properties&rsaquo;".
+                    <b><u>Remarques: </u></b>Tu peux remplacer "&lt;http://rdfs.org/ns/void#triples&gt;" par "&lt;http://rdfs.org/ns/void#classes&gt;", ou "&lt;http://rdfs.org/ns/void#properties&gt;".
                 </p>
             </div>
             <div class="box-right">
@@ -98,13 +88,13 @@ loadChartViz("dekalog-1", parameters); </code>
 <code class="language-sparql line-numbers">SELECT DISTINCT ?endpointUrl 
     (MAX(?rawO) AS ?triples)  (MAX(?raw1) AS ?classes)  (MAX(?raw2) AS ?properties) {
     GRAPH ?g {
-        { ?curated &lsaquo;http://www.w3.org/ns/sparql-service-description#endpoint&rsaquo; ?endpointUrl . }
-        UNION { ?curated &lsaquo;http://rdfs.org/ns/void#sparqlEndpoint&rsaquo; ?endpointUrl . }
-        UNION { ?curated &lsaquo;http://www.w3.org/ns/dcat#endpointURL&rsaquo; ?endpointUrl . }
-        ?metadata &lsaquo;http://ns.inria.fr/kg/index#curated&rsaquo; ?curated .
-        ?curated &lsaquo;http://rdfs.org/ns/void#triples&rsaquo; ?rawO .
-        ?curated &lsaquo;http://rdfs.org/ns/void#classes&rsaquo; ?raw1 .
-    	?curated &lsaquo;http://rdfs.org/ns/void#properties&rsaquo; ?raw2 .
+        { ?curated &lt;http://www.w3.org/ns/sparql-service-description#endpoint&gt; ?endpointUrl . }
+        UNION { ?curated &lt;http://rdfs.org/ns/void#sparqlEndpoint&gt; ?endpointUrl . }
+        UNION { ?curated &lt;http://www.w3.org/ns/dcat#endpointURL&gt; ?endpointUrl . }
+        ?metadata &lt;http://ns.inria.fr/kg/index#curated&gt; ?curated .
+        ?curated &lt;http://rdfs.org/ns/void#triples&gt; ?rawO .
+        ?curated &lt;http://rdfs.org/ns/void#classes&gt; ?raw1 .
+    	?curated &lt;http://rdfs.org/ns/void#properties&gt; ?raw2 .
     }
 } GROUP BY ?endpointUrl</code>
                 </pre>
@@ -116,21 +106,23 @@ loadChartViz("dekalog-1", parameters); </code>
 <code class="language-javascript line-numbers">const parameters2 = {
     endpoint: "http://prod-dekalog.inria.fr/sparql",
     query: query_deka2,
-    type: "barchart",
+    type: "bar",
     title: "Barchart of number of classes, properties and triples per endpoint",
+    scale: "log",
+    display: "row",
     config: [{
         category : "nb triples",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "triples"
     },
     {
         category : "nb classes",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "classes"
     },
     {
         category : "nb properties",
-        label : "endpoint",
+        label : "endpointUrl",
         value : "properties"
     }
 ]
@@ -147,6 +139,21 @@ loadChartViz("dekalog-2", parameters2)</code>
                     <b><u>Notes:</u></b> Aucune variable permet de nommer la catégorie, l'utilisateur peut renseigner une chaine de caractères
                     pour spécifier la catégorie (ex: "nb triples", "nb classes" et "nb properties"). Cette chaine ne doit pas être une variable dans les résultats SPARQL.
                 </p>
+                <pre class="code-block">
+<code class="language-javascript line-numbers">const parameters2 = {
+    endpoint: "http://prod-dekalog.inria.fr/sparql",
+    query: query_deka2,
+    type: "barchart",
+    title: "Barchart of number of classes, properties and triples per endpoint",
+    config: [{
+        category : ["nb triples", "nb classes", "nb properties"]
+        label : "endpoint",
+        value : ["triples", "classes", "properties"]
+    }
+    ]
+}
+loadChartViz("dekalog-2", parameters2)</code>
+                                    </pre>
             </div>
             <div class="box-right">
                 <div id="dekalog-2" class="chart-div"></div>
@@ -154,110 +161,55 @@ loadChartViz("dekalog-2", parameters2)</code>
         </section>
         <hr>
         <section class="chart-section">
-            <h1>Pie Chart example</h1>
-            <div id="piechart" class="chart-div"></div>
+            <h1>Exemple de Piechart</h1>
+            <section class="box">
+                <div class="box-left">
+                    <h2>Exemple: Nombre de propriétés par endpoint</h2>
+                    <p></p>
+                </div>
+                <div class="box-right">
+                    <pre>
+<code class="language-sparql line-numbers">SELECT DISTINCT ?endpointUrl (MAX(?raw2) AS ?properties) {
+    GRAPH ?g {
+        { ?curated &lt;http://www.w3.org/ns/sparql-service-description#endpoint&gt; ?endpointUrl . }
+        UNION { ?curated &lt;http://rdfs.org/ns/void#sparqlEndpoint&gt; ?endpointUrl . }
+        UNION { ?curated &lt;http://www.w3.org/ns/dcat#endpointURL&gt; ?endpointUrl . }
+        ?metadata &lt;http://ns.inria.fr/kg/index#curated&gt; ?curated .
+    	?curated &lt;http://rdfs.org/ns/void#properties&gt; ?raw2 .
+    }
+} GROUP BY ?endpointUrl</code>
+                    </pre>
+                </div>
+            </section>
+            <section class="box">
+                <div class="box-left">
+                    <pre>
+<code class="language-javascript line-numbers" id="piechart-deka"></code>
+                    </pre>
+                </div>
+                <div class="box-right">
+                    <div id="dekalog-3" class="chart-div"></div>
+                </div>
+            </section>
+            
         </section>
         <hr>
         <section class="chart-section">
             <h1>Node-link Chart example</h1>
-            <div id="nodelink" class="chart-div"></div>
-            
+            <div class="box">
+                <div class="box-left"></div>
+                <div class="box-right"></div>
+            </div>
+            <div class="box">
+                <div class="box-left"></div>
+                <div class="box-right">
+                    <div id="zoomathia" class="chart-div"></div>
+                </div>
+            </div>            
         </section>
         <section class="chart-section">
             <h1>Tree map example</h1>
             <div id="tree_map" class="chart-div"></div>
         </section>
     </body>
-    <script type="module" defer>
-        const endpoint = "http://54.36.123.165:8890/sparql/";
-        const query = `PREFIX oa:     <http://www.w3.org/ns/oa#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX schema:  <http://schema.org/>
-SELECT DISTINCT ?name_construction (COUNT(DISTINCT(?name_animal)) as ?nb)  WHERE {
-?annotation1 oa:hasBody ?animal ; oa:hasTarget [ oa:hasSource ?paragraph; oa:hasSelector [ oa:exact ?mention_animal]].
-?animal skos:prefLabel ?name_animal.
-?animal_collection a skos:Collection;
-    skos:prefLabel "Ancient class"@en;
-    skos:member ?animal.
-
-?annotation2 oa:hasBody ?construction;
-        oa:hasTarget [oa:hasSource ?paragraph;
-            oa:hasSelector [oa:exact ?mention_construction]].
-?paragraph schema:text ?text.
-
-?construction skos:prefLabel ?name_construction;
-                    skos:broader+ ?construction_generique.
-?construction_generique skos:prefLabel "house building"@en.
-
-FILTER NOT EXISTS {?x  skos:broader ?animal}
-FILTER (lang(?name_animal) = "en")
-FILTER (lang(?name_construction) = "en")
-}
-GROUP BY ?name_construction`;
-
-        const query_deka = `SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activity) AS ?count) {
-    GRAPH ?g {
-        { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
-        UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
-        UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
-        ?metadata <http://ns.inria.fr/kg/index#curated> ?curated, ?dataset .
-            { ?dataset <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity . }
-            UNION { ?metadata <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity .}
-            FILTER(CONTAINS(str(?activity), ?sparqlNorm))
-            VALUES ?sparqlNorm { "SPARQL10" "SPARQL11" }
-    }
-}
-GROUP BY ?endpoint ?sparqlNorm
-ORDER BY ?endpoint ?sparqlNorm`;
-
-        const query_deka2 = `SELECT DISTINCT ?endpointUrl (MAX(?rawO) AS ?o) {
-    GRAPH ?g {
-        { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpointUrl . }
-        UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpointUrl . }
-        UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpointUrl . }
-        ?metadata <http://ns.inria.fr/kg/index#curated> ?curated .
-        ?curated <http://rdfs.org/ns/void#triples> ?rawO .
-    }
-} GROUP BY ?endpointUrl`
-
-
-        const parameters = {
-            endpoint : "http://prod-dekalog.inria.fr/sparql",
-            query : query_deka,
-            type : 'bar',
-            title : "Number feature per norm",
-            config : [{
-                category : "sparqlNorm",
-                label : "endpoint",
-                value : "count"
-            }]
-
-        }
-        loadChartViz("dekalog-1", parameters);
-
-        const parameters2 = {
-            endpoint: "http://prod-dekalog.inria.fr/sparql",
-            query: query_deka2,
-            type: "barchart",
-            title: "Barchart of number of classes, properties and triples per endpoint",
-            config: [{
-                category : "nb triples",
-                label : "endpoint",
-                value : "triples"
-            },
-            {
-                category : "nb classes",
-                label : "endpoint",
-                value : "classes"
-            },
-            {
-                category : "nb properties",
-                label : "endpoint",
-                value : "properties"
-            }
-        ]
-        }
-        loadChartViz("dekalog-2", parameters2)
-    </script>
-
 </html>
