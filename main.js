@@ -114,6 +114,7 @@ const parameters = {
     endpoint : "http://prod-dekalog.inria.fr/sparql",
     query : query_deka,
     type : 'bar',
+    stacked: true,
     title : "Number feature per norm",
     config : [{
         category : "sparqlNorm",
