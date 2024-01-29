@@ -103,6 +103,7 @@ const makeNodeLinkChartOption = (data, option, parameters) => {
     const nodes = buildNodes(data, parameters.config)
     const edges = buildLink(data, parameters.config, nodes)
     const categories = [parameters.config[0].source, parameters.config[0].target]
+
     option["series"] = [
         {
             name : parameters.titre,
@@ -119,7 +120,8 @@ const makeNodeLinkChartOption = (data, option, parameters) => {
             force : {
                 initLayout : null,
                 repulsion : 1000,
-                gravity : 0.2
+                gravity : 0.2,
+                layoutAnimation: parameters.animation
             }
         }
     ]
