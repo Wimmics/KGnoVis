@@ -23,16 +23,15 @@ function handleMouseOut() {
 const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
 
     // Création des constantes du graphique et de ses contours
-    const width = 380
-    const height = 380
+    const longueur = 380
     const taille = donnees.length
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const varPadding = 1
     const domaine = Math.max(...donnees.map(d => Math.max(...d.values)))
 
-    const svg = d3.select("#d3_demo_3").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
-    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width]).padding(0.1)      
-    const y_scale = d3.scaleLinear().domain([0, domaine]).range([height, 15]) 
+    const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)      
+    const y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 15]) 
 
     // Transformation des données
 
@@ -89,7 +88,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
             .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
             .attr("y", d => y_scale(d.value))
             .attr("width", (x_scale.bandwidth() / taille) - varPadding)
-            .attr("height", d => height - y_scale(d.value) - 10)
+            .attr("height", d => longueur - y_scale(d.value) - 10)
             .style("fill", d => echelle_couleurs(d.parents))
         //.on("mouseover", handleMouseOver)
         //.on("mouseout", handleMouseOut)
@@ -117,11 +116,12 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
                 update => update,
                 exit => exit.remove()
             )
-            .attr("y", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
-            .attr("x", d => y_scale(d.value))
-            .attr("height", (x_scale.bandwidth() / taille) - varPadding)
-            .attr("width", d => height - y_scale(d.value) - 10)
+            .attr("y", d => (x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)))
+            .attr("x", 5)
+            .attr("height", ((x_scale.bandwidth() / taille) - varPadding))
+            .attr("width", d => (longueur - y_scale(d.value) - 10))
             .style("fill", d => echelle_couleurs(d.parents))
+            
         group.selectAll("text")
             .data(d => d.Value)
             .join(
@@ -135,7 +135,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
             .style("font", "12px times")
             .attr("y", d => x_scale(d.parents) + (d.incr+0.7)*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
             // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
-            .attr("x", d => y_scale(d.value) - 15)
+            .attr("x", d => longueur - (y_scale(d.value)))
     
     }
 
@@ -145,7 +145,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
         .data(keys).enter()
         .append("circle")
         .attr("cx", function(d,i){ return 15 + i*75})
-        .attr("cy", height)
+        .attr("cy", longueur)
         .attr("r", 7)
         .style("fill", (d,i) => color[i])
 
@@ -153,7 +153,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
         .data(keys).enter()
         .append("text")
         .attr("x", function(d,i){ return 25 + i*75})
-        .attr("y", height)
+        .attr("y", longueur)
         .style("fill", (d,i) => color[i])
         .text(function(d){ return d})
         .attr("text-anchor", "left")
