@@ -1,8 +1,8 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const databis = [
-    {category :"Clouds", values : [10, 20, 15, 25, 30], fill : "black"},
-    {category :"Flower", values : [5, 8, 12 , 7, 9], fill : "crimson"},
+    {category :"Clouds", values : [5, 8, 12 , 7, 9], fill : "black"},
+    {category :"Flower", values : [10, 20, 15, 25, 30], fill : "crimson"},
     {category :"Snow", values :  [6, 8, 2, 4, 5], fill : "silver"},
     {category :"Wind", values :  [20, 30, 10, 12, 18], fill : "gold"},
     {category :"Moon", values :  [14, 16, 24, 8, 17], fill : "lightblue"}
@@ -20,11 +20,11 @@ function handleMouseOut() {
 */
 // Mettre un "if" couleurs = None : alors création de color, sinon on garde couleurs.
 
-const svg_creator = (donnees, couleurs = [0]) => {
+const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
 
     // Création des constantes du graphique et de ses contours
     const width = 380
-    const height = 290
+    const height = 380
     const taille = donnees.length
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const varPadding = 1
@@ -65,45 +65,79 @@ const svg_creator = (donnees, couleurs = [0]) => {
         .data(exploitable)
         .join(
             enter => enter.append("g")
-                            .attr("class", d => d.Category),
+                            .attr("class", (d, i) => d.Value[i]),
             update => update,
             exit => exit.remove()
         )
+
+    // Ici, je créé différents groupes, à partir de chaque valeur?. Sur le graph c'est toujours groupé par catégorie. Peut-être changer dans le rect,
+    // mais le problème c'est qu'à ce niveau-là je suis déjà sur mes valeurs et mes groupes sont faits.
+
+// If/Else  je créé width et scale, mais du coup j'veux un svg carré.
 
     // Création des rectangles
 
-    group.selectAll("rect")
-        .data(d => d.Value)
-        .join(
-            enter => enter.append("rect")
-                          .attr("class", "bar"),
-            update => update,
-            exit => exit.remove()
-        )
-        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
-        .attr("y", d => y_scale(d.value))
-        .attr("width", (x_scale.bandwidth() / taille) - varPadding)
-        .attr("height", d => height - y_scale(d.value) - 10)
-        .style("fill", d => echelle_couleurs(d.parents))
+    if (vertical_bar == true) {
+        group.selectAll("rect")
+            .data(d => d.Value)
+            .join(
+                enter => enter.append("rect")
+                            .attr("class", "bar"),
+                update => update,
+                exit => exit.remove()
+            )
+            .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
+            .attr("y", d => y_scale(d.value))
+            .attr("width", (x_scale.bandwidth() / taille) - varPadding)
+            .attr("height", d => height - y_scale(d.value) - 10)
+            .style("fill", d => echelle_couleurs(d.parents))
         //.on("mouseover", handleMouseOver)
         //.on("mouseout", handleMouseOut)
-
-    // Hauteur des rectangles
-
-    group.selectAll("text")
-        .data(d => d.Value)
-        .join(
-            enter => enter.append("text").text((d => d.value))
-                          .attr("class", "text"),
-            update => update,
-            exit => exit.remove()
-        )
-	    .attr("fill","black")
-        .attr("text-anchor", "start")
-        .style("font", "12px times")
-        .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+        group.selectAll("text")
+            .data(d => d.Value)
+            .join(
+                enter => enter.append("text").text((d => d.value))
+                            .attr("class", "text"),
+                update => update,
+                exit => exit.remove()
+            )
+	        .attr("fill","black")
+            .attr("text-anchor", "start")
+            .style("font", "12px times")
+            .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
         // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
-        .attr("y", d => y_scale(d.value) - 2)
+            .attr("y", d => y_scale(d.value) - 2)
+
+    } else {
+        group.selectAll("rect")
+            .data(d => d.Value)
+            .join(
+                enter => enter.append("rect")
+                            .attr("class", "bar"),
+                update => update,
+                exit => exit.remove()
+            )
+            .attr("y", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
+            .attr("x", d => y_scale(d.value))
+            .attr("height", (x_scale.bandwidth() / taille) - varPadding)
+            .attr("width", d => height - y_scale(d.value) - 10)
+            .style("fill", d => echelle_couleurs(d.parents))
+        group.selectAll("text")
+            .data(d => d.Value)
+            .join(
+                enter => enter.append("text").text((d => d.value))
+                              .attr("class", "text"),
+                update => update,
+                exit => exit.remove()
+            )
+            .attr("fill","black")
+            .attr("text-anchor", "start")
+            .style("font", "12px times")
+            .attr("y", d => x_scale(d.parents) + (d.incr+0.7)*(x_scale.bandwidth() / taille)) // On a la taille avec x_scale(d.parents) et on se déplace à chaque catégorie, pas à chaque élément.
+            // Il faudrait pouvoir augmenter de 1 le x_scale.bandwith à chaque valeur, pas chaque catégorie.
+            .attr("x", d => y_scale(d.value) - 15)
+    
+    }
 
     // Légende
 
@@ -148,6 +182,6 @@ const svg_creator = (donnees, couleurs = [0]) => {
 */
 }
 
-svg_creator(databis, color)
+svg_creator(databis, color, false)
 
 // Prochaine tâche : mouseover
