@@ -24,39 +24,46 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
     const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)  
-
     let y_scale   
+    try {
 
-    if (!is_log) {
-        y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 15])
-    } else {
-        y_scale = d3.scaleLog().domain([1, domaine]).range([longueur, 15]) 
+        if (!is_log) {
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 15])
+        } else {
+            y_scale = d3.scaleLog().domain([1, domaine]).range([longueur, 15]) 
+        }
+    } catch (error){
+        console.error("is_log n'est pas un boolean", error)
     }
-
-    // Transformation des données
-
     let exploitable = []
     let keys = []
     let color = []
-    donnees.forEach(d => {
-        let object = {"Category" : d.category}
-        object["Value"] = []
+    // Transformation des données
+    try {
 
-        for (let i = 0; i < d.values.length ; i++) {
-            object.Value.push({"value" : d.values[i], "parents" : d.category, "color" : d.fill, "incr" : i})
-        }
+        donnees.forEach(d => {
+            let object = {"Category" : d.category}
+            object["Value"] = []
 
-        exploitable.push(object)
-        keys.push(object.Category)
-        if (couleurs[0] === 0) {
-            let couleurs = {"color" : d.fill}
-            color.push(couleurs.color)
-        } else {
-            color = couleurs
-        }
-    })
+            for (let i = 0; i < d.values.length ; i++) {
+                object.Value.push({"value" : d.values[i], "parents" : d.category, "color" : d.fill, "incr" : i})
+            }
 
-    let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(couleurs)
+            exploitable.push(object)
+            keys.push(object.Category)
+
+            if (couleurs[0] === 0) {
+                let couleurs = {"color" : d.fill}
+                color.push(couleurs.color)
+            } else {
+                color = couleurs
+            }
+        })
+    } catch (error) {
+        console.error("Le dataset n'est pas au bon format : ", error)
+    }
+
+    let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(color)
 
     let group = svg.selectAll("g")
         .data(exploitable)
@@ -129,7 +136,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             .style("font", "12px times")
             .attr("y", d => x_scale(d.parents) + (d.incr+0.7)*(x_scale.bandwidth() / taille))
             .attr("x", d => longueur - (y_scale(d.value)))
-    
     }
 
     // Légende
@@ -140,14 +146,14 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
         .attr("cx", function(d,i){ return 15 + i*75})
         .attr("cy", longueur)
         .attr("r", 7)
-        .style("fill", (d,i) => color[i])
+        .style("fill", (d, i) => color[i])
 
     svg.selectAll("mylabels")
         .data(keys).enter()
         .append("text")
         .attr("x", function(d,i){ return 25 + i*75})
         .attr("y", longueur)
-        .style("fill", (d,i) => color[i])
+        .style("fill", (d, i) => color[i])
         .text(function(d){ return d})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
