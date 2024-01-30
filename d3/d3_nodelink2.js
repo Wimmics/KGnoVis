@@ -38,8 +38,8 @@ const height = 350 - margin.top - margin.bottom
 const svg = d3.select("#d3_demo2")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
-.append("g")
-  .attr("transform", `translate(${margin.left}, ${margin.top})`)
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`)
 
 function test_node_link(data) {
 
