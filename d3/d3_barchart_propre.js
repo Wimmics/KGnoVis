@@ -18,20 +18,28 @@ function handleMouseOut() {
     d3.select(this).attr({fill : color})
 }
 */
-// Mettre un "if" couleurs = None : alors création de color, sinon on garde couleurs.
+// Créer des labels, un par valeur de len(value), avec un nom particulier
 
-const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
+
+const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false) => {
 
     // Création des constantes du graphique et de ses contours
     const longueur = 380
     const taille = donnees.length
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const varPadding = 1
-    const domaine = Math.max(...donnees.map(d => Math.max(...d.values)))
+    const domaine = Math.max(...donnees.map(d => Math.max(...d.values)*1.05))
 
     const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
-    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)      
-    const y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 15]) 
+    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)  
+
+    let y_scale   
+
+    if (!is_log) {
+        y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 15])
+    } else {
+        y_scale = d3.scaleLog().domain([1, domaine]).range([longueur, 15]) 
+    }
 
     // Transformation des données
 
@@ -58,8 +66,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
 
     let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(couleurs)
 
-    console.log(echelle_couleurs("Flower"))
-
     let group = svg.selectAll("g")
         .data(exploitable)
         .join(
@@ -69,10 +75,13 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
             exit => exit.remove()
         )
 
+                
+    console.log(exploitable)
+    console.log(exploitable[0])
+    console.log(y_scale(5))
+
     // Ici, je créé différents groupes, à partir de chaque valeur?. Sur le graph c'est toujours groupé par catégorie. Peut-être changer dans le rect,
     // mais le problème c'est qu'à ce niveau-là je suis déjà sur mes valeurs et mes groupes sont faits.
-
-// If/Else  je créé width et scale, mais du coup j'veux un svg carré.
 
     // Création des rectangles
 
@@ -182,6 +191,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true) => {
 */
 }
 
-svg_creator(databis, color, false)
+svg_creator(databis, color, true, true)
 
 // Prochaine tâche : mouseover
