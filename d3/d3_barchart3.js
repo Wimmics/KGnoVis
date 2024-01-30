@@ -358,3 +358,37 @@ const prend_valeur = (donnees) => {
 
 
 //prend_valeur(databis)
+
+
+// Nécessité de changer la forme du dataset.
+
+/*
+function handleMouseOver() {
+    d3.select(this).attr({fill : "green"})
+}
+
+function handleMouseOut() {
+    d3.select(this).attr({fill : color})
+}
+*/
+
+    // Tests mouseon/mouseover
+/*
+    var tooltip = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .style("background", "#000")
+        .text("a simple tooltip")
+
+    d3.select("body")
+        .selectAll("div")
+        .data(donnees)
+        .enter().append("div")
+        .style("width", function(d) { return x_scale(d) + "px" })
+        .text(function(d) { return d }) 
+        .on("mouseover", function(d){tooltip.text(d); return tooltip.style("visibility", "visible")})
+        .on("mousemove", function(){return tooltip.style("top", (d3.event.pageX-10)+"px").style("left",(d3.event.pageY+10)+"px")})
+        .on("mouseout", function(){return tooltip.style("visibility", "hidden")})
+*/
