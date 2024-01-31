@@ -46,12 +46,12 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     // Transformation des données
     try {
 
-        donnees.forEach(d => {
+        donnees.forEach((d,i) => {
             let object = {"Label" : d.label}
             object["Value"] = []
 
-            for (let i = 0; i < d.values.length ; i++) {
-                object.Value.push({"value" : d.values[i], "parents" : d.label, "color" : d.fill, "incr" : i})
+            for (let j = 0; j < d.values.length ; j++) {
+                object.Value.push({"value" : d.values[j], "parents" : d.label, "color" : d.fill, "incr" : i})
             }
 
             exploitable.push(object)
@@ -69,6 +69,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     }
 
     let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(color)
+    let cat = 0;
 
 
 
@@ -89,9 +90,16 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     console.log(exploitable)
     console.log(exploitable[0].Label)
     console.log(x_scale(exploitable[0].Label))
-    console.log(x_scale(exploitable[1].Label))
+
+    let ecart = x_scale(exploitable[1].Label)-x_scale(exploitable[0].Label)
+    let origin = x_scale(exploitable[0].Label)
+    let growing = 0
+    console.log(ecart)
+
     console.log(x_scale.bandwidth())
     console.log(x_scale.bandwidth()/taille)
+    growing = growing + 1
+    console.log(growing)
     
     // L'objectif est d'augmenter de 200 à chaque barre, et de 32 à chaque catégorie.
     // x_scale(label) = 18 et 199 => endroit où débutent leurs parties. Problème : je veux pas que le 2ème commence là
@@ -109,7 +117,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
                 update => update,
                 exit => exit.remove()
             )
-            .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
+            .attr("x", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))   //x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
             .attr("y", d => y_scale(d.value))
             .attr("width", (x_scale.bandwidth() / taille) - varPadding)
             .attr("height", d => longueur - y_scale(d.value) - 10)
@@ -128,6 +136,8 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             .style("font", "12px times")
             .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
             .attr("y", d => y_scale(d.value) - 2)
+
+        
 
     } else {
         group.selectAll("rect")
@@ -181,5 +191,5 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
 }
 
-svg_creator(data_test, undefined, true, true)
+svg_creator(databis, undefined, true, true)
 
