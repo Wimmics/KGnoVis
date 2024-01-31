@@ -134,7 +134,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 	        .attr("fill","black")
             .attr("text-anchor", "start")
             .style("font", "12px times")
-            .attr("x", d => x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille))
+            .attr("x", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
             .attr("y", d => y_scale(d.value) - 2)
 
         
@@ -148,7 +148,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
                 update => update,
                 exit => exit.remove()
             )
-            .attr("y", d => (x_scale(d.parents) + d.incr*(x_scale.bandwidth() / taille)))
+            .attr("y", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
             .attr("x", 5)
             .attr("height", ((x_scale.bandwidth() / taille) - varPadding))
             .attr("width", d => (longueur - y_scale(d.value) - 10))
@@ -165,7 +165,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             .attr("fill","black")
             .attr("text-anchor", "start")
             .style("font", "12px times")
-            .attr("y", d => x_scale(d.parents) + (d.incr+0.7)*(x_scale.bandwidth() / taille))
+            .attr("y", (d,i) => 2.5*origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
             .attr("x", d => longueur - (y_scale(d.value)))
     }
 
@@ -191,5 +191,5 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
 }
 
-svg_creator(databis, undefined, true, true)
+svg_creator(databis, undefined, false, true)
 
