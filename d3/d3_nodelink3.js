@@ -26,6 +26,16 @@ const dataset = {
     {"source": 5, "target": 10}
   ]
 }
+
+let donnees
+donnees = fetch('nodelink-dataset.json')
+          .then(response => response.json())
+          .catch(error => {
+            console.error('Une erreur s\'est produite lors du chargement du fichier JSON :', error);
+          });
+
+console.log(donnees)
+
 let couleurs = ["green", "red"]
 
 function autonode(data, colors = [0], strength = -400) {
@@ -75,7 +85,7 @@ function autonode(data, colors = [0], strength = -400) {
 
 
 
-autonode(dataset)
+autonode(donnees)
 
 
 
