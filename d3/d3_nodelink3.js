@@ -37,15 +37,22 @@ let recup_data = async() => {
     })
   }
 
-let couleurs = ["green", "red"]
+let couleurs = ["gold", "green"]
 
-async function autonode(data, colors = [0], strength = -400) {
+async function autonode(data, colors = [], strength = -400) {
   
   const donnees = await data()
 
   const width = 380
   const height = 380
   const margin = {top: 5, right: 5, bottom: 5, left: 5}
+
+  let coloration
+  if (colors.length != 2) {
+    coloration = ["red", "steelblue"]
+  } else {
+    coloration = colors
+  }
 
   const svg = d3.select("#nodelink_auto")
     .attr("width", width + margin.left + margin.right)
@@ -55,13 +62,13 @@ async function autonode(data, colors = [0], strength = -400) {
   const link = svg.selectAll("line")
     .data(donnees.links)
     .join("line")
-    .style("stroke", "red")
+    .style("stroke", coloration[0])
 
   const node = svg.selectAll("circle")
     .data(donnees.nodes)
     .join("circle")
     .attr("r", 20)
-    .style("fill", "steelblue")
+    .style("fill", coloration[1])
     
   function ticked() {
     link
@@ -88,7 +95,7 @@ async function autonode(data, colors = [0], strength = -400) {
 
 
 
-autonode(recup_data)
+autonode(recup_data, couleurs, -200)
 
 
 
