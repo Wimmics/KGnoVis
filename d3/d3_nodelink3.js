@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const dataset = {
-  nodes: [
+  "nodes": [
     {"id": 1, "name": "A"},
     {"id": 2, "name": "B"},
     {"id": 3, "name": "C"},
@@ -13,7 +13,7 @@ const dataset = {
     {"id": 9, "name": "I"},
     {"id": 10, "name": "J"}
   ],
-  links: [
+  "links": [
     {"source": 1, "target": 2},
     {"source": 1, "target": 5},
     {"source": 1, "target": 6},
@@ -27,65 +27,68 @@ const dataset = {
   ]
 }
 
-let donnees
-donnees = fetch('nodelink-dataset.json')
-          .then(response => response.json())
-          .catch(error => {
-            console.error('Une erreur s\'est produite lors du chargement du fichier JSON :', error);
-          });
 
-console.log(donnees)
+let recup_data = async() => {
+  return await fetch('nodelink-dataset.json')
+    .then(response => response.json())
+    .then(data =>  data)
+    .catch(error => {
+      console.error('Une erreur s\'est produite lors du chargement du fichier JSON :', error)
+    })
+  }
 
 let couleurs = ["green", "red"]
 
-function autonode(data, colors = [0], strength = -400) {
-    const width = 380
-    const height = 380
-    const margin = {top: 5, right: 5, bottom: 5, left: 5}
+async function autonode(data, colors = [0], strength = -400) {
+  
+  const donnees = await data()
 
-    const svg = d3.select("#nodelink_auto")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-          .append("g")
+  const width = 380
+  const height = 380
+  const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
-    const link = svg.selectAll("line")
-        .data(data.links)
-        .join("line")
-        .style("stroke", "red")
+  const svg = d3.select("#nodelink_auto")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
 
-    const node = svg.selectAll("circle")
-        .data(data.nodes)
-        .join("circle")
-        .attr("r", 20)
-        .style("fill", "steelblue")
+  const link = svg.selectAll("line")
+    .data(donnees.links)
+    .join("line")
+    .style("stroke", "red")
+
+  const node = svg.selectAll("circle")
+    .data(donnees.nodes)
+    .join("circle")
+    .attr("r", 20)
+    .style("fill", "steelblue")
     
-    function ticked() {
-        link
-            .attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; })
+  function ticked() {
+    link
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; })
     
-        node
-             .attr("cx", function (d) { return d.x+6; })
-             .attr("cy", function(d) { return d.y-6; })
-    }
+      node
+      .attr("cx", function (d) { return d.x+6; })
+      .attr("cy", function(d) { return d.y-6; })
+  }
 
-    const simulation = d3.forceSimulation(data.nodes)       
-      .force("link", d3.forceLink()                      
-            .id(function(d) { return d.id; })                
-            .links(data.links)                                 
-      )
-      .force("charge", d3.forceManyBody().strength(strength))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .on("end", ticked)
+  const simulation = d3.forceSimulation(donnees.nodes)       
+    .force("link", d3.forceLink()                      
+      .id(function(d) { return d.id; })                
+      .links(donnees.links)                                 
+    )
+    .force("charge", d3.forceManyBody().strength(strength))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .on("end", ticked)
     
-
 }
 
 
 
-autonode(donnees)
+autonode(recup_data)
 
 
 
