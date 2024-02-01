@@ -39,12 +39,9 @@ let recup_data = async() => {
 
 let couleurs = ["gold", "green"]
 
-async function autonode(data, colors = [], strength = -400) {
+async function autonode(data, colors = [], strength = -400, width = 380, height = 380) {
   
   const donnees = await data()
-
-  const width = 380
-  const height = 380
   const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
   let coloration
