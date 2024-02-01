@@ -18,7 +18,39 @@
             <h1>Exemple de Barchart: Une variable pour les catégories</h1>
         </section>
         <section class="box">
-            
+            <div class="box-left">
+                <div id="ex-pie" class="chart-div"></div>
+            </div>
+            <div class="box-right">
+                <div id="simple-bar" class="chart-div"></div>
+            </div>
+        </section>
+        <section class="box">
+            <div class="box-left">
+                <div id="simple-bar-row" class="chart-div"></div>
+            </div>
+            <div class="box-right">
+                <div id="ex-bar1" class="chart-div"></div>
+            </div>
+        </section>
+        <section class="box">
+            <div class="box-left">
+                <div id="ex-bar2" class="chart-div"></div>
+            </div>
+            <div class="box-right">
+                <div id="ex-bar3" class="chart-div"></div>
+            </div>
+        </section>
+        <section class="box">
+            <div class="box-left">
+                <div class="chart-div" id="stacked-bar"></div>
+            </div>
+            <div class="box-right">
+
+            </div>
+        </section>
+        
+        <section class="box">
             <div class="box-left">
                 <h2>SPARQL Request Dekalog 1 : Nombre de features supportées par les endpoints pour les 2 versions de la norme SPARQL</h2>
                 <p>
@@ -32,12 +64,12 @@
                 <pre class="code-block">
 <code class="language-sparql line-numbers" id="sparql-dekalog1">SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activity) AS ?count) {
     GRAPH ?g {
-        { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
-        UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
-        UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
-        ?metadata <http://ns.inria.fr/kg/index#curated> ?curated, ?dataset .
-        { ?dataset <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity . }
-        UNION { ?metadata <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity .}
+        { ?curated &lt;http://www.w3.org/ns/sparql-service-description#endpoint&gt; ?endpoint . }
+        UNION { ?curated &lt;http://rdfs.org/ns/void#sparqlEndpoint&gt; ?endpoint . }
+        UNION { ?curated &lt;http://www.w3.org/ns/dcat#endpointURL&gt; ?endpoint . }
+        ?metadata &lt;http://ns.inria.fr/kg/index#curated&gt; ?curated, ?dataset .
+        { ?dataset &lt;http://www.w3.org/ns/prov#wasGeneratedBy&gt; ?activity . }
+        UNION { ?metadata &lt;http://www.w3.org/ns/prov#wasGeneratedBy&gt; ?activity .}
         FILTER(CONTAINS(str(?activity), ?sparqlNorm))
         VALUES ?sparqlNorm { "SPARQL10" "SPARQL11" }
     }
@@ -197,11 +229,78 @@ loadChartViz("dekalog-2", parameters2)</code>
         <section class="chart-section">
             <h1>Node-link Chart example</h1>
             <div class="box">
-                <div class="box-left"></div>
-                <div class="box-right"></div>
+                <div class="box-left">
+                    <h2>Exemple: Quelles les relations hommes animals</h2>
+                    <p>
+                        <u><b>Visualisation :</b></u> graphe
+                    </p>
+                    <p>
+                        <u><b>Remarques :</b></u> Concernant les anthroponymes, il y a des hommes ainsi que des noms de lieu.
+                    </p>
+                </div>
+                <div class="box-right">
+                    <pre>
+<code class="language-sparql line-numbers">SELECT DISTINCT ?paragraph 
+	(str(?name_animal) as ?animal)
+	(str(?name_relation) as ?relationship)
+	(str(?name_anthro) as ?anthroponyme) 
+WHERE {
+  ?annotation1 a oa:Annotation; oa:hasBody ?animal;
+	oa:hasTarget [ oa:hasSource ?paragraph;
+      oa:hasSelector [ oa:exact ?mention_animal]].
+
+  ?annotation2 oa:hasBody ?relation;
+        oa:hasTarget [oa:hasSource ?paragraph;
+                      oa:hasSelector [ oa:exact ?mention_relation]].
+
+   ?annotation3 oa:hasBody ?anthro;
+        oa:hasTarget [ oa:hasSource ?paragraph;
+                       oa:hasSelector [oa:exact ?mention_anthro]].
+
+  ?animal a skos:Concept;
+       skos:prefLabel ?name_animal.
+  ?animal_collection a skos:Collection;
+       skos:prefLabel "Ancient class"@en;
+       skos:member ?animal.
+
+  ?relation skos:prefLabel ?name_relation;
+     	            skos:broader+ ?relation_generique.
+  ?relation_generique skos:prefLabel  "special relationship"@en.
+
+ ?anthro skos:prefLabel ?name_anthro.
+ ?anthro_collection skos:prefLabel ?anthro_collection_name;
+	skos:member ?anthro.
+
+  FILTER (lang(?name_animal) = "en").
+  FILTER (lang(?name_relation) = "en")
+  FILTER (lang(?name_anthro) = "en")
+  FILTER (?anthro_collection_name in ("Place"@en, "Anthroponym"@en))
+}
+ORDER BY ?paragraph    
+</code>
+                    </pre>
+                </div>
             </div>
             <div class="box">
-                <div class="box-left"></div>
+                <div class="box-left">
+                    <pre>
+<code class="language-javascript line-numbers">const parameters4 = {
+    endpoint: "http://54.36.123.165:8890/sparql",
+    query: query_4,
+    type: "graph",
+    animation: false,
+    title: "Relationship between human, place and animal",
+    config: [
+        {
+            source:"animal",
+            target:"anthroponyme",
+            label:"relationship"
+        }
+    ]
+}
+loadChartViz("zoomathia", parameters4);</code>
+                    </pre>
+                </div>
                 <div class="box-right">
                     <div id="zoomathia" class="chart-div"></div>
                 </div>
@@ -209,7 +308,13 @@ loadChartViz("dekalog-2", parameters2)</code>
         </section>
         <section class="chart-section">
             <h1>Tree map example</h1>
-            <div id="tree_map" class="chart-div"></div>
+            <dib class="box">
+                <div class="box-left">
+                    <div id="deka-node" class="chart-div"></div>
+                </div>
+                <div class="box-right">$</div>
+            </dib>
+            
         </section>
     </body>
 </html>
