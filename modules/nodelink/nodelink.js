@@ -1,7 +1,7 @@
 const buildLink = (result, config, nodes) => {
     let values = []
     for(const row of result["results"]["bindings"]){
-        for(const conf of config){
+        for(const conf of config.config){
             let id_source
             nodes.forEach(node => {
                 if(node.name === row[conf.source]["value"]){
@@ -15,9 +15,18 @@ const buildLink = (result, config, nodes) => {
                     id_target = node.id
                 }
             })
-            values.push(
-                {source : id_source, target: id_target, label: {show: false, formatter: "{c}"}, value: row[conf.label]["value"]}
-            )
+            let obj = {
+                source : id_source,
+                target: id_target,
+                //label: {show: false, formatter: "{c}"},
+                value: result["head"]["vars"].includes(conf.label) ? row[conf.label]["value"] : conf.label,
+            }
+            if(config.oriented){
+                obj["lineStyle"] = {
+                    curvness: 0.2
+                }
+            }
+            values.push(obj)
         }
     }
 
@@ -71,7 +80,7 @@ const buildNodes = (result, config) => {
                     borderType : 'solid',
                     borderColor : "grey"
                 },
-                label : {show : true}
+                //label : {show : true}
             }
 
             if(!(nodeAlreadyExist(submited_node_1, nodes))){
@@ -88,7 +97,7 @@ const buildNodes = (result, config) => {
                     borderType : 'solid',
                     borderColor : "black"
                 },
-                label : {show : true}
+                //label : {show : true}
             }
 
             if(!(nodeAlreadyExist(submited_node_2, nodes))){
@@ -101,7 +110,7 @@ const buildNodes = (result, config) => {
 
 const makeNodeLinkChartOption = (data, option, parameters) => {
     const nodes = buildNodes(data, parameters.config)
-    const edges = buildLink(data, parameters.config, nodes)
+    const edges = buildLink(data, parameters, nodes)
     const categories = [parameters.config[0].source, parameters.config[0].target]
 
     option["series"] = [
@@ -119,8 +128,8 @@ const makeNodeLinkChartOption = (data, option, parameters) => {
             },
             force : {
                 initLayout : null,
-                repulsion : 1000,
-                gravity : 0.2,
+                repulsion : 100000,
+                gravity : 8,
                 layoutAnimation: parameters.animation
             }
         }
