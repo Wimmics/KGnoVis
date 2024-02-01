@@ -10,9 +10,8 @@ const databis = [
 
 const color = ["black", "crimson", "silver", "gold", "steelblue"]
 
-const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, is_stacked = false) => {
+const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, is_stacked = false, longueur = 380) => {
 
-    const longueur = 380
     const taille = Math.max(donnees.length, 5)
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const varPadding = 1
@@ -39,7 +38,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     // Transformation des données
     try {
-
         donnees.forEach((d,i) => {
             let object = {"Label" : d.label}
             object["Value"] = []
@@ -65,15 +63,32 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(color)
 
 
+/*
     const stackedData = d3.stack()
     .keys(keys)
-    .offset(d3.stackOffsetDiverging) // Vous pouvez également utiliser d3.stackOffsetNone, d3.stackOffsetSilhouette, etc.
-    .order(d3.stackOrderNone) // Vous pouvez également utiliser d3.stackOrderAscending ou d3.stackOrderDescending
+    .offset(d3.stackOffsetDiverging)
+    .order(d3.stackOrderNone)
     (donnees)
-
+*/
     console.log(exploitable)
+    const reformattedData = exploitable.map(d => {
+        return {
+          label: d.Label,
+          values: d.Value.map(v => v.value)
+        }
+      })
+      // J'ai vraiment pas compris comment fonctionne le stackedchart...
+      
+      const stack = d3.stack()
+        .keys(["values"])
+        .order(d3.stackOrderNone) 
+        .offset(d3.stackOffsetNone)
+        (reformattedData)
+
+    
+    console.log(reformattedData)
     console.log(keys)
-    console.log(stackedData)
+    console.log(stack)
 
     let group = svg.selectAll("g")
         .data(exploitable)
