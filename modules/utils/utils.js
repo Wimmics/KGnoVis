@@ -3,8 +3,16 @@ const displayCode = (tag, text) => {
 }
 
 const executeSPARQLRequest = async (endpoint, query) => {
-    const url = endpoint + "?query=" + encodeURIComponent(query) + "&format=json";
-    return await fetch(url).then( response => response.json()).then(data => {return data})
+    localStorage.clear()
+    const url = `${endpoint}?query=${encodeURIComponent(query)}&format=json`;
+    let result_data = await fetch(url, {
+        headers: {
+            Accept: "application/sparql-results+json"
+        }  
+    }).then( 
+        response => response.json()
+        ).then(data => data)
+    return result_data
 }
 
 export { executeSPARQLRequest };
