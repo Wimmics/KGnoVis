@@ -44,6 +44,14 @@ const nodeAlreadyExist = (node, nodesList) => {
     return false;
 }
 
+const getColorNode = (name, config) => {
+    for(let option of config.options){
+        if(option.name === name){
+            return option.color
+        }
+    }
+}
+
 const increaseSizeOfNode = (node, nodesList, size) => {
     let updateList = []
 
@@ -65,19 +73,19 @@ const increaseSizeOfNode = (node, nodesList, size) => {
     return updateList
 }
 
-const buildNodes = (result, config) => {
+const buildNodes = (result, parameters) => {
     const nodes = []
-
+    let color
     for(const row of result["results"]["bindings"]){
-        for(const conf of config){
-
+        for(const conf of parameters.config){
+            color = parameters.options ? getColorNode(conf.source, parameters) : ""
             let submited_node_1 = {
                 id : row[conf.source]["value"],
                 name : row[conf.source]["value"],
                 category: 0,
                 symbolSize : 40,
                 itemStyle : {
-                    color : "#c71969",
+                    color: color,
                     borderType : 'solid',
                     borderColor : "grey"
                 },
@@ -87,14 +95,14 @@ const buildNodes = (result, config) => {
             if(!(nodeAlreadyExist(submited_node_1, nodes))){
                 nodes.push(submited_node_1)
             }
-
+            color = parameters.options ? getColorNode(conf.target, parameters) : ""
             let submited_node_2 = {
                 id : row[conf.target]["value"],
                 name : row[conf.target]["value"],
                 category: 1,
                 symbolSize : 40,
                 itemStyle : {
-                    color: "green",
+                    color: color,
                     borderType : 'solid',
                     borderColor : "black"
                 },
@@ -110,7 +118,7 @@ const buildNodes = (result, config) => {
 }
 
 const makeNodeLinkChartOption = (data, option, parameters) => {
-    const nodes = buildNodes(data, parameters.config)
+    const nodes = buildNodes(data, parameters)
     const edges = buildLink(data, parameters, nodes)
     const categories = [parameters.config[0].source, parameters.config[0].target]
 

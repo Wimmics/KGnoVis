@@ -77,9 +77,9 @@ const parameters_bar_2 = {
     type: 'bar',
     title: "Number of paper and number of person per team",
     config : [{
-        category: "nb paper",
-        label: "teamname",
-        value: "nb_paper"
+            category: "nb paper",
+            label: "teamname",
+            value: "nb_paper"
         },
         {
             category: "nb person",
@@ -348,3 +348,45 @@ const parameters_node_deka = {
     }]
 }
 loadChartViz("deka-node", parameters_node_deka)
+
+const query_oriented = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix ex:      <http://www.example.org/ontology#>
+
+SELECT ?teamname ?person_name ?paper WHERE {
+      ?paper ex:author ?person;
+              ex:year ?year.
+      ?person ex:belong ?team;
+              ex:Name ?person_name.
+      ?team ex:Name ?teamname.
+}
+`;
+
+const parameters_oriented = {
+    endpoint: endpoint_local,
+    query: query_oriented,
+    oriented: true,
+    type: 'graph',
+    config: [{
+        source: "teamname",
+        target: "person_name",
+        label: "belong"
+    },{
+        source: "person_name",
+        target: "paper",
+        label: "author"
+    }
+],
+    options: [{
+        name: "teamname",
+        color: "red"
+    },{
+        name: "person_name",
+        color: "blue"
+    },{
+        name: "paper",
+        color: "green"
+    }
+]
+}
+loadChartViz("oriented-simple", parameters_oriented)
