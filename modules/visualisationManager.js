@@ -18,7 +18,7 @@ const makeMandatoryOption = (parameters) => {
             text : parameters.title
         },
         dataZoom: {
-            type: 'inside',
+            type: 'inside'
         },
         tooltip : {},
         legend : {
@@ -73,4 +73,5 @@ const loadChartViz = async (context, parameters) => {
     nodeChart.hideLoading();
     nodeChart.setOption(option)
 }
+
 export default loadChartViz;
