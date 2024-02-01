@@ -2,29 +2,30 @@ const buildLink = (result, config, nodes) => {
     let values = []
     for(const row of result["results"]["bindings"]){
         for(const conf of config.config){
-            let id_source
-            nodes.forEach(node => {
+            let id_source, id_target;
+
+            for(let node of nodes){
                 if(node.name === row[conf.source]["value"]){
                     id_source = node.id
                 }
-            })
 
-            let id_target
-            nodes.forEach(node => {
                 if(node.name === row[conf.target]["value"]){
                     id_target = node.id
                 }
-            })
+            }
+
             let obj = {
                 source : id_source,
                 target: id_target,
                 //label: {show: false, formatter: "{c}"},
                 value: result["head"]["vars"].includes(conf.label) ? row[conf.label]["value"] : conf.label,
             }
+
             if(config.oriented){
-                obj["lineStyle"] = {
-                    curvness: 0.2
-                }
+                obj["symbolSize"] = 10
+                /*obj["lineStyle"] = {
+                    curveness: 0.2
+                }*/
             }
             values.push(obj)
         }
@@ -122,6 +123,7 @@ const makeNodeLinkChartOption = (data, option, parameters) => {
             layout : 'force',
             roam : true,
             categories: categories,
+            edgeSymbol: parameters.oriented ? ['none', 'arrow'] : ['none','none'],
             emphasis : {
                 focus : 'adjacency',
                 scale : true
