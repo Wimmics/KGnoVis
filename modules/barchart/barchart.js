@@ -41,7 +41,10 @@ const labelCategoryLinking = (results, config) => {
     let categories = []
 
     config.forEach(conf => {
-        if(isSparqlVariable(header, conf.category)){
+        if(!conf.hasOwnProperty("category")){
+            categories.push(`${conf.label} -> ${conf.value}`);
+            conf["category"] = `${conf.label} -> ${conf.value}`
+        }else if(isSparqlVariable(header, conf.category)){
             categories.push(...labelExtraction(body, conf.category));
         }else{
             categories.push(conf.category);
@@ -92,7 +95,6 @@ const buildSeries = (results, config) => {
             if(element){
                 element.data.push({name : key, value: parseInt(data[key][subkey])})
             }else{
-                console.log(config)
                 let obj = {
                     name: subkey,
                     type : 'bar',
@@ -115,24 +117,16 @@ const buildSeries = (results, config) => {
 
 const makeBarChartOption = (data, option, parameters) => {
     const [label, series_value] = buildSeries(data, parameters);
+    const [axis1, axis2] = parameters.display === "row"?["xAxis", "yAxis"]:["yAxis", "xAxis"]
 
-    if(parameters.display === "row"){
-        option["xAxis"] = [{
-            type: parameters.hasOwnProperty("scale")?parameters.scale:"value"
-        }]
-        option["yAxis"] = [{
-            type : "category",
-            data: label,
-        }]
-    }else{
-        option["yAxis"] = [{
-            type: parameters.hasOwnProperty("scale")?parameters.scale:"value"
-        }]
-        option["xAxis"] = [{
-            type : "category",
-            data: label,
-        }]
-    }
+    option[axis1] = [{
+        type: parameters.hasOwnProperty("scale")?parameters.scale:"value"
+    }]
+    option[axis2] = [{
+        type : "category",
+        data: label,
+    }]
+    
     option["series"] = series_value
 }
 
