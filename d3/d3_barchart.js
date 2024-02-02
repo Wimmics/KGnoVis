@@ -89,7 +89,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             .attr("x", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
             .attr("y", d => y_scale(d.value))
             .attr("width", (x_scale.bandwidth() / taille) - varPadding)
-            .attr("height", d => longueur - y_scale(d.value) - 10)
+            .attr("height", d => longueur - y_scale(d.value))
             .style("fill", d => echelle_couleurs(d.parents))
 
         group.selectAll("text")
@@ -104,7 +104,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             .attr("text-anchor", "start")
             .style("font", "12px times")
             .attr("x", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
-            .attr("y", d => y_scale(d.value) - 2)
+            .attr("y", d => y_scale(d.value))
 
     } else {
         group.selectAll("rect")
