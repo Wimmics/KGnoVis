@@ -1,11 +1,11 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const databis = [
-    {label :"Clouds", values : [5, 8, 12 , 7, 9], fill : "black"},
-    {label :"Flower", values : [10, 20, 15, 25, 30], fill : "crimson"},
-    {label :"Snow", values :  [6, 8, 2, 4, 5], fill : "silver"},
-    {label :"Wind", values :  [20, 30, 10, 12, 18], fill : "gold"},
-    {label :"Moon", values :  [14, 16, 24, 8, 17], fill : "lightblue"}
+    {category :"Clouds", values : [5, 8, 12 , 7, 9], fill : "black"},
+    {category :"Flower", values : [10, 20, 15, 25, 30], fill : "crimson"},
+    {category :"Snow", values :  [6, 8, 2, 4, 5], fill : "silver"},
+    {category :"Wind", values :  [20, 30, 10, 12, 18], fill : "gold"},
+    {category :"Moon", values :  [14, 16, 24, 8, 17], fill : "lightblue"}
 ]
 
 const color = ["black", "crimson", "silver", "gold", "steelblue"]
@@ -18,7 +18,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     const domaine = Math.max(...donnees.map(d => Math.max(...d.values)*1.05))
 
     const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
-    const x_scale = d3.scaleBand().domain(donnees.map(d => d.label)).range([0, longueur]).padding(0.1) 
+    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1) 
     let y_scale
 
     try {
@@ -39,15 +39,15 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     // Transformation des données
     try {
         donnees.forEach((d,i) => {
-            let object = {"Label" : d.label}
+            let object = {"Category" : d.category}
             object["Value"] = []
 
             for (let j = 0; j < d.values.length ; j++) {
-                object.Value.push({"value" : d.values[j], "parents" : d.label, "color" : d.fill, "incr" : i})
+                object.Value.push({"value" : d.values[j], "parents" : d.category, "color" : d.fill, "incr" : i})
             }
 
             exploitable.push(object)
-            keys.push(object.Label)
+            keys.push(object.Category)
 
             if (couleurs[0] === 0) {
                 let couleurs = {"color" : d.fill}
@@ -73,7 +73,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     console.log(exploitable)
     const reformattedData = exploitable.map(d => {
         return {
-          label: d.Label,
+          category: d.Category,
           values: d.Value.map(v => v.value)
         }
       })
@@ -101,8 +101,8 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     // Création des rectangles
 
-    let ecart = x_scale(exploitable[1].Label)-x_scale(exploitable[0].Label)
-    let origin = x_scale(exploitable[0].Label)
+    let ecart = x_scale(exploitable[1].Category)-x_scale(exploitable[0].Category)
+    let origin = x_scale(exploitable[0].Category)
 
     if (vertical_bar == true) {
         group.selectAll("rect")
@@ -173,7 +173,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
         .attr("r", 7)
         .style("fill", (d, i) => color[i])
 
-    svg.selectAll("mylabels")
+    svg.selectAll("mycategorys")
         .data(keys).enter()
         .append("text")
         .attr("x", function(d,i){ return 25 + i*75})
