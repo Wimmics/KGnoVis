@@ -1,11 +1,11 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const databis = [
-    {category :"Clouds", values : [5, 8, 12 , 7, 9], fill : "black"},
-    {category :"Flower", values : [10, 20, 15, 25, 30], fill : "crimson"},
-    {category :"Snow", values :  [6, 8, 2, 4, 5], fill : "silver"},
-    {category :"Wind", values :  [20, 30, 10, 12, 18], fill : "gold"},
-    {category :"Moon", values :  [14, 16, 24, 8, 17], fill : "lightblue"}
+    {category :"Clouds", values : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}], fill : "black"},
+    {category :"Flower", values : [{value : 10, label : "Wolf"}, {value : 20, label : "Eagle"}, {value : 15, label : "Deer"}, {value : 25, label : "Lion"}, {value : 30, label : "Dragon"}], fill : "crimson"},
+    {category :"Snow", values :  [{value : 6, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 2, label : "Deer"}, {value : 4, label : "Lion"}, {value : 5, label : "Dragon"}], fill : "silver"},
+    {category :"Wind", values :  [{value : 20, label : "Wolf"}, {value : 30, label : "Eagle"}, {value : 10, label : "Deer"}, {value : 12, label : "Lion"}, {value : 18, label : "Dragon"}], fill : "gold"},
+    {category :"Moon", values :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}], fill : "lightblue"}
 ]
 
 const color = ["black", "crimson", "silver", "gold", "steelblue"]
@@ -15,7 +15,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     const taille = Math.max(donnees.length, 5)
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const varPadding = 1
-    const domaine = Math.max(...donnees.map(d => Math.max(...d.values)*1.05))
+    const domaine = d3.max(donnees, d => d3.max(d.values, e => e.value))
 
     const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
     const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1) 
@@ -43,7 +43,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             object["Value"] = []
 
             for (let j = 0; j < d.values.length ; j++) {
-                object.Value.push({"value" : d.values[j], "parents" : d.category, "color" : d.fill, "incr" : i})
+                object.Value.push({"value" : d.values[j].value, "labels" : d.values[j].label, "parents" : d.category, "color" : d.fill, "incr" : i})
             }
 
             exploitable.push(object)
@@ -62,34 +62,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(color)
 
-
-/*
-    const stackedData = d3.stack()
-    .keys(keys)
-    .offset(d3.stackOffsetDiverging)
-    .order(d3.stackOrderNone)
-    (donnees)
-*/
-    console.log(exploitable)
-    const reformattedData = exploitable.map(d => {
-        return {
-          category: d.Category,
-          values: d.Value.map(v => v.value)
-        }
-      })
-      // J'ai vraiment pas compris comment fonctionne le stackedchart...
-      
-      const stack = d3.stack()
-        .keys(["values"])
-        .order(d3.stackOrderNone) 
-        .offset(d3.stackOffsetNone)
-        (reformattedData)
-
-    
-    console.log(reformattedData)
-    console.log(keys)
-    console.log(stack)
-
     let group = svg.selectAll("g")
         .data(exploitable)
         .join(
@@ -103,6 +75,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     let ecart = x_scale(exploitable[1].Category)-x_scale(exploitable[0].Category)
     let origin = x_scale(exploitable[0].Category)
+
 
     if (vertical_bar == true) {
         group.selectAll("rect")

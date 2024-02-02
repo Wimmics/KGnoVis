@@ -27,7 +27,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     const varPadding = 1
     const domaine = Math.max(...donnees.map(d => Math.max(...d.values)*1.05))
 
-    const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const svg = d3.select("#test").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
     const x_scale = d3.scaleBand().domain(donnees.map(d => d.label)).range([0, longueur]).padding(0.1) 
     let y_scale   
     try {
@@ -87,19 +87,10 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     // Création des rectangles
 
-    console.log(exploitable)
-    console.log(exploitable[0].Label)
-    console.log(x_scale(exploitable[0].Label))
-
     let ecart = x_scale(exploitable[1].Label)-x_scale(exploitable[0].Label)
     let origin = x_scale(exploitable[0].Label)
     let growing = 0
-    console.log(ecart)
 
-    console.log(x_scale.bandwidth())
-    console.log(x_scale.bandwidth()/taille)
-    growing = growing + 1
-    console.log(growing)
     
     // L'objectif est d'augmenter de 200 à chaque barre, et de 32 à chaque catégorie.
     // x_scale(label) = 18 et 199 => endroit où débutent leurs parties. Problème : je veux pas que le 2ème commence là
@@ -191,5 +182,5 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
 }
 
-svg_creator(databis, undefined, false, true)
+svg_creator(databis, undefined, true, true)
 
