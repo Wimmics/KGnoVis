@@ -43,14 +43,11 @@ const makeMandatoryOption = (parameters) => {
  */
 const generateChart = (data, parameters) => {
     let option = makeMandatoryOption(parameters)
-    if (parameters.type === 'bar'){
-        makeBarChartOption(data, option, parameters)
-    } else if(parameters.type === 'pie') {
-        makePieChartOption(data, option, parameters)
-    } else if (parameters.type === 'graph'){
-        makeNodeLinkChartOption(data, option, parameters)
-    } else if (parameters.type === 'treemap'){
-        makeTreeMapChartOption(data, option, parameters)
+    switch (parameters.type){
+        case 'bar': makeBarChartOption(data, option, parameters); break;
+        case 'pie': makePieChartOption(data, option, parameters); break;
+        case 'graph': makeNodeLinkChartOption(data, option, parameters); break;
+        case 'treemap': makeTreeMapChartOption(data, option, parameters); break;
     }
     return option
 
@@ -63,15 +60,34 @@ const generateChart = (data, parameters) => {
  * @param {Parameters_object} parameters 
  */
 const loadChartViz = async (context, parameters) => {
-    let nodeChart = echarts.init(document.getElementById(context))
-    nodeChart.showLoading();
+    let visualisation = echarts.init(document.getElementById(context))
+    visualisation.showLoading();
 
     const data = await executeSPARQLRequest(parameters.endpoint, parameters.query);
-
     let option = generateChart(data, parameters)
 
-    nodeChart.hideLoading();
-    nodeChart.setOption(option)
+    visualisation.hideLoading();
+    visualisation.setOption(option)
+
+
+
+    visualisation.on('click', (params) => {
+        //Get the specific object
+        if(params.componentType === 'series'){
+            if(params.dataType === 'node'){
+                for(const serie of option.series){
+                    console.log(params.dataIndex)
+                    console.log(serie.data[params.dataIndex])
+                }
+            }else if(params.dataType === 'edge'){
+                for(const serie of option.series){
+                    console.log(params.dataIndex)
+                    console.log(serie.links[params.dataIndex])
+                }
+            }
+        }
+        //window.open(params.name)
+    })
 }
 
 export default loadChartViz;

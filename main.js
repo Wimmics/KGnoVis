@@ -1,33 +1,6 @@
 import loadChartViz from "./modules/visualisationManager.js";
 import { displayCode } from "./modules/utils/utils.js";
 
-
-const endpoint = "http://54.36.123.165:8890/sparql/";
-const query = `PREFIX oa:     <http://www.w3.org/ns/oa#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX schema:  <http://schema.org/>
-SELECT DISTINCT ?name_construction (COUNT(DISTINCT(?name_animal)) as ?nb)  WHERE {
-?annotation1 oa:hasBody ?animal ; oa:hasTarget [ oa:hasSource ?paragraph; oa:hasSelector [ oa:exact ?mention_animal]].
-?animal skos:prefLabel ?name_animal.
-?animal_collection a skos:Collection;
-skos:prefLabel "Ancient class"@en;
-skos:member ?animal.
-
-?annotation2 oa:hasBody ?construction;
-oa:hasTarget [oa:hasSource ?paragraph;
-    oa:hasSelector [oa:exact ?mention_construction]].
-?paragraph schema:text ?text.
-
-?construction skos:prefLabel ?name_construction;
-            skos:broader+ ?construction_generique.
-?construction_generique skos:prefLabel "house building"@en.
-
-FILTER NOT EXISTS {?x  skos:broader ?animal}
-FILTER (lang(?name_animal) = "en")
-FILTER (lang(?name_construction) = "en")
-}
-GROUP BY ?name_construction`;
-
 const endpoint_local = "http://localhost:8080/sparql";
 const query_ex_1 = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -263,7 +236,6 @@ const parameters = {
         label : "endpoint",
         value : "count"
     }]
-
 }
 loadChartViz("dekalog-1", parameters);
 displayCode("#parameters-dekalog1", parameters);
@@ -289,8 +261,7 @@ const parameters2 = {
         category : "nb properties",
         label : "endpointUrl",
         value : "properties"
-    }
-]
+    }]
 }
 loadChartViz("dekalog-2", parameters2)
 
@@ -315,14 +286,23 @@ const parameters4 = {
     type: "graph",
     animation: false,
     oriented: true,
+    display: 'force',
     title: "Relationship between human, place and animal",
     config: [
         {
             source:"animal",
             target:"anthroponyme",
-            label:"relationship"
+            relation:"relationship"
         }
-    ]
+    ],
+    options: [{
+        name: "animal",
+        color: "brown"
+    },{
+        name: "anthroponyme",
+        color: "purple"
+    }
+]
 }
 loadChartViz("zoomathia", parameters4);
 
@@ -340,11 +320,20 @@ const query_node_deka = `SELECT DISTINCT ?endpointUrl ?vocabulary {
 const parameters_node_deka = {
     endpoint: "http://prod-dekalog.inria.fr/sparql",
     query: query_node_deka,
+    title: "Vocabularies used by endpoint",
+    display: 'force',
     type: "graph",
     config: [{
         source:"endpointUrl",
         target:"vocabulary",
-        label: "use"
+        relation: "use"
+    }],
+    options: [{
+        name: "endpointUrl",
+        color: "blue"
+    },{
+        name: "vocabulary",
+        color: "red"
     }]
 }
 loadChartViz("deka-node", parameters_node_deka)
@@ -359,34 +348,33 @@ SELECT ?teamname ?person_name ?paper WHERE {
       ?person ex:belong ?team;
               ex:Name ?person_name.
       ?team ex:Name ?teamname.
-}
-`;
+}`;
 
 const parameters_oriented = {
     endpoint: endpoint_local,
     query: query_oriented,
-    oriented: true,
+    //oriented: true,
+    display: 'force',
     type: 'graph',
     config: [{
         source: "teamname",
         target: "person_name",
-        label: "belong"
+        show: true
     },{
         source: "person_name",
         target: "paper",
-        label: "author"
-    }
-],
+        relation: "author"
+    }],
     options: [{
         name: "teamname",
         color: "red"
     },{
         name: "person_name",
-        color: "blue"
+        color: "blue",
+        show:true
     },{
         name: "paper",
         color: "green"
-    }
-]
+    }]
 }
 loadChartViz("oriented-simple", parameters_oriented)
