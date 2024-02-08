@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/prism.css">
-        <script src="lib/echarts.js" defer></script>
+        <!--<script src="lib/echarts.js" defer></script>-->
+        <script src="lib/echarts.js"></script>
+        <script src="https://d3js.org/d3.v6.js"></script>
 
-        <!--<script src="visu.js" defer></script>-->
         <script src="lib/prism.js" defer></script>
         <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
         <script type="module" src="main.js" defer></script>
@@ -14,8 +15,11 @@
     </head>
 
     <body>
-        <section class="chart-section">
-            <h1>Exemple de Barchart: Une variable pour les catégories</h1>
+        <section class="box">
+            <div class="box-left">
+                <svg id="geomap" width="1024" height="660"></svg>
+            </div>
+            <div class="box-right"></div>
         </section>
         <section class="box">
             <div class="box-left">

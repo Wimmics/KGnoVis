@@ -354,12 +354,11 @@ const parameters_oriented = {
     endpoint: endpoint_local,
     query: query_oriented,
     //oriented: true,
-    display: 'force',
+    display: 'circular',
     type: 'graph',
     config: [{
         source: "teamname",
         target: "person_name",
-        show: true
     },{
         source: "person_name",
         target: "paper",
@@ -371,10 +370,37 @@ const parameters_oriented = {
     },{
         name: "person_name",
         color: "blue",
-        show:true
     },{
         name: "paper",
         color: "green"
     }]
 }
 loadChartViz("oriented-simple", parameters_oriented)
+
+const query_weKG = `PREFIX geo:        <http://www.w3.org/2003/01/geo/wgs84_pos#> 
+PREFIX weo:        <http://ns.inria.fr/meteo/ontology/> 
+PREFIX geosparql:  <http://www.opengis.net/ont/geosparql#> 
+PREFIX geof:       <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom:        <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT  ?label ?lat ?long ?coordinates WHERE {
+        ?x rdfs:label ?label ;
+           geosparql:hasGeometry [ geosparql:asWKT ?coordinates];
+           geo:lat ?lat; geo:long ?long .
+        BIND("Point(0.1413499 45.1423348)"^^geosparql:wktLiteral as ?Currentposition)
+        BIND (geof:distance(?coordinates,?Currentposition , uom:metre) as ?distance)        
+}
+ORDER BY ?distance`
+const parameters_geomap = {
+    endpoint: "http://weakg.i3s.unice.fr/sparql",
+    query: query_weKG,
+    title: "Geomap test",
+    type: 'map',
+    config:[{
+        latitude: "lat",
+        longitude: "long",
+        value: "coordinates",
+        label: "label"
+    }]
+}
+loadChartViz("geomap", parameters_geomap);

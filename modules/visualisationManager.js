@@ -1,6 +1,7 @@
 import {
     executeSPARQLRequest,
     makeBarChartOption,
+    makeDotMapOption,
     makeNodeLinkChartOption,
     makePieChartOption
  } from "./visualisationManagerDependencies.js";
@@ -41,13 +42,15 @@ const makeMandatoryOption = (parameters) => {
  * @param {Parameters_object} parameters 
  * @returns {Object_option}
  */
-const generateChart = (data, parameters) => {
+const generateChart = (context, data, parameters) => {
     let option = makeMandatoryOption(parameters)
     switch (parameters.type){
         case 'bar': makeBarChartOption(data, option, parameters); break;
         case 'pie': makePieChartOption(data, option, parameters); break;
         case 'graph': makeNodeLinkChartOption(data, option, parameters); break;
         case 'treemap': makeTreeMapChartOption(data, option, parameters); break;
+        case 'map': makeDotMapOption(context, data, option, parameters); break;
+        default: throw new Error("Not implemented yet.");
     }
     return option
 
@@ -60,11 +63,14 @@ const generateChart = (data, parameters) => {
  * @param {Parameters_object} parameters 
  */
 const loadChartViz = async (context, parameters) => {
-    let visualisation = echarts.init(document.getElementById(context))
+    let visualisation = echarts.init(document.getElementById(context), null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    })
     visualisation.showLoading();
 
     const data = await executeSPARQLRequest(parameters.endpoint, parameters.query);
-    let option = generateChart(data, parameters)
+    let option = generateChart(context, data, parameters)
 
     visualisation.hideLoading();
     visualisation.setOption(option)

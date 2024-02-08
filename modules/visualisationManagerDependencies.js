@@ -7,4 +7,7 @@ export { makeBarChartOption } from "./barchart/barchart.js";
 export {makePieChartOption } from "./piechart/piechart.js";
 
 /* Nodelink-chart dependencies */
-export { makeNodeLinkChartOption } from "./nodelink/nodelink.js"
+export { makeNodeLinkChartOption } from "./nodelink/nodelink.js";
+
+/* DotMap-chart dependencies */
+export { makeDotMapOption } from "./dotmap/DotMap.js";
