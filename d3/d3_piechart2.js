@@ -83,4 +83,4 @@ const svg_creator = (donnees, couleurs = [0], longueur = 350) => {
      
 }
 
-svg_creator(databis)
+svg_creator(databis, ["green", "steelblue", "gold", "gray", "crimson"])
