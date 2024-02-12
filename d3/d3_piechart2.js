@@ -10,9 +10,11 @@ const databis = [
 
 const svg_creator = (donnees, couleurs = [0], longueur = 350) => {
 
+    let pie = []
+    let data_pie = []
     try{
-        const pie = d3.pie().value(d => d.value)
-        const data_pie = pie(donnees)
+        pie = d3.pie().value(d => d.value)
+        data_pie = pie(donnees)
     } catch (error) {
         console.log("Le dataset ne peut être pie : ", error)
     }
