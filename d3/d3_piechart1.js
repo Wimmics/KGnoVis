@@ -66,7 +66,7 @@ const svg_creator = (donnees) => {
     // Generate the pie
     const pie = d3.pie()
 
-    console.log(pie(donnees))
+    //console.log(pie(donnees))
 
 //data
 //index
