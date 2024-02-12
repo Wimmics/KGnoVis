@@ -10,13 +10,19 @@ const databis = [
 
 const svg_creator = (donnees, couleurs = [0], longueur = 350) => {
 
+    try{
+        const pie = d3.pie().value(d => d.value)
+        const data_pie = pie(donnees)
+    } catch (error) {
+        console.log("Le dataset ne peut être pie : ", error)
+    }
     // Récupération du pie des données et de l'arc
-    const pie = d3.pie().value(d => d.value)
-    const data_pie = pie(donnees)
+    
     const radius = longueur / 2
+
     const arc = d3.arc()
-    .innerRadius(0)
-    .outerRadius(radius)
+        .innerRadius(0)
+        .outerRadius(radius)
 
     // Initialisation du svg
     const svg = d3.select("#d3_demo_bis")
