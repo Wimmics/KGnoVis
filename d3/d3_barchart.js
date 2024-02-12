@@ -24,9 +24,9 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     try {
 
         if (!is_log) {
-            y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 15])
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 60])
         } else {
-            y_scale = d3.scaleLog().domain([1, domaine]).range([longueur, 15]) 
+            y_scale = d3.scaleLog().domain([1, domaine]).range([longueur, 60]) 
         }
     } catch (error){
         console.error("is_log n'est pas un boolean", error)
@@ -89,7 +89,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             .attr("x", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
             .attr("y", d => y_scale(d.value))
             .attr("width", (x_scale.bandwidth() / taille) - varPadding)
-            .attr("height", d => longueur - y_scale(d.value))
+            .attr("height", d => longueur-10 - y_scale(d.value))
             .style("fill", d => echelle_couleurs(d.parents))
 
         group.selectAll("text")
@@ -104,7 +104,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             .attr("text-anchor", "start")
             .style("font", "12px times")
             .attr("x", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
-            .attr("y", d => y_scale(d.value))
+            .attr("y", d => y_scale(d.value) - 3)
 
     } else {
         group.selectAll("rect")
