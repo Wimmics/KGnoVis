@@ -8,9 +8,17 @@ const databis = [
     {category :"Moon", values :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}], fill : "lightblue"}
 ]
 
+const datatest = [
+    {group : "Wolf", Clouds : 5, Flower : 10, Snow : 6, Wind : 20, Moon : 14},
+    {group : "Eagle", Clouds : 8, Flower : 20, Snow : 8, Wind : 30, Moon : 16},
+    {group : "Deer", Clouds : 12, Flower : 15, Snow : 2, Wind : 10, Moon : 24},
+    {group : "Lion", Clouds : 7, Flower : 25, Snow : 4, Wind : 12, Moon : 8},
+    {group : "Dragon", Clouds : 9, Flower : 30, Snow : 5, Wind : 18, Moon : 17}   
+]
+
 const color = ["black", "crimson", "silver", "gold", "steelblue"]
 
-const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, is_stacked = false, longueur = 380) => {
+const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, longueur = 380) => {
 
     const taille = Math.max(donnees.length, 5)
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
@@ -18,6 +26,8 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     const domaine = d3.max(donnees, d => d3.max(d.values, e => e.value))
 
     const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+
+
     const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1) 
     let y_scale
 
@@ -176,5 +186,5 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
 }
 
-svg_creator(databis, color, true, true, true)
+svg_creator(databis, color)
 
