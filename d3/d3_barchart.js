@@ -27,7 +27,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
 
-
     const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1) 
     let y_scale
 
@@ -81,6 +80,36 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
         })
     })
 
+    let ecart = x_scale(exploitable[1].Category)-x_scale(exploitable[0].Category)
+    let origin = x_scale(exploitable[0].Category)
+
+// Go écrire une fonction pour x/y snif
+
+    function choix(letter, d = exploitable.Value) {
+        let width_true = (x_scale.bandwidth() / taille)
+        let height_true = y_scale(d.value)
+        let val_choisie = 0
+        console.log(d)
+        console.log(d.value)
+
+        if (vertical_bar === true) {
+            if (letter === "x") {
+                val_choisie = width_true
+            } else {
+                val_choisie = height_true
+            }
+
+        } else {
+            if (letter === "x") {
+                val_choisie = height_true
+            } else {
+                val_choisie = width_true
+            }
+        }
+
+        return val_choisie
+    }
+
     let group = svg.selectAll("g")
         .data(exploitable)
         .join(
@@ -92,99 +121,97 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     // Création des rectangles
 
-    let ecart = x_scale(exploitable[1].Category)-x_scale(exploitable[0].Category)
-    let origin = x_scale(exploitable[0].Category)
+    group.selectAll("rect")
+        .data(d => d.Value)
+        .join(
+            enter => enter.append("rect")
+                        .attr("class", "bar"),
+            update => update,
+            exit => exit.remove()
+        )
+        .attr("x", (d,i) => origin + i*ecart + d.incr*choix("x", d))
+        .attr("y", (d) => choix("y", d))
+        .attr("width", d => choix("x", d) - varPadding)
+        .attr("height", d => longueur-10 - choix("y", d))
+        .style("fill", d => echelle_couleurs(d.parents))
+/*
+    group.selectAll("text")
+        .data(d => d.Value)
+        .join(
+            enter => enter.append("text").text((d => d.value))
+                        .attr("class", "text"),
+            update => update,
+            exit => exit.remove()
+        )
+        .attr("fill","black")
+        .attr("text-anchor", "start")
+        .style("font", "12px times")
+        .attr("x", (d,i) => origin + i*ecart + d.incr*choix("x", d))
+        .attr("y", d => choix("y", d) - 3)
+*/
 
     if (vertical_bar == true) {
-        group.selectAll("rect")
-            .data(d => d.Value)
-            .join(
-                enter => enter.append("rect")
-                            .attr("class", "bar"),
-                update => update,
-                exit => exit.remove()
-            )
-            .attr("x", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
-            .attr("y", d => y_scale(d.value))
-            .attr("width", (x_scale.bandwidth() / taille) - varPadding)
-            .attr("height", d => longueur-10 - y_scale(d.value))
-            .style("fill", d => echelle_couleurs(d.parents))
 
-        group.selectAll("text")
-            .data(d => d.Value)
-            .join(
-                enter => enter.append("text").text((d => d.value))
-                            .attr("class", "text"),
-                update => update,
-                exit => exit.remove()
-            )
-	        .attr("fill","black")
-            .attr("text-anchor", "start")
-            .style("font", "12px times")
-            .attr("x", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
-            .attr("y", d => y_scale(d.value) - 3)
+        svg.selectAll("labels")
+            .data(uniqueLabels).enter()
+            .append("text")
+            .attr("x", function(d,i){ return 15 + i*75})
+            .attr("y", longueur)
+            .text(function(d){ return d})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
 
-    } else {
-        group.selectAll("rect")
-            .data(d => d.Value)
-            .join(
-                enter => enter.append("rect")
-                            .attr("class", "bar"),
-                update => update,
-                exit => exit.remove()
-            )
-            .attr("y", (d,i) => origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
-            .attr("x", 5)
-            .attr("height", ((x_scale.bandwidth() / taille) - varPadding))
-            .attr("width", d => (longueur - y_scale(d.value) - 10))
-            .style("fill", d => echelle_couleurs(d.parents))
-            
-        group.selectAll("text")
-            .data(d => d.Value)
-            .join(
-                enter => enter.append("text").text((d => d.value))
-                              .attr("class", "text"),
-                update => update,
-                exit => exit.remove()
-            )
-            .attr("fill","black")
-            .attr("text-anchor", "start")
-            .style("font", "12px times")
-            .attr("y", (d,i) => 2.5*origin + i*ecart + d.incr*(x_scale.bandwidth() / taille))
-            .attr("x", d => longueur - (y_scale(d.value)))
+        svg.selectAll("categories_dots")
+            .data(keys).enter()
+            .append("circle")
+            .attr("cx", function(d,i){ return 20 + i*75})
+            .attr("cy", 15)
+            .attr("r", 7)
+            .style("fill", (d, i) => color[i])
+
+        svg.selectAll("categories")
+            .data(keys).enter()
+            .append("text")
+            .attr("x", function(d,i){ return 30 + i*75})
+            .attr("y", 15)
+            .style("fill", (d, i) => color[i])
+            .text(function(d){ return d})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
+
+    } /*else {
+
+        svg.selectAll("labels")
+            .data(uniqueLabels).enter()
+            .append("text")
+            .attr("y", function(d,i){ return 15 + i*75})
+            .attr("x", longueur)
+            .text(function(d){ return d})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
+    
+        svg.selectAll("categories_dots")
+            .data(keys).enter()
+            .append("circle")
+            .attr("cy", function(d,i){ return 20 + i*75})
+            .attr("cx", 15)
+            .attr("r", 7)
+            .style("fill", (d, i) => color[i])
+    
+        svg.selectAll("categories")
+            .data(keys).enter()
+            .append("text")
+            .attr("y", function(d,i){ return 30 + i*75})
+            .attr("x", 15)
+            .style("fill", (d, i) => color[i])
+            .text(function(d){ return d})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
     }
 
     // Légende
-
-
-    svg.selectAll("labels")
-        .data(uniqueLabels).enter()
-        .append("text")
-        .attr("x", function(d,i){ return 15 + i*75})
-        .attr("y", longueur)
-        .text(function(d){ return d})
-        .attr("text-anchor", "left")
-        .style("alignment-baseline", "middle")
-
-    svg.selectAll("categories_dots")
-        .data(keys).enter()
-        .append("circle")
-        .attr("cx", function(d,i){ return 20 + i*75})
-        .attr("cy", 15)
-        .attr("r", 7)
-        .style("fill", (d, i) => color[i])
-
-    svg.selectAll("categories")
-        .data(keys).enter()
-        .append("text")
-        .attr("x", function(d,i){ return 30 + i*75})
-        .attr("y", 15)
-        .style("fill", (d, i) => color[i])
-        .text(function(d){ return d})
-        .attr("text-anchor", "left")
-        .style("alignment-baseline", "middle")
-
+*/
 }
 
-svg_creator(databis, color)
+svg_creator(databis, color, false)
 

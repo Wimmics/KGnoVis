@@ -65,7 +65,34 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 38
         .domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)])
         .range([longueur, 40])
 
-    let group = svg.selectAll("g")
+    if (vertical_bar = true) {
+        let group = svg.selectAll("g")
+            .data(item)
+            .join(
+                enter => enter.append("g")
+                        .attr("fill", (d,i) => color[i]),
+                update => update,
+                exit => exit.remove()
+            )
+
+        //console.log(item)
+        //console.log(donnees)
+
+        group.selectAll("rect")
+            .data(d => d)
+            .join(
+                enter => enter.append("rect")
+                        .attr("class", "stackedbar"),
+                update => update,
+                exit => exit.remove()
+            )
+            .attr("x", d => x_scale(d.data.group))
+            .attr("y", d => y_scale(d[1])-10)
+            .attr("height", d => (y_scale(d[0]) - y_scale(d[1])))
+            .attr("width", x_scale.bandwidth())
+
+    } else {
+        let group = svg.selectAll("g")
         .data(item)
         .join(
             enter => enter.append("g")
@@ -74,24 +101,24 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 38
             exit => exit.remove()
         )
 
-    console.log(item)
-    console.log(donnees)
+        //console.log(item)
+        //console.log(donnees)
 
-    group.selectAll("rect")
-        .data(d => d)
-        .join(
-            enter => enter.append("rect")
-                    .attr("class", "stackedbar"),
-            update => update,
-            exit => exit.remove()
-        )
-        .attr("x", d => x_scale(d.data.group))
-        .attr("y", d => y_scale(d[1])-10)
-        .attr("height", d => (y_scale(d[0]) - y_scale(d[1])))
-        .attr("width", x_scale.bandwidth())
+        group.selectAll("rect")
+            .data(d => d)
+            .join(
+                enter => enter.append("rect")
+                        .attr("class", "stackedbar"),
+                update => update,
+                exit => exit.remove()
+            )
+            .attr("y", d => x_scale(d.data.group))
+            .attr("x", d => y_scale(d[1])-10)
+            .attr("width", d => (y_scale(d[0]) - y_scale(d[1])))
+            .attr("height", x_scale.bandwidth())
+    }
 
-
-        svg.selectAll("labels")
+    svg.selectAll("labels")
         .data(uniqueLabels).enter()
         .append("text")
         .attr("x", function(d,i){ return 15 + i*75})
@@ -119,4 +146,4 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 38
         .style("alignment-baseline", "middle")
 }
 
-svg_creator(databis, colors)
+svg_creator(databis, colors, false)
