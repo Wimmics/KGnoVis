@@ -17,6 +17,7 @@ const datatest = [
 ]
 
 const color = ["black", "crimson", "silver", "gold", "steelblue"]
+console.log(0.92**6)
 
 const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, longueur = 380) => {
 
@@ -27,18 +28,30 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
 
-    const x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1) 
+    let x_scale
     let y_scale
-
-    try {
-
+   /* if (vertical_bar === true) {
+        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)
         if (!is_log) {
             y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 40])
         } else {
             y_scale = d3.scaleLog().domain([1, domaine]).range([longueur, 40]) 
         }
-    } catch (error){
-        console.error("is_log n'est pas un boolean", error)
+    } else {
+        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)
+        if (!is_log) {
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, longueur])
+        } else {
+            y_scale = d3.scaleLog().domain([1, domaine]).range([0, longueur]) 
+        }
+        
+    }*/
+    
+    x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)
+    if (!is_log) {
+        y_scale = d3.scaleLinear().domain([0, domaine]).range([0, longueur])
+    } else {
+        y_scale = d3.scaleLog().domain([1, domaine]).range([0, longueur]) 
     }
 
     let exploitable = []
@@ -85,30 +98,34 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
 // Go écrire une fonction pour x/y snif
 
-    function choix(letter, d, i, formula = false) {
-        
-        let width_true = 0
-        if (formula === true) {
-            width_true = origin + i*ecart + d.incr*(x_scale.bandwidth() / taille)
-        } else{
-            width_true = (x_scale.bandwidth() / taille)
-        }
-        let height_true = y_scale(d.value)
+    function choix(choice, d, i) {
+
         let val_choisie = 0
 
-
         if (vertical_bar === true) {
-            if (letter === "x") {
-                val_choisie = width_true
+            if (choice === "x") {
+                val_choisie = origin + i*ecart + d.incr*(x_scale.bandwidth() / taille)
+            } else if (choice === "y") {
+                val_choisie = y_scale(d.value)
+            } else if (choice === "width") {
+                val_choisie = (x_scale.bandwidth() / taille) - varPadding
+            } else if (choice === "height") {
+                val_choisie = longueur-10 - y_scale(d.value)
             } else {
-                val_choisie = height_true
+                console.log("mauvais choice")
             }
 
         } else {
-            if (letter === "x") {
-                val_choisie = height_true
+            if (choice === "x") {
+                val_choisie = y_scale(d.value)
+            } else if (choice === "y") {
+                val_choisie = origin + i*ecart + d.incr*(x_scale.bandwidth() / taille)
+            } else if (choice === "width") {
+                val_choisie = longueur-10 - y_scale(d.value)
+            } else if (choice === "height") {
+                val_choisie = (x_scale.bandwidth() / taille) - varPadding
             } else {
-                val_choisie = width_true
+                console.log("Mauvais choice")
             }
         }
 
@@ -138,10 +155,10 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             update => update,
             exit => exit.remove()
         )
-        .attr("x", (d,i) => choix("x", d, i, true)) // Je remplace mais ça fait que j'ai le calcul * y_scale au lieu d'avoir juste y_scale
-        .attr("y", (d,i) => choix("y", d, i, true))
-        .attr("width", (d,i) => choix("x", d, i) - varPadding)
-        .attr("height", (d,i) => longueur-10 - choix("y", d, i))
+        .attr("x", (d,i) => choix("x", d, i)) // Je remplace mais ça fait que j'ai le calcul * y_scale au lieu d'avoir juste y_scale
+        .attr("y", (d,i) => choix("y", d, i))
+        .attr("width", (d,i) => choix("width", d, i))
+        .attr("height", (d,i) => choix("height", d, i))
         .style("fill", d => echelle_couleurs(d.parents))
 /*
     group.selectAll("text")
