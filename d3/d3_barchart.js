@@ -85,12 +85,17 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
 // Go écrire une fonction pour x/y snif
 
-    function choix(letter, d = exploitable.Value) {
-        let width_true = (x_scale.bandwidth() / taille)
+    function choix(letter, d, i, formula = false) {
+        
+        let width_true = 0
+        if (formula === true) {
+            width_true = origin + i*ecart + d.incr*(x_scale.bandwidth() / taille)
+        } else{
+            width_true = (x_scale.bandwidth() / taille)
+        }
         let height_true = y_scale(d.value)
         let val_choisie = 0
-        console.log(d)
-        console.log(d.value)
+
 
         if (vertical_bar === true) {
             if (letter === "x") {
@@ -109,6 +114,10 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
         return val_choisie
     }
+
+// Si je met dans la fonction, ça marche pas ligne 136 car y'a pas de calcul long à faire
+// Si je ne mets pas dans la fonction, alors échanger x et y suffit pas car j'mets pas le calcul
+// Rajouter une condition? Genre un "added" =>  suffit pas
 
     let group = svg.selectAll("g")
         .data(exploitable)
@@ -129,10 +138,10 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             update => update,
             exit => exit.remove()
         )
-        .attr("x", (d,i) => origin + i*ecart + d.incr*choix("x", d))
-        .attr("y", (d) => choix("y", d))
-        .attr("width", d => choix("x", d) - varPadding)
-        .attr("height", d => longueur-10 - choix("y", d))
+        .attr("x", (d,i) => choix("x", d, i, true)) // Je remplace mais ça fait que j'ai le calcul * y_scale au lieu d'avoir juste y_scale
+        .attr("y", (d,i) => choix("y", d, i, true))
+        .attr("width", (d,i) => choix("x", d, i) - varPadding)
+        .attr("height", (d,i) => longueur-10 - choix("y", d, i))
         .style("fill", d => echelle_couleurs(d.parents))
 /*
     group.selectAll("text")
@@ -212,6 +221,10 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     // Légende
 */
 }
+
+// Si je met dans la fonction, ça marche pas ligne 136 car y'a pas de calcul long à faire
+// Si je ne mets pas dans la fonction, alors échanger x et y suffit pas car j'mets pas le calcul
+// Rajouter une condition? Genre un "added"
 
 svg_creator(databis, color, false)
 
