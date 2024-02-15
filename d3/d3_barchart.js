@@ -49,9 +49,9 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     
     x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)
     if (!is_log) {
-        y_scale = d3.scaleLinear().domain([0, domaine]).range([0, longueur])
+        y_scale = d3.scaleLinear().domain([0, domaine]).range([0, longueur*0.9])
     } else {
-        y_scale = d3.scaleLog().domain([1, domaine]).range([0, longueur]) 
+        y_scale = d3.scaleLog().domain([1, domaine]).range([0, longueur*0.9]) 
     }
 
     let exploitable = []
@@ -117,11 +117,11 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
         } else {
             if (choice === "x") {
-                val_choisie = y_scale(d.value)
+                val_choisie = 10 // Longueur de la barre
             } else if (choice === "y") {
                 val_choisie = origin + i*ecart + d.incr*(x_scale.bandwidth() / taille)
             } else if (choice === "width") {
-                val_choisie = longueur-10 - y_scale(d.value)
+                val_choisie = y_scale(d.value) //Décalage par rapport à la gauche !! => Point le plus à droite de chaque barre.
             } else if (choice === "height") {
                 val_choisie = (x_scale.bandwidth() / taille) - varPadding
             } else {
@@ -129,12 +129,9 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             }
         }
 
+        // Y'en a qui valent 0?? => ils valent 380, soit la même valeur que la taille de la fenêtre. Pour régler ça, j'ai mis un *0.9 sur les valeurs, donc ça sera toujours au max 10% plus petit que la fenêtre
         return val_choisie
     }
-
-// Si je met dans la fonction, ça marche pas ligne 136 car y'a pas de calcul long à faire
-// Si je ne mets pas dans la fonction, alors échanger x et y suffit pas car j'mets pas le calcul
-// Rajouter une condition? Genre un "added" =>  suffit pas
 
     let group = svg.selectAll("g")
         .data(exploitable)
@@ -155,8 +152,8 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             update => update,
             exit => exit.remove()
         )
-        .attr("x", (d,i) => choix("x", d, i)) // Je remplace mais ça fait que j'ai le calcul * y_scale au lieu d'avoir juste y_scale
-        .attr("y", (d,i) => choix("y", d, i))
+        .attr("x", (d,i) => choix("x", d, i))
+        .attr("y", (d,i) => {console.log(y_scale(d.value)); return choix("y", d, i)})
         .attr("width", (d,i) => choix("width", d, i))
         .attr("height", (d,i) => choix("height", d, i))
         .style("fill", d => echelle_couleurs(d.parents))
@@ -238,10 +235,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     // Légende
 */
 }
-
-// Si je met dans la fonction, ça marche pas ligne 136 car y'a pas de calcul long à faire
-// Si je ne mets pas dans la fonction, alors échanger x et y suffit pas car j'mets pas le calcul
-// Rajouter une condition? Genre un "added"
 
 svg_creator(databis, color, false)
 
