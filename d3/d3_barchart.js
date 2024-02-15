@@ -17,7 +17,6 @@ const datatest = [
 ]
 
 const color = ["black", "crimson", "silver", "gold", "steelblue"]
-console.log(0.92**6)
 
 const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, longueur = 380) => {
 
@@ -28,24 +27,23 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
 
+    let svg2 = svg.append("svg")
+        .attr("x", longueur/10)
+        .attr("y", longueur/10)
+        .attr("width", longueur/2)
+        .attr("height", longueur/2)
+        .style("fill", "crimson")
+
+
+    svg2.append("rect")
+        .attr("x", 10)  // Position horizontale du coin supérieur gauche du rectangle par rapport au coin supérieur gauche du SVG enfant
+        .attr("y", 10)  // Position verticale du coin supérieur gauche du rectangle par rapport au coin supérieur gauche du SVG enfant
+        .attr("width", 50)  // Largeur du rectangle
+        .attr("height", 50)  // Hauteur du rectangle
+        .style("fill", "lightblue")
+/*
     let x_scale
     let y_scale
-   /* if (vertical_bar === true) {
-        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)
-        if (!is_log) {
-            y_scale = d3.scaleLinear().domain([0, domaine]).range([longueur, 40])
-        } else {
-            y_scale = d3.scaleLog().domain([1, domaine]).range([longueur, 40]) 
-        }
-    } else {
-        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)
-        if (!is_log) {
-            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, longueur])
-        } else {
-            y_scale = d3.scaleLog().domain([1, domaine]).range([0, longueur]) 
-        }
-        
-    }*/
     
     x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, longueur]).padding(0.1)
     if (!is_log) {
@@ -157,7 +155,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
         .attr("width", (d,i) => choix("width", d, i))
         .attr("height", (d,i) => choix("height", d, i))
         .style("fill", d => echelle_couleurs(d.parents))
-/*
+
     group.selectAll("text")
         .data(d => d.Value)
         .join(
@@ -171,7 +169,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
         .style("font", "12px times")
         .attr("x", (d,i) => origin + i*ecart + d.incr*choix("x", d))
         .attr("y", d => choix("y", d) - 3)
-*/
+
 
     if (vertical_bar == true) {
 
