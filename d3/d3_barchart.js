@@ -1,6 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
-const databis = [
+const dataset_barchart = [
     {category :"Clouds", values : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}], fill : "black"},
     {category :"Flower", values : [{value : 10, label : "Wolf"}, {value : 20, label : "Eagle"}, {value : 15, label : "Deer"}, {value : 25, label : "Lion"}, {value : 30, label : "Dragon"}], fill : "crimson"},
     {category :"Snow", values :  [{value : 6, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 2, label : "Deer"}, {value : 4, label : "Lion"}, {value : 5, label : "Dragon"}], fill : "silver"},
@@ -8,17 +8,9 @@ const databis = [
     {category :"Moon", values :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}], fill : "lightblue"}
 ]
 
-const datatest = [
-    {group : "Wolf", Clouds : 5, Flower : 10, Snow : 6, Wind : 20, Moon : 14},
-    {group : "Eagle", Clouds : 8, Flower : 20, Snow : 8, Wind : 30, Moon : 16},
-    {group : "Deer", Clouds : 12, Flower : 15, Snow : 2, Wind : 10, Moon : 24},
-    {group : "Lion", Clouds : 7, Flower : 25, Snow : 4, Wind : 12, Moon : 8},
-    {group : "Dragon", Clouds : 9, Flower : 30, Snow : 5, Wind : 18, Moon : 17}   
-]
+const couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
 
-const color = ["black", "crimson", "silver", "gold", "steelblue"]
-
-const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, longueur = 400) => {
+const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, longueur = 400) => {
 
     const taille = Math.max(donnees.length, 5)
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
@@ -208,5 +200,5 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
 }
 
-svg_creator(databis, color, false)
+barchart_creator(dataset_barchart, couleurs, false, true, longueur = 300)
 
