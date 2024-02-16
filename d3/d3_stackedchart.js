@@ -11,7 +11,7 @@ const databis = [
 
 const colors = ["black", "crimson", "silver", "gold", "steelblue"]
 
-const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 380) => {
+const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 400) => {
 
     // Initialisation
 
@@ -55,44 +55,64 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 38
 
     const svg = d3.select("#stacked").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
 
+    const long2 = longueur*0.8
+
+    let svg2 = svg.append("svg")
+        .attr("x", longueur*0.15)
+        .attr("y", longueur*0.15)
+        .attr("width", long2)
+        .attr("height", long2)
+
     const x_scale = d3.scaleBand()
         .domain(dataset.map(d => d.group))
-        .range([0, longueur])
+        .range([0, long2])
         .padding(0.1)
-  
-  // Set up the y scale
-    const y_scale = d3.scaleLinear()
-        .domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)])
-        .range([longueur, 40])
 
-    if (vertical_bar = true) {
-        let group = svg.selectAll("g")
-            .data(item)
-            .join(
-                enter => enter.append("g")
-                        .attr("fill", (d,i) => color[i]),
-                update => update,
-                exit => exit.remove()
-            )
+    let y_scale
 
-        //console.log(item)
-        //console.log(donnees)
+    // Fonction de choix
 
-        group.selectAll("rect")
-            .data(d => d)
-            .join(
-                enter => enter.append("rect")
-                        .attr("class", "stackedbar"),
-                update => update,
-                exit => exit.remove()
-            )
-            .attr("x", d => x_scale(d.data.group))
-            .attr("y", d => y_scale(d[1])-10)
-            .attr("height", d => (y_scale(d[0]) - y_scale(d[1])))
-            .attr("width", x_scale.bandwidth())
+    function choix(choice, d, i) {
 
-    } else {
-        let group = svg.selectAll("g")
+        let val_choisie = 0
+
+        if (vertical_bar === true) {
+            y_scale = d3.scaleLinear()
+                .domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)])
+                .range([long2*0.9, 0])
+            if (choice === "x") {
+                val_choisie = x_scale(d.data.group)
+            } else if (choice === "y") {
+                val_choisie = y_scale(d[1])
+            } else if (choice === "width") {
+                val_choisie = x_scale.bandwidth()
+            } else if (choice === "height") {
+                val_choisie = (y_scale(d[0]) - y_scale(d[1]))
+            } else {
+                console.log("mauvais choice")
+            }
+
+        } else {
+            y_scale = d3.scaleLinear()
+                .domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)])
+                .range([0, long2*0.9])
+            if (choice === "x") {
+                val_choisie = y_scale(d[0])// Longueur de la barre
+            } else if (choice === "y") {
+                val_choisie = x_scale(d.data.group)
+            } else if (choice === "width") {
+                val_choisie = (y_scale(d[1]) - y_scale(d[0])) //Décalage par rapport à la gauche !! => Point le plus à droite de chaque barre.
+            } else if (choice === "height") {
+                val_choisie = x_scale.bandwidth()
+            } else {
+                console.log("Mauvais choice")
+            }
+        }
+
+        return val_choisie
+    }
+
+    let group = svg2.selectAll("g")
         .data(item)
         .join(
             enter => enter.append("g")
@@ -101,31 +121,18 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 38
             exit => exit.remove()
         )
 
-        //console.log(item)
-        //console.log(donnees)
-
-        group.selectAll("rect")
-            .data(d => d)
-            .join(
-                enter => enter.append("rect")
-                        .attr("class", "stackedbar"),
-                update => update,
-                exit => exit.remove()
-            )
-            .attr("y", d => x_scale(d.data.group))
-            .attr("x", d => y_scale(d[1])-10)
-            .attr("width", d => (y_scale(d[0]) - y_scale(d[1])))
-            .attr("height", x_scale.bandwidth())
-    }
-
-    svg.selectAll("labels")
-        .data(uniqueLabels).enter()
-        .append("text")
-        .attr("x", function(d,i){ return 15 + i*75})
-        .attr("y", longueur)
-        .text(function(d){ return d})
-        .attr("text-anchor", "left")
-        .style("alignment-baseline", "middle")
+    group.selectAll("rect")
+        .data(d => d)
+        .join(
+            enter => enter.append("rect")
+                    .attr("class", "stackedbar"),
+            update => update,
+            exit => exit.remove()
+        )
+        .attr("x", (d,i) => choix("x", d, i))
+        .attr("y", (d,i) => choix("y", d, i))
+        .attr("width", (d,i) => choix("width", d, i))
+        .attr("height", (d,i) => choix("height", d, i))
 
     svg.selectAll("categories_dots")
         .data(keys).enter()
@@ -144,6 +151,35 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 38
         .text(function(d){ return d})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
+
+
+
+    let ecart = x_scale(uniqueLabels[1])-x_scale(uniqueLabels[0])
+    let origin = x_scale(uniqueLabels[0])
+
+    if (vertical_bar == true) {
+
+        svg.selectAll("labels")
+            .data(uniqueLabels).enter()
+            .append("text")
+            .attr("x", (d,i) => longueur*0.15 + origin + i*ecart)
+            .attr("y", longueur*0.95)
+            .text(function(d){ return d})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
+
+    } else {
+
+        svg.selectAll("labels")
+            .data(uniqueLabels).enter()
+            .append("text")
+            .attr("y", (d,i) => longueur*0.15 + 5*origin + i*ecart)
+            .attr("x", 5)
+            .text(d => d.substring(0, 5))
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
+    }    
+
 }
 
 svg_creator(databis, colors, false)
