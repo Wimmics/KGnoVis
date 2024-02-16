@@ -33,7 +33,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
         .attr("y", longueur*0.1)
         .attr("width", long2)
         .attr("height", long2)
-        .style("fill", "crimson")
 
     let x_scale
     let y_scale
@@ -87,9 +86,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
     let ecart = x_scale(exploitable[1].Category)-x_scale(exploitable[0].Category)
     let origin = x_scale(exploitable[0].Category)
-
-    console.log(origin)
-    console.log(ecart)
 
     function choix(choice, d, i) {
 
@@ -212,5 +208,5 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
 
 }
 
-svg_creator(databis, color, true)
+svg_creator(databis, color, false)
 
