@@ -35,7 +35,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
         .attr("height", long2)
         .style("fill", "crimson")
 
-
     let x_scale
     let y_scale
     
@@ -51,6 +50,7 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     let color = []
 
     // Transformation des données
+
     try {
         donnees.forEach((d,i) => {
             let object = {"Category" : d.category}
@@ -91,8 +91,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     console.log(origin)
     console.log(ecart)
 
-// Go écrire une fonction pour x/y snif
-
     function choix(choice, d, i) {
 
         let val_choisie = 0
@@ -124,7 +122,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
             }
         }
 
-        // Y'en a qui valent 0?? => ils valent 380, soit la même valeur que la taille de la fenêtre. Pour régler ça, j'ai mis un *0.9 sur les valeurs, donc ça sera toujours au max 10% plus petit que la fenêtre
         return val_choisie
     }
 
@@ -166,6 +163,9 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
         .style("font", "12px times")
         .attr("x", (d,i) => choix("x", d, i)+choix("width", d, i) + 2)
         .attr("y", (d,i) => choix("y", d, i)+choix("height", d, i))
+
+
+    // Légende
 
     svg.selectAll("categories_dots")
         .data(keys).enter()
@@ -209,8 +209,6 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = fals
     
 
     }
-
-    // Légende
 
 }
 
