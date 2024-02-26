@@ -1,6 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
-const databis = [
+const dataset_stackedchart = [
     {category :"Clouds", values : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}], fill : "black"},
     {category :"Flower", values : [{value : 10, label : "Wolf"}, {value : 20, label : "Eagle"}, {value : 15, label : "Deer"}, {value : 25, label : "Lion"}, {value : 30, label : "Dragon"}], fill : "crimson"},
     {category :"Snow", values :  [{value : 6, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 2, label : "Deer"}, {value : 4, label : "Lion"}, {value : 5, label : "Dragon"}], fill : "silver"},
@@ -11,7 +11,7 @@ const databis = [
 
 const colors = ["black", "crimson", "silver", "gold", "steelblue"]
 
-const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 400) => {
+const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 400) => {
 
     // Initialisation
 
@@ -182,4 +182,4 @@ const svg_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 40
 
 }
 
-svg_creator(databis, colors, false)
+stackedchart_creator(dataset_stackedchart, colors, false)

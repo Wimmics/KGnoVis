@@ -1,6 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
-const databis = [
+const dataset_piechart = [
     {label :"Clouds", value : 12, fill : "black"},
     {label :"Flower", value : 19, fill : "crimson"},
     {label :"Snow", value :  10, fill : "gray"},
@@ -8,7 +8,7 @@ const databis = [
     {label :"Moon", value :  8, fill : "steelblue"}
 ]
 
-const svg_creator = (donnees, couleurs = [0], longueur = 350) => {
+const piechart_creator = (donnees, couleurs = [0], longueur = 350) => {
 
     let pie = []
     let data_pie = []
@@ -91,4 +91,4 @@ const svg_creator = (donnees, couleurs = [0], longueur = 350) => {
      
 }
 
-svg_creator(databis, ["green", "steelblue", "gold", "gray", "crimson"])
+piechart_creator(dataset_piechart, ["green", "steelblue", "gold", "gray", "crimson"])

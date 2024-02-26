@@ -1,29 +1,29 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
-const dataset = {
-  "nodes": [
-    {"id": 1, "name": "A"},
-    {"id": 2, "name": "B"},
-    {"id": 3, "name": "C"},
-    {"id": 4, "name": "D"},
-    {"id": 5, "name": "E"},
-    {"id": 6, "name": "F"},
-    {"id": 7, "name": "G"},
-    {"id": 8, "name": "H"},
-    {"id": 9, "name": "I"},
-    {"id": 10, "name": "J"}
+const dataset_nodelink = {
+  nodes: [
+    {id: 1, name: "A"},
+    {id: 2, name: "B"},
+    {id: 3, name: "C"},
+    {id: 4, name: "D"},
+    {id: 5, name: "E"},
+    {id: 6, name: "F"},
+    {id: 7, name: "G"},
+    {id: 8, name: "H"},
+    {id: 9, name: "I"},
+    {id: 10, name: "J"}
   ],
-  "links": [
-    {"source": 1, "target": 2},
-    {"source": 1, "target": 5},
-    {"source": 1, "target": 6},
-    {"source": 2, "target": 3},
-    {"source": 2,"target": 7},
-    {"source": 3, "target": 4},
-    {"source": 8, "target": 3},
-    {"source": 4, "target": 5},
-    {"source": 4, "target": 9},
-    {"source": 5, "target": 10}
+  links: [
+    {source: 1, target: 2},
+    {source: 1, target: 5},
+    {source: 1, target: 6},
+    {source: 2, target: 3},
+    {source: 2,target: 7},
+    {source: 3, target: 4},
+    {source: 8, target: 3},
+    {source: 4, target: 5},
+    {source: 4, target: 9},
+    {source: 5, target: 10}
   ]
 }
 
@@ -39,9 +39,9 @@ let recup_data = async() => {
 
 let couleurs = ["gold", "green"]
 
-async function autonode(data, colors = [], strength = -400, width = 380, height = 380) {
+async function nodelink_creator(data, colors = [], strength = -400, longueur = 380) {
   
-  const donnees = await data()
+  const donnees = data
   const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
   let coloration
@@ -52,8 +52,8 @@ async function autonode(data, colors = [], strength = -400, width = 380, height 
   }
 
   const svg = d3.select("#nodelink_auto")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", longueur + margin.left + margin.right)
+    .attr("height", longueur + margin.top + margin.bottom)
     .append("g")
 
   const link = svg.selectAll("line")
@@ -85,14 +85,14 @@ async function autonode(data, colors = [], strength = -400, width = 380, height 
       .links(donnees.links)                                 
     )
     .force("charge", d3.forceManyBody().strength(strength))
-    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("center", d3.forceCenter(longueur / 2, longueur / 2))
     .on("end", ticked)
     
 }
 
 
 
-autonode(recup_data, couleurs, -200)
+nodelink_creator(dataset_nodelink, couleurs, -400)
 
 
 
