@@ -18,7 +18,7 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, is_log =
     const domaine = d3.max(donnees, d => d3.max(d.values, e => e.value))
     const long2 = longueur*0.8
 
-    const svg = d3.select("#d3_demo_3").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const svg = d3.select("#d3_barchart").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
 
     let svg2 = svg.append("svg")
         .attr("x", longueur*0.1)
@@ -213,5 +213,5 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, is_log =
 
 }
 
-barchart_creator(dataset_barchart, couleurs, true)
+barchart_creator(dataset_barchart, couleurs)
 

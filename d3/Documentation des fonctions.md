@@ -58,7 +58,7 @@ Ce sous-dataset doit contenir 2 éléments : une variable "label", et une variab
 Enfin, la variable "fill", qui pourra être remplacée par l'un des paramètres optionnels, sert à déterminer la couleur de chaque catégorie. Elle peut contenir un code couleur ou un nom de couleur reconnu dans les SVG.
 
 ### Exemple de dataset obligatoire
-
+```javascript
 dataset_barchart = [
 
 {**category** :"Clouds", **values** : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}], **fill** : "black"},
@@ -72,6 +72,7 @@ dataset_barchart = [
 {**category** :"Moon", **values** :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}], **fill** : "lightblue"}
 
 ]
+```
 
 ### Paramètres optionnels
 
@@ -85,16 +86,20 @@ Enfin, le dernier paramètre est la longueur du SVG (qui sera toujours un carré
 
 ### Exemple de dataset optionnel
 
+```javascript
 couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
+```
 
-### Exemples d'appels de la fonction
+### Exemples d'appels de la fonction => Ajout hmtl et dessin
 
+```javascript
 barchart_creator(dataset_barchart)
 
 barchart_creator(dataset_barchart, couleurs, false, true, 300)
 
 barchart_creator(dataset_barchart, undefined, undefined, true)
 
+```
 
 # Stacked Chart
 
@@ -113,6 +118,7 @@ Enfin, la variable "fill", qui pourra être remplacée par l'un des paramètres 
 
 ### Exemple de dataset obligatoire
 
+```javascript
 dataset_stackedchart = [
 
 {**category** :"Clouds", **values** : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}], **fill** : "black"},
@@ -126,6 +132,7 @@ dataset_stackedchart = [
 {**category** :"Moon", **values** :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}], **fill** : "lightblue"}
 
 ]
+```
 
 ### Paramètres optionnels
 
@@ -139,16 +146,18 @@ Enfin, le dernier paramètre est la longueur du SVG (qui sera toujours un carré
 
 ### Exemple de dataset optionnel
 
+```javascript
 couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
-
+```
 ### Exemples d'appels de la fonction
 
+```javascript
 stackedchart_creator(dataset_stackedchart)
 
 stackedchart_creator(dataset_stackedchart, couleurs, false, 300)
 
 stackedchart_creator(dataset_stackedchart, undefined, undefined, 300)
-
+```
 
 # Pie chart
 
@@ -164,6 +173,7 @@ Il doit donc posséder une variable "label" qui contient simplement le nom du la
 
 ### Exemple de dataset obligatoire
 
+```javascript
 const dataset_piechart = [
 
 {**label** : "Clouds", **value** : 12, **fill** : "black"},
@@ -177,6 +187,7 @@ const dataset_piechart = [
 {**label** : "Moon", **value** :  8, **fill** : "steelblue"}
 
 ]
+```
 
 ### Paramètres optionnels
 
@@ -186,16 +197,19 @@ Le deuxième paramètre optionnel est la longueur du SVG (qui sera toujours un c
 
 ### Exemple de dataset optionnel
 
+```javascript
 couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
+```
 
 ### Exemples d'appels de la fonction
 
+```javascript
 piechart_creator(dataset_piechart)
 
 piechart_creator(dataset_piechart, couleurs, 300)
 
 piechart_creator(dataset_piechart, undefined, 300)
-
+```
 
 # Nodelink
 
@@ -211,6 +225,7 @@ Il doit donc posséder une variable "nodes" qui est une liste de dictionnaires, 
 
 ### Exemple de dataset obligatoire
 
+```javascript
 const dataset_nodelink = {
 
   **nodes** : [
@@ -242,6 +257,7 @@ const dataset_nodelink = {
     
   ]
 }
+```
 
 ### Paramètres optionnels
 
@@ -253,28 +269,19 @@ Le dernier paramètre optionnel est la longueur du SVG (qui sera toujours un car
 
 ### Exemple de dataset optionnel
 
+```javascript
 couleurs = ["black", "gold"]
+```
 
 ### Exemples d'appels de la fonction
 
+```javascript
 nodelink_creator(dataset_nodelink)
 
 nodelink_creator(dataset_nodelink, couleurs, -200, 300)
 
 nodelink_creator(dataset_nodelink, undefined, undefined, 300)
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 
 

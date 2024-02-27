@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Hugo Carton">
-<meta name="dcterms.date" content="2024-02-26">
+<meta name="dcterms.date" content="2024-02-27">
 
 <title>Automatisation de graphiques contenant des requêtes SparQL de données RDF</title>
 <style>
@@ -20,6 +20,40 @@ ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
 width: 0.8em;
 margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
+}
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+}
+pre.numberSource { margin-left: 3em; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -3006,7 +3040,7 @@ vertical-align: -.125em;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 26, 2024</p>
+        <p class="date">February 27, 2024</p>
       </div>
     </div>
     
@@ -3030,7 +3064,7 @@ vertical-align: -.125em;
   <li><a href="#exemple-de-dataset-obligatoire" id="toc-exemple-de-dataset-obligatoire" class="nav-link" data-scroll-target="#exemple-de-dataset-obligatoire"><span class="header-section-number">3.1.2</span> Exemple de dataset obligatoire</a></li>
   <li><a href="#paramètres-optionnels" id="toc-paramètres-optionnels" class="nav-link" data-scroll-target="#paramètres-optionnels"><span class="header-section-number">3.1.3</span> Paramètres optionnels</a></li>
   <li><a href="#exemple-de-dataset-optionnel" id="toc-exemple-de-dataset-optionnel" class="nav-link" data-scroll-target="#exemple-de-dataset-optionnel"><span class="header-section-number">3.1.4</span> Exemple de dataset optionnel</a></li>
-  <li><a href="#exemples-dappels-de-la-fonction" id="toc-exemples-dappels-de-la-fonction" class="nav-link" data-scroll-target="#exemples-dappels-de-la-fonction"><span class="header-section-number">3.1.5</span> Exemples d’appels de la fonction</a></li>
+  <li><a href="#exemples-dappels-de-la-fonction-ajout-hmtl-et-dessin" id="toc-exemples-dappels-de-la-fonction-ajout-hmtl-et-dessin" class="nav-link" data-scroll-target="#exemples-dappels-de-la-fonction-ajout-hmtl-et-dessin"><span class="header-section-number">3.1.5</span> Exemples d’appels de la fonction =&gt; Ajout hmtl et dessin</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#stacked-chart" id="toc-stacked-chart" class="nav-link" data-scroll-target="#stacked-chart"><span class="header-section-number">4</span> Stacked Chart</a>
@@ -3041,7 +3075,7 @@ vertical-align: -.125em;
   <li><a href="#exemple-de-dataset-obligatoire-1" id="toc-exemple-de-dataset-obligatoire-1" class="nav-link" data-scroll-target="#exemple-de-dataset-obligatoire-1"><span class="header-section-number">4.1.2</span> Exemple de dataset obligatoire</a></li>
   <li><a href="#paramètres-optionnels-1" id="toc-paramètres-optionnels-1" class="nav-link" data-scroll-target="#paramètres-optionnels-1"><span class="header-section-number">4.1.3</span> Paramètres optionnels</a></li>
   <li><a href="#exemple-de-dataset-optionnel-1" id="toc-exemple-de-dataset-optionnel-1" class="nav-link" data-scroll-target="#exemple-de-dataset-optionnel-1"><span class="header-section-number">4.1.4</span> Exemple de dataset optionnel</a></li>
-  <li><a href="#exemples-dappels-de-la-fonction-1" id="toc-exemples-dappels-de-la-fonction-1" class="nav-link" data-scroll-target="#exemples-dappels-de-la-fonction-1"><span class="header-section-number">4.1.5</span> Exemples d’appels de la fonction</a></li>
+  <li><a href="#exemples-dappels-de-la-fonction" id="toc-exemples-dappels-de-la-fonction" class="nav-link" data-scroll-target="#exemples-dappels-de-la-fonction"><span class="header-section-number">4.1.5</span> Exemples d’appels de la fonction</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#pie-chart" id="toc-pie-chart" class="nav-link" data-scroll-target="#pie-chart"><span class="header-section-number">5</span> Pie chart</a>
@@ -3052,7 +3086,7 @@ vertical-align: -.125em;
   <li><a href="#exemple-de-dataset-obligatoire-2" id="toc-exemple-de-dataset-obligatoire-2" class="nav-link" data-scroll-target="#exemple-de-dataset-obligatoire-2"><span class="header-section-number">5.1.2</span> Exemple de dataset obligatoire</a></li>
   <li><a href="#paramètres-optionnels-2" id="toc-paramètres-optionnels-2" class="nav-link" data-scroll-target="#paramètres-optionnels-2"><span class="header-section-number">5.1.3</span> Paramètres optionnels</a></li>
   <li><a href="#exemple-de-dataset-optionnel-2" id="toc-exemple-de-dataset-optionnel-2" class="nav-link" data-scroll-target="#exemple-de-dataset-optionnel-2"><span class="header-section-number">5.1.4</span> Exemple de dataset optionnel</a></li>
-  <li><a href="#exemples-dappels-de-la-fonction-2" id="toc-exemples-dappels-de-la-fonction-2" class="nav-link" data-scroll-target="#exemples-dappels-de-la-fonction-2"><span class="header-section-number">5.1.5</span> Exemples d’appels de la fonction</a></li>
+  <li><a href="#exemples-dappels-de-la-fonction-1" id="toc-exemples-dappels-de-la-fonction-1" class="nav-link" data-scroll-target="#exemples-dappels-de-la-fonction-1"><span class="header-section-number">5.1.5</span> Exemples d’appels de la fonction</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#nodelink" id="toc-nodelink" class="nav-link" data-scroll-target="#nodelink"><span class="header-section-number">6</span> Nodelink</a>
@@ -3063,7 +3097,7 @@ vertical-align: -.125em;
   <li><a href="#exemple-de-dataset-obligatoire-3" id="toc-exemple-de-dataset-obligatoire-3" class="nav-link" data-scroll-target="#exemple-de-dataset-obligatoire-3"><span class="header-section-number">6.1.2</span> Exemple de dataset obligatoire</a></li>
   <li><a href="#paramètres-optionnels-3" id="toc-paramètres-optionnels-3" class="nav-link" data-scroll-target="#paramètres-optionnels-3"><span class="header-section-number">6.1.3</span> Paramètres optionnels</a></li>
   <li><a href="#exemple-de-dataset-optionnel-3" id="toc-exemple-de-dataset-optionnel-3" class="nav-link" data-scroll-target="#exemple-de-dataset-optionnel-3"><span class="header-section-number">6.1.4</span> Exemple de dataset optionnel</a></li>
-  <li><a href="#exemples-dappels-de-la-fonction-3" id="toc-exemples-dappels-de-la-fonction-3" class="nav-link" data-scroll-target="#exemples-dappels-de-la-fonction-3"><span class="header-section-number">6.1.5</span> Exemples d’appels de la fonction</a></li>
+  <li><a href="#exemples-dappels-de-la-fonction-2" id="toc-exemples-dappels-de-la-fonction-2" class="nav-link" data-scroll-target="#exemples-dappels-de-la-fonction-2"><span class="header-section-number">6.1.5</span> Exemples d’appels de la fonction</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -3101,13 +3135,19 @@ vertical-align: -.125em;
 </section>
 <section id="exemple-de-dataset-obligatoire" class="level3" data-number="3.1.2">
 <h3 data-number="3.1.2" class="anchored" data-anchor-id="exemple-de-dataset-obligatoire"><span class="header-section-number">3.1.2</span> Exemple de dataset obligatoire</h3>
-<p>dataset_barchart = [</p>
-<p>{<strong>category</strong> :“Clouds”, <strong>values</strong> : [{value : 5, label : “Wolf”}, {value : 8, label : “Eagle”}, {value : 12, label : “Deer”}, {value : 7, label : “Lion”}, {value : 9, label : “Dragon”}], <strong>fill</strong> : “black”},</p>
-<p>{<strong>category</strong> :“Flower”, <strong>values</strong> : [{value : 10, label : “Wolf”}, {value : 20, label : “Eagle”}, {value : 15, label : “Deer”}, {value : 25, label : “Lion”}, {value : 30, label : “Dragon”}], <strong>fill</strong> : “crimson”},</p>
-<p>{<strong>category</strong> :“Snow”, <strong>values</strong> : [{value : 6, label : “Wolf”}, {value : 8, label : “Eagle”}, {value : 2, label : “Deer”}, {value : 4, label : “Lion”}, {value : 5, label : “Dragon”}], <strong>fill</strong> : “silver”},</p>
-<p>{<strong>category</strong> :“Wind”, <strong>values</strong> : [{value : 20, label : “Wolf”}, {value : 30, label : “Eagle”}, {value : 10, label : “Deer”}, {value : 12, label : “Lion”}, {value : 18, label : “Dragon”}], <strong>fill</strong> : “gold”},</p>
-<p>{<strong>category</strong> :“Moon”, <strong>values</strong> : [{value : 14, label : “Wolf”}, {value : 16, label : “Eagle”}, {value : 24, label : “Deer”}, {value : 8, label : “Lion”}, {value : 17, label : “Dragon”}], <strong>fill</strong> : “lightblue”}</p>
-<p>]</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dataset_barchart <span class="op">=</span> [</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Clouds&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span> [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">7</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">9</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;black&quot;</span>}<span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Flower&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span> [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">20</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">15</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">25</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">30</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;crimson&quot;</span>}<span class="op">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Snow&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span>  [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;silver&quot;</span>}<span class="op">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Wind&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span>  [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">20</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">30</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">18</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;gold&quot;</span>}<span class="op">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Moon&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span>  [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">14</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">16</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">24</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">17</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;lightblue&quot;</span>}</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="paramètres-optionnels" class="level3" data-number="3.1.3">
 <h3 data-number="3.1.3" class="anchored" data-anchor-id="paramètres-optionnels"><span class="header-section-number">3.1.3</span> Paramètres optionnels</h3>
@@ -3118,13 +3158,15 @@ vertical-align: -.125em;
 </section>
 <section id="exemple-de-dataset-optionnel" class="level3" data-number="3.1.4">
 <h3 data-number="3.1.4" class="anchored" data-anchor-id="exemple-de-dataset-optionnel"><span class="header-section-number">3.1.4</span> Exemple de dataset optionnel</h3>
-<p>couleurs = [“black”, “crimson”, “silver”, “gold”, “steelblue”]</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>couleurs <span class="op">=</span> [<span class="st">&quot;black&quot;</span><span class="op">,</span> <span class="st">&quot;crimson&quot;</span><span class="op">,</span> <span class="st">&quot;silver&quot;</span><span class="op">,</span> <span class="st">&quot;gold&quot;</span><span class="op">,</span> <span class="st">&quot;steelblue&quot;</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="exemples-dappels-de-la-fonction" class="level3" data-number="3.1.5">
-<h3 data-number="3.1.5" class="anchored" data-anchor-id="exemples-dappels-de-la-fonction"><span class="header-section-number">3.1.5</span> Exemples d’appels de la fonction</h3>
-<p>barchart_creator(dataset_barchart)</p>
-<p>barchart_creator(dataset_barchart, couleurs, false, true, 300)</p>
-<p>barchart_creator(dataset_barchart, undefined, undefined, true)</p>
+<section id="exemples-dappels-de-la-fonction-ajout-hmtl-et-dessin" class="level3" data-number="3.1.5">
+<h3 data-number="3.1.5" class="anchored" data-anchor-id="exemples-dappels-de-la-fonction-ajout-hmtl-et-dessin"><span class="header-section-number">3.1.5</span> Exemples d’appels de la fonction =&gt; Ajout hmtl et dessin</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">barchart_creator</span>(dataset_barchart)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">barchart_creator</span>(dataset_barchart<span class="op">,</span> couleurs<span class="op">,</span> <span class="kw">false</span><span class="op">,</span> <span class="kw">true</span><span class="op">,</span> <span class="dv">300</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">barchart_creator</span>(dataset_barchart<span class="op">,</span> <span class="kw">undefined</span><span class="op">,</span> <span class="kw">undefined</span><span class="op">,</span> <span class="kw">true</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 </section>
@@ -3141,13 +3183,19 @@ vertical-align: -.125em;
 </section>
 <section id="exemple-de-dataset-obligatoire-1" class="level3" data-number="4.1.2">
 <h3 data-number="4.1.2" class="anchored" data-anchor-id="exemple-de-dataset-obligatoire-1"><span class="header-section-number">4.1.2</span> Exemple de dataset obligatoire</h3>
-<p>dataset_stackedchart = [</p>
-<p>{<strong>category</strong> :“Clouds”, <strong>values</strong> : [{value : 5, label : “Wolf”}, {value : 8, label : “Eagle”}, {value : 12, label : “Deer”}, {value : 7, label : “Lion”}, {value : 9, label : “Dragon”}], <strong>fill</strong> : “black”},</p>
-<p>{<strong>category</strong> :“Flower”, <strong>values</strong> : [{value : 10, label : “Wolf”}, {value : 20, label : “Eagle”}, {value : 15, label : “Deer”}, {value : 25, label : “Lion”}, {value : 30, label : “Dragon”}], <strong>fill</strong> : “crimson”},</p>
-<p>{<strong>category</strong> :“Snow”, <strong>values</strong> : [{value : 6, label : “Wolf”}, {value : 8, label : “Eagle”}, {value : 2, label : “Deer”}, {value : 4, label : “Lion”}, {value : 5, label : “Dragon”}], <strong>fill</strong> : “silver”},</p>
-<p>{<strong>category</strong> :“Wind”, <strong>values</strong> : [{value : 20, label : “Wolf”}, {value : 30, label : “Eagle”}, {value : 10, label : “Deer”}, {value : 12, label : “Lion”}, {value : 18, label : “Dragon”}], <strong>fill</strong> : “gold”},</p>
-<p>{<strong>category</strong> :“Moon”, <strong>values</strong> : [{value : 14, label : “Wolf”}, {value : 16, label : “Eagle”}, {value : 24, label : “Deer”}, {value : 8, label : “Lion”}, {value : 17, label : “Dragon”}], <strong>fill</strong> : “lightblue”}</p>
-<p>]</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataset_stackedchart <span class="op">=</span> [</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Clouds&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span> [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">7</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">9</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;black&quot;</span>}<span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Flower&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span> [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">20</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">15</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">25</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">30</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;crimson&quot;</span>}<span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Snow&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span>  [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;silver&quot;</span>}<span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Wind&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span>  [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">20</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">30</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">18</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;gold&quot;</span>}<span class="op">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>category<span class="op">**</span> <span class="op">:</span><span class="st">&quot;Moon&quot;</span><span class="op">,</span> <span class="op">**</span>values<span class="op">**</span> <span class="op">:</span>  [{<span class="dt">value</span> <span class="op">:</span> <span class="dv">14</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Wolf&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">16</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Eagle&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">24</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Deer&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Lion&quot;</span>}<span class="op">,</span> {<span class="dt">value</span> <span class="op">:</span> <span class="dv">17</span><span class="op">,</span> <span class="dt">label</span> <span class="op">:</span> <span class="st">&quot;Dragon&quot;</span>}]<span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;lightblue&quot;</span>}</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="paramètres-optionnels-1" class="level3" data-number="4.1.3">
 <h3 data-number="4.1.3" class="anchored" data-anchor-id="paramètres-optionnels-1"><span class="header-section-number">4.1.3</span> Paramètres optionnels</h3>
@@ -3158,13 +3206,15 @@ vertical-align: -.125em;
 </section>
 <section id="exemple-de-dataset-optionnel-1" class="level3" data-number="4.1.4">
 <h3 data-number="4.1.4" class="anchored" data-anchor-id="exemple-de-dataset-optionnel-1"><span class="header-section-number">4.1.4</span> Exemple de dataset optionnel</h3>
-<p>couleurs = [“black”, “crimson”, “silver”, “gold”, “steelblue”]</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>couleurs <span class="op">=</span> [<span class="st">&quot;black&quot;</span><span class="op">,</span> <span class="st">&quot;crimson&quot;</span><span class="op">,</span> <span class="st">&quot;silver&quot;</span><span class="op">,</span> <span class="st">&quot;gold&quot;</span><span class="op">,</span> <span class="st">&quot;steelblue&quot;</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="exemples-dappels-de-la-fonction-1" class="level3" data-number="4.1.5">
-<h3 data-number="4.1.5" class="anchored" data-anchor-id="exemples-dappels-de-la-fonction-1"><span class="header-section-number">4.1.5</span> Exemples d’appels de la fonction</h3>
-<p>stackedchart_creator(dataset_stackedchart)</p>
-<p>stackedchart_creator(dataset_stackedchart, couleurs, false, 300)</p>
-<p>stackedchart_creator(dataset_stackedchart, undefined, undefined, 300)</p>
+<section id="exemples-dappels-de-la-fonction" class="level3" data-number="4.1.5">
+<h3 data-number="4.1.5" class="anchored" data-anchor-id="exemples-dappels-de-la-fonction"><span class="header-section-number">4.1.5</span> Exemples d’appels de la fonction</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stackedchart_creator</span>(dataset_stackedchart)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">stackedchart_creator</span>(dataset_stackedchart<span class="op">,</span> couleurs<span class="op">,</span> <span class="kw">false</span><span class="op">,</span> <span class="dv">300</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stackedchart_creator</span>(dataset_stackedchart<span class="op">,</span> <span class="kw">undefined</span><span class="op">,</span> <span class="kw">undefined</span><span class="op">,</span> <span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 </section>
@@ -3180,13 +3230,19 @@ vertical-align: -.125em;
 </section>
 <section id="exemple-de-dataset-obligatoire-2" class="level3" data-number="5.1.2">
 <h3 data-number="5.1.2" class="anchored" data-anchor-id="exemple-de-dataset-obligatoire-2"><span class="header-section-number">5.1.2</span> Exemple de dataset obligatoire</h3>
-<p>const dataset_piechart = [</p>
-<p>{<strong>label</strong> : “Clouds”, <strong>value</strong> : 12, <strong>fill</strong> : “black”},</p>
-<p>{<strong>label</strong> : “Flower”, <strong>value</strong> : 19, <strong>fill</strong> : “crimson”},</p>
-<p>{<strong>label</strong> : “Snow”, <strong>value</strong> : 10, <strong>fill</strong> : “gray”},</p>
-<p>{<strong>label</strong> : “Wind”, <strong>value</strong> : 20, <strong>fill</strong> : “gold”},</p>
-<p>{<strong>label</strong> : “Moon”, <strong>value</strong> : 8, <strong>fill</strong> : “steelblue”}</p>
-<p>]</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> dataset_piechart <span class="op">=</span> [</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>label<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;Clouds&quot;</span><span class="op">,</span> <span class="op">**</span>value<span class="op">**</span> <span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;black&quot;</span>}<span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>label<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;Flower&quot;</span><span class="op">,</span> <span class="op">**</span>value<span class="op">**</span> <span class="op">:</span> <span class="dv">19</span><span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;crimson&quot;</span>}<span class="op">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>label<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;Snow&quot;</span><span class="op">,</span> <span class="op">**</span>value<span class="op">**</span> <span class="op">:</span>  <span class="dv">10</span><span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;gray&quot;</span>}<span class="op">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>label<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;Wind&quot;</span><span class="op">,</span> <span class="op">**</span>value<span class="op">**</span> <span class="op">:</span>  <span class="dv">20</span><span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;gold&quot;</span>}<span class="op">,</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>{<span class="op">**</span>label<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;Moon&quot;</span><span class="op">,</span> <span class="op">**</span>value<span class="op">**</span> <span class="op">:</span>  <span class="dv">8</span><span class="op">,</span> <span class="op">**</span>fill<span class="op">**</span> <span class="op">:</span> <span class="st">&quot;steelblue&quot;</span>}</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="paramètres-optionnels-2" class="level3" data-number="5.1.3">
 <h3 data-number="5.1.3" class="anchored" data-anchor-id="paramètres-optionnels-2"><span class="header-section-number">5.1.3</span> Paramètres optionnels</h3>
@@ -3195,13 +3251,15 @@ vertical-align: -.125em;
 </section>
 <section id="exemple-de-dataset-optionnel-2" class="level3" data-number="5.1.4">
 <h3 data-number="5.1.4" class="anchored" data-anchor-id="exemple-de-dataset-optionnel-2"><span class="header-section-number">5.1.4</span> Exemple de dataset optionnel</h3>
-<p>couleurs = [“black”, “crimson”, “silver”, “gold”, “steelblue”]</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>couleurs <span class="op">=</span> [<span class="st">&quot;black&quot;</span><span class="op">,</span> <span class="st">&quot;crimson&quot;</span><span class="op">,</span> <span class="st">&quot;silver&quot;</span><span class="op">,</span> <span class="st">&quot;gold&quot;</span><span class="op">,</span> <span class="st">&quot;steelblue&quot;</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="exemples-dappels-de-la-fonction-2" class="level3" data-number="5.1.5">
-<h3 data-number="5.1.5" class="anchored" data-anchor-id="exemples-dappels-de-la-fonction-2"><span class="header-section-number">5.1.5</span> Exemples d’appels de la fonction</h3>
-<p>piechart_creator(dataset_piechart)</p>
-<p>piechart_creator(dataset_piechart, couleurs, 300)</p>
-<p>piechart_creator(dataset_piechart, undefined, 300)</p>
+<section id="exemples-dappels-de-la-fonction-1" class="level3" data-number="5.1.5">
+<h3 data-number="5.1.5" class="anchored" data-anchor-id="exemples-dappels-de-la-fonction-1"><span class="header-section-number">5.1.5</span> Exemples d’appels de la fonction</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">piechart_creator</span>(dataset_piechart)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">piechart_creator</span>(dataset_piechart<span class="op">,</span> couleurs<span class="op">,</span> <span class="dv">300</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">piechart_creator</span>(dataset_piechart<span class="op">,</span> <span class="kw">undefined</span><span class="op">,</span> <span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 </section>
@@ -3217,31 +3275,37 @@ vertical-align: -.125em;
 </section>
 <section id="exemple-de-dataset-obligatoire-3" class="level3" data-number="6.1.2">
 <h3 data-number="6.1.2" class="anchored" data-anchor-id="exemple-de-dataset-obligatoire-3"><span class="header-section-number">6.1.2</span> Exemple de dataset obligatoire</h3>
-<p>const dataset_nodelink = {</p>
-<p><strong>nodes</strong> : [</p>
-<pre><code>{id: 1, name: &quot;A&quot;},
-{id: 2, name: &quot;B&quot;},
-{id: 3, name: &quot;C&quot;},
-{id: 4, name: &quot;D&quot;},
-{id: 5, name: &quot;E&quot;},
-{id: 6, name: &quot;F&quot;},
-{id: 7, name: &quot;G&quot;},
-{id: 8, name: &quot;H&quot;},
-{id: 9, name: &quot;I&quot;},
-{id: 10, name: &quot;J&quot;}</code></pre>
-<p>],</p>
-<p><strong>links</strong> : [</p>
-<pre><code>{source: 1, target: 2},
-{source: 1, target: 5},
-{source: 1, target: 6},
-{source: 2, target: 3},
-{source: 2, target: 7},
-{source: 3, target: 4},
-{source: 8, target: 3},
-{source: 4, target: 5},
-{source: 4, target: 9},
-{source: 5, target: 10}</code></pre>
-<p>] }</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> dataset_nodelink <span class="op">=</span> {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">**</span>nodes<span class="op">**</span> <span class="op">:</span> [</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;A&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;B&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;C&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;D&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;E&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;F&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">7</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;G&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;H&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">9</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;I&quot;</span>}<span class="op">,</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">id</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;J&quot;</span>}</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="op">**</span>links<span class="op">**</span> <span class="op">:</span> [</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">2</span>}<span class="op">,</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">5</span>}<span class="op">,</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">6</span>}<span class="op">,</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">3</span>}<span class="op">,</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">7</span>}<span class="op">,</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">4</span>}<span class="op">,</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">3</span>}<span class="op">,</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">5</span>}<span class="op">,</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">9</span>}<span class="op">,</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">source</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">target</span><span class="op">:</span> <span class="dv">10</span>}</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="paramètres-optionnels-3" class="level3" data-number="6.1.3">
 <h3 data-number="6.1.3" class="anchored" data-anchor-id="paramètres-optionnels-3"><span class="header-section-number">6.1.3</span> Paramètres optionnels</h3>
@@ -3251,13 +3315,15 @@ vertical-align: -.125em;
 </section>
 <section id="exemple-de-dataset-optionnel-3" class="level3" data-number="6.1.4">
 <h3 data-number="6.1.4" class="anchored" data-anchor-id="exemple-de-dataset-optionnel-3"><span class="header-section-number">6.1.4</span> Exemple de dataset optionnel</h3>
-<p>couleurs = [“black”, “gold”]</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>couleurs <span class="op">=</span> [<span class="st">&quot;black&quot;</span><span class="op">,</span> <span class="st">&quot;gold&quot;</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="exemples-dappels-de-la-fonction-3" class="level3" data-number="6.1.5">
-<h3 data-number="6.1.5" class="anchored" data-anchor-id="exemples-dappels-de-la-fonction-3"><span class="header-section-number">6.1.5</span> Exemples d’appels de la fonction</h3>
-<p>nodelink_creator(dataset_nodelink)</p>
-<p>nodelink_creator(dataset_nodelink, couleurs, -200, 300)</p>
-<p>nodelink_creator(dataset_nodelink, undefined, undefined, 300)</p>
+<section id="exemples-dappels-de-la-fonction-2" class="level3" data-number="6.1.5">
+<h3 data-number="6.1.5" class="anchored" data-anchor-id="exemples-dappels-de-la-fonction-2"><span class="header-section-number">6.1.5</span> Exemples d’appels de la fonction</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nodelink_creator</span>(dataset_nodelink)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nodelink_creator</span>(dataset_nodelink<span class="op">,</span> couleurs<span class="op">,</span> <span class="op">-</span><span class="dv">200</span><span class="op">,</span> <span class="dv">300</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nodelink_creator</span>(dataset_nodelink<span class="op">,</span> <span class="kw">undefined</span><span class="op">,</span> <span class="kw">undefined</span><span class="op">,</span> <span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 </section>
