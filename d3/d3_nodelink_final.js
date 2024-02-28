@@ -29,7 +29,7 @@ const dataset_nodelink = {
 
 let couleurs = ["gold", "green"]
 
-async function nodelink_creator(data, colors = [], strength = -400, longueur = 380) {
+function nodelink_creator(data, colors = [], strength = -400, longueur = 380) {
   
   const donnees = data
   const margin = {top: 5, right: 5, bottom: 5, left: 5}

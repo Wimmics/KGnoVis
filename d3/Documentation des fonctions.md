@@ -90,7 +90,26 @@ Enfin, le dernier paramètre est la longueur du SVG (qui sera toujours un carré
 couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
 ```
 
-### Exemples d'appels de la fonction => Ajout hmtl et dessin
+### Exemples d'appels de la fonction
+
+```html
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<script src="https://d3js.org/d3.v7.min.js" defer></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
+    <script src="d3_barchart_final.js" defer type="module"></script>
+    <link rel="stylesheet" href="../bordure.css">
+    <title>Graphiques d3</title>
+</head>
+<body>
+    <div id="svg_wrapper" style="white-space: nowrap;">
+        <svg id="d3_barchart", style="display:inline"></svg>
+    </div>
+
+</body>
+</html>
+```
 
 ```javascript
 barchart_creator(dataset_barchart)
@@ -151,6 +170,25 @@ couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
 ```
 ### Exemples d'appels de la fonction
 
+```html
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<script src="https://d3js.org/d3.v7.min.js" defer></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
+    <script src="d3_stackedchart_final.js" defer type="module"></script>
+    <link rel="stylesheet" href="../bordure.css">
+    <title>Graphiques d3</title>
+</head>
+<body>
+    <div id="svg_wrapper" style="white-space: nowrap;">
+        <svg id="d3_stackedchart", style="display:inline"></svg>
+    </div>
+
+</body>
+</html>
+```
+
 ```javascript
 stackedchart_creator(dataset_stackedchart)
 
@@ -202,6 +240,25 @@ couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
 ```
 
 ### Exemples d'appels de la fonction
+
+```html
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<script src="https://d3js.org/d3.v7.min.js" defer></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
+    <script src="d3_piechart_final.js" defer type="module"></script>
+    <link rel="stylesheet" href="../bordure.css">
+    <title>Graphiques d3</title>
+</head>
+<body>
+    <div id="svg_wrapper" style="white-space: nowrap;">
+        <svg id="d3_piechart", style="display:inline"></svg>
+    </div>
+
+</body>
+</html>
+```
 
 ```javascript
 piechart_creator(dataset_piechart)
@@ -274,6 +331,25 @@ couleurs = ["black", "gold"]
 ```
 
 ### Exemples d'appels de la fonction
+
+```html
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<script src="https://d3js.org/d3.v7.min.js" defer></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
+    <script src="d3_nodelink_final.js" defer type="module"></script>
+    <link rel="stylesheet" href="../bordure.css">
+    <title>Graphiques d3</title>
+</head>
+<body>
+    <div id="svg_wrapper" style="white-space: nowrap;">
+        <svg id="d3_nodelink", style="display:inline"></svg>
+    </div>
+
+</body>
+</html>
+```
 
 ```javascript
 nodelink_creator(dataset_nodelink)
