@@ -517,6 +517,8 @@ const visualisation = (config) => {
         piechart_creator(config)
       } else if (config.type === "nodelink") {
         nodelink_creator(config)
+      } else {
+        console.error("Le type ne correspond pas aux différentes visualisations possibles")
       }
 
 }
