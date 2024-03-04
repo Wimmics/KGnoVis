@@ -60,16 +60,18 @@
         ]
       }
 
-    const couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
+    const couleurs = ["green", "crimson", "silver", "gold", "steelblue"]
+    const couleur_texte = ["black"]
+    const couleurs_nodelink = ["crimson", "steelblue"]
 
       
     //let configuration = {data : donnees, type : visu, options : {couleurs}}
     let config_barchart = {data : dataset_barchart, type : "barchart", options : {longueur : 400, vertical_bar : true, is_log : false}}
     let config_stackedchart = {data : dataset_stackedchart, type : "stackedchart", options : {colors : couleurs, longueur : 400, vertical_bar : true}}
-    let config_piechart = {data : dataset_piechart, type : "piechart", options : {colors : couleurs, longueur : 400}}
-    let config_nodelink = {data : dataset_nodelink, type : "nodelink", options : {colors : couleurs, longueur : 400, strength : -400}}
+    let config_piechart = {data : dataset_piechart, type : "piechart", options : {colors : couleurs, longueur : 400, color_text : couleur_texte}}
+    let config_nodelink = {data : dataset_nodelink, type : "nodelink", options : {colors : couleurs_nodelink, longueur : 400, strength : -400}}
 
-    visualisation(config_barchart)
+    visualisation(config_nodelink)
 
     </script>
     <div id="svg_wrapper" style="white-space: nowrap;">
