@@ -5,11 +5,12 @@ const couleurs = ["green", "crimson", "silver", "gold", "steelblue"]
 const barchart_creator = (config_barchart) => {
 
     console.log(config_barchart)
-    let longueur = config_barchart.options.longueur
-    let donnees = config_barchart.data
-    let is_log = config_barchart.options.is_log
-    let vertical_bar = config_barchart.options.vertical_bar
 
+    let donnees = config_barchart.data
+
+    let longueur = config_barchart.options.hasOwnProperty("longueur") ? config_barchart.options.longueur : 400
+    let vertical_bar = config_barchart.options.hasOwnProperty("vertical_bar") ? config_barchart.options.vertical_bar : true
+    let is_log = config_barchart.options.hasOwnProperty("is_log") ? config_barchart.options.is_log : false
     let colors = config_barchart.options.hasOwnProperty("colors") ? config_barchart.options.colors : couleurs
 
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
@@ -58,7 +59,7 @@ const barchart_creator = (config_barchart) => {
     } catch (error) {
         console.error("Le dataset n'est pas au bon format : ", error)
     }
-// ZENERHTBGQRQEGSNTEGHZTNBRGSEDFH ETBZGAZGSR4REBS 4GBDSZF4AEZBF4AZDS Question de la couleur
+
     let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(colors)
 
     let uniqueLabels = []
@@ -81,11 +82,11 @@ const barchart_creator = (config_barchart) => {
             if (choice === "x") {
                 val_choisie = origin + i*ecart + d.incr*(x_scale.bandwidth() / taille)
             } else if (choice === "y") {
-                val_choisie = y_scale(d.value)
+                val_choisie = long2 - y_scale(d.value)
             } else if (choice === "width") {
                 val_choisie = (x_scale.bandwidth() / taille) - varPadding
             } else if (choice === "height") {
-                val_choisie = longueur-10 - y_scale(d.value)
+                val_choisie = y_scale(d.value)
             } else {
                 console.log("mauvais choice")
             }
@@ -210,10 +211,11 @@ const barchart_creator = (config_barchart) => {
 const stackedchart_creator = (config_stackedchart) => {
 
     console.log(config_stackedchart)
-    let longueur = config_stackedchart.options.longueur
-    let donnees = config_stackedchart.data
-    let vertical_bar = config_stackedchart.options.vertical_bar
 
+    let donnees = config_stackedchart.data
+
+    let longueur = config_stackedchart.options.hasOwnProperty("longueur") ? config_stackedchart.options.longueur : 400
+    let vertical_bar = config_stackedchart.options.hasOwnProperty("vertical_bar") ? config_stackedchart.options.vertical_bar : true
     let colors = config_stackedchart.options.hasOwnProperty("colors") ? config_stackedchart.options.colors : couleurs
 
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
@@ -222,8 +224,8 @@ const stackedchart_creator = (config_stackedchart) => {
     const long2 = longueur*0.8
 
     let svg2 = svg.append("svg")
-            .attr("x", longueur*0.1)
-            .attr("y", longueur*0.1)
+            .attr("x", longueur*0.15)
+            .attr("y", longueur*0.15)
             .attr("width", long2)
             .attr("height", long2)
 
@@ -381,8 +383,9 @@ const stackedchart_creator = (config_stackedchart) => {
 const piechart_creator = (config_piechart) => {
 
     console.log(config_piechart)
-    let longueur = config_piechart.options.longueur
     let donnees = config_piechart.data
+
+    let longueur = config_piechart.options.hasOwnProperty("longueur") ? config_piechart.options.longueur : 400
     let colors = config_piechart.options.hasOwnProperty("colors") ? config_piechart.options.colors : couleurs
     let color_text = config_piechart.options.hasOwnProperty("color_text") ? config_piechart.options.color_text : couleurs[0]
 
@@ -460,8 +463,10 @@ const piechart_creator = (config_piechart) => {
 
 function nodelink_creator(config_nodelink) {
 
-    let longueur = config_nodelink.options.longueur
+    
     let donnees = config_nodelink.data
+
+    let longueur = config_nodelink.options.hasOwnProperty("longueur") ? config_nodelink.options.longueur : 400
     let colors = config_nodelink.options.hasOwnProperty("colors") ? config_nodelink.options.colors : couleurs
     let strength = config_nodelink.options.hasOwnProperty("strength") ? config_nodelink.options.strength : -400
 

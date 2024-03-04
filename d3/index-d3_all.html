@@ -66,12 +66,12 @@
 
       
     //let configuration = {data : donnees, type : visu, options : {couleurs}}
-    let config_barchart = {data : dataset_barchart, type : "barchart", options : {longueur : 400, vertical_bar : true, is_log : false}}
+    let config_barchart = {data : dataset_barchart, type : "barchart", options : {longueur : 400, vertical_bar : true, is_log : false}} //Problème d'ordre là => inverser uniquement pour true (longueur - (longueur - valeur)) j'pense
     let config_stackedchart = {data : dataset_stackedchart, type : "stackedchart", options : {colors : couleurs, longueur : 400, vertical_bar : true}}
     let config_piechart = {data : dataset_piechart, type : "piechart", options : {colors : couleurs, longueur : 400, color_text : couleur_texte}}
     let config_nodelink = {data : dataset_nodelink, type : "nodelink", options : {colors : couleurs_nodelink, longueur : 400, strength : -400}}
 
-    visualisation(config_nodelink)
+    visualisation(config_barchart)
 
     </script>
     <div id="svg_wrapper" style="white-space: nowrap;">
