@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
+    <script src="mission.js" defer type="module"></script>
+    <link rel="stylesheet" href="../bordure.css">
     <title>Analyse de SparQL</title>
     <style>
         .right-align {
             float: right
         }
-
         textarea {
             width: 100%
-        }
+        }      
     </style>
+    <script type="module">
+        import test from "./mission.js"
+        import recupererDonnees from "./mission.js"
+    </script>
+
 </head>
 <body>
     <form>
         <label for="user_text">Veuillez entrer la requête SparQL</label><br>
         <textarea id="user_text" name="user_message" rows="10"></textarea><br>
-        <input type="submit" value="Envoyer" class="right-align">
+        <input type="submit" value="Envoyer" class="right-align" onclick="test()">
+        <button onclick="recupererDonnees()">Récupérer les données</button>
     </form>
 </body>
 </html>
