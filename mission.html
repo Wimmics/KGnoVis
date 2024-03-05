@@ -16,8 +16,16 @@
         }      
     </style>
     <script type="module">
-        import test from "./mission.js"
-        import recupererDonnees from "./mission.js"
+        import {test, recupererDonnees} from "./mission.js"
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var boutonEnvoyer = document.querySelector('#test1')
+            boutonEnvoyer.addEventListener('click', function(event) {
+                event.preventDefault()
+                test()
+                recupererDonnees()
+            })
+        })
     </script>
 
 </head>
@@ -25,8 +33,7 @@
     <form>
         <label for="user_text">Veuillez entrer la requête SparQL</label><br>
         <textarea id="user_text" name="user_message" rows="10"></textarea><br>
-        <input type="submit" value="Envoyer" class="right-align" onclick="test()">
-        <button onclick="recupererDonnees()">Récupérer les données</button>
+        <button id="test1">Envoyer</button>
     </form>
 </body>
 </html>
