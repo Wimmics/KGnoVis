@@ -66,18 +66,13 @@
 
       
     //let configuration = {data : donnees, type : visu, options : {couleurs}}
-    let config_barchart = {data : dataset_barchart, type : "barchart", options : {longueur : 400, colors : couleurs, vertical_bar : true, is_log : false}}
-    let config_stackedchart = {data : dataset_stackedchart, type : "stackedchart", options : {colors : couleurs, longueur : 400, vertical_bar : true}}
-    let config_piechart = {data : dataset_piechart, type : "piechart", options : {colors : couleurs, longueur : 400, color_text : couleur_texte}}
-    let config_nodelink = {data : dataset_nodelink, type : "nodelink", options : {colors : couleurs_nodelink, longueur : 400, strength : -400}}
-/*
-    width/height
-    méchant franglais
+    let config_barchart = {data : dataset_barchart, type : "barchart", options : {width : 400, height : 400, colors : couleurs, vertical_bar : true, scale : false}}
+    let config_stackedchart = {data : dataset_stackedchart, type : "stackedchart", options : {colors : couleurs, width : 400, height : 400, vertical_bar : true}}
+    let config_piechart = {data : dataset_piechart, type : "piechart", options : {colors : couleurs, width : 400, height : 400, color_text : couleur_texte}}
+    let config_nodelink = {data : dataset_nodelink, type : "nodelink", options : {colors : couleurs_nodelink, width : 400, height : 400, strength : -400}}
 
-    scale => linear/log
+    // Il reste à changer scale en character
 
-    chercher comment mettre des couleurs auto en fonction du nombre de dataset
-*/
     visualisation(config_barchart)
 
     </script>

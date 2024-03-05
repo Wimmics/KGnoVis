@@ -10,30 +10,41 @@ const dataset_barchart = [
 
 const couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
 
-const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, is_log = false, longueur = 400) => {
+const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, scale = false, width = 400, height = 400) => {
 
     const taille = Math.max(donnees.length, 5)
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const varPadding = 1
     const domaine = d3.max(donnees, d => d3.max(d.values, e => e.value))
-    const long2 = longueur*0.8
 
-    const svg = d3.select("#d3_barchart").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const svg = d3.select("#d3_barchart").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
+
+    const width2 = width*0.8
+    const height2 = height*0.8
 
     let svg2 = svg.append("svg")
-        .attr("x", longueur*0.1)
-        .attr("y", longueur*0.1)
-        .attr("width", long2)
-        .attr("height", long2)
+        .attr("x", width*0.1)
+        .attr("y", height*0.1)
+        .attr("width", width2)
+        .attr("height", height2)
 
     let x_scale
     let y_scale
     
-    x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, long2]).padding(0.1)
-    if (!is_log) {
-        y_scale = d3.scaleLinear().domain([0, domaine]).range([0, long2*0.9])
+    if (vertical_bar = true) {
+        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width2]).padding(0.1)
+        if (!scale) {
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, height2*0.9])
+        } else {
+            y_scale = d3.scaleLog().domain([1, domaine]).range([0, height2*0.9]) 
+        }
     } else {
-        y_scale = d3.scaleLog().domain([1, domaine]).range([0, long2*0.9]) 
+        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, height2]).padding(0.1)
+        if (!scale) {
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, width2*0.9])
+        } else {
+            y_scale = d3.scaleLog().domain([1, domaine]).range([0, width2*0.9]) 
+        }
     }
 
     let exploitable = []
@@ -87,11 +98,11 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, is_log =
             if (choice === "x") {
                 val_choisie = origin + i*ecart + d.incr*(x_scale.bandwidth() / taille)
             } else if (choice === "y") {
-                val_choisie = y_scale(d.value)
+                val_choisie = height2 - y_scale(d.value)
             } else if (choice === "width") {
                 val_choisie = (x_scale.bandwidth() / taille) - varPadding
             } else if (choice === "height") {
-                val_choisie = longueur-10 - y_scale(d.value)
+                val_choisie = y_scale(d.value)
             } else {
                 console.log("mauvais choice")
             }
@@ -177,9 +188,9 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, is_log =
         svg.selectAll("labels")
             .data(uniqueLabels).enter()
             .append("text")
-            .attr("x", (d,i) => longueur/10 + origin + i*ecart)
-            .attr("y", longueur*0.95)
-            .text(function(d){ return d})
+            .attr("x", (d,i) => width/10 + origin + i*ecart)
+            .attr("y", height*0.95)
+            .text(d => d)
             .attr("text-anchor", "left")
             .style("alignment-baseline", "middle")
 
@@ -202,7 +213,7 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, is_log =
         svg.selectAll("labels")
             .data(uniqueLabels).enter()
             .append("text")
-            .attr("y", (d,i) => longueur/10 + 5*origin + i*ecart)
+            .attr("y", (d,i) => width/10 + 5*origin + i*ecart)
             .attr("x", 5)
             .text(d => d.substring(0, 5))
             .attr("text-anchor", "left")

@@ -8,21 +8,23 @@ const barchart_creator = (config_barchart) => {
 
     let donnees = config_barchart.data
 
-    let longueur = config_barchart.options.hasOwnProperty("longueur") ? config_barchart.options.longueur : 400
+    let width = config_barchart.options.hasOwnProperty("width") ? config_barchart.options.width : 400
+    let height = config_barchart.options.hasOwnProperty("height") ? config_barchart.options.height : 400
     let vertical_bar = config_barchart.options.hasOwnProperty("vertical_bar") ? config_barchart.options.vertical_bar : true
-    let is_log = config_barchart.options.hasOwnProperty("is_log") ? config_barchart.options.is_log : false
-    let colors = config_barchart.options.hasOwnProperty("colors") ? config_barchart.options.colors : couleurs
+    let scale = config_barchart.options.hasOwnProperty("scale") ? config_barchart.options.scale: false
+    let colors = config_barchart.options.hasOwnProperty("colors") ? config_barchart.options.colors : [0]
 
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
-    const svg = d3.select("#d3_visualisation").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const svg = d3.select("#d3_visualisation").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
-    const long2 = longueur*0.8
+    const width2 = width*0.8
+    const height2 = height*0.8
 
     let svg2 = svg.append("svg")
-            .attr("x", longueur*0.1)
-            .attr("y", longueur*0.1)
-            .attr("width", long2)
-            .attr("height", long2)
+            .attr("x", width*0.1)
+            .attr("y", height*0.1)
+            .attr("width", width2)
+            .attr("height", height2)
 
     const taille = Math.max(donnees.length, 5)
     const varPadding = 1
@@ -30,13 +32,25 @@ const barchart_creator = (config_barchart) => {
 
     let x_scale
     let y_scale
-    
-    x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, long2]).padding(0.1)
-    if (!is_log) {
-        y_scale = d3.scaleLinear().domain([0, domaine]).range([0, long2*0.9])
-    } else {
-        y_scale = d3.scaleLog().domain([1, domaine]).range([0, long2*0.9]) 
+
+    if (vertical_bar === true) {
+        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width2]).padding(0.1)
+        if (!scale) {
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, height2*0.9])
+        } else {
+            y_scale = d3.scaleLog().domain([1, domaine]).range([0, height2*0.9]) 
+        }
     }
+    if (vertical_bar === false) {
+        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, height2]).padding(0.1)
+        if (!scale) {
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, width2*0.9])
+        } else {
+            y_scale = d3.scaleLog().domain([1, domaine]).range([0, width2*0.9]) 
+        }
+    }
+    
+    
 
     let exploitable = []
     let keys = []
@@ -60,7 +74,14 @@ const barchart_creator = (config_barchart) => {
         console.error("Le dataset n'est pas au bon format : ", error)
     }
 
-    let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(colors)
+    let colorScale
+    
+    if (colors == [0]) {
+        colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(keys)
+        colors = d3.schemeCategory10
+    } else {
+        colorScale = d3.scaleOrdinal().domain(keys).range(colors)
+    }
 
     let uniqueLabels = []
     donnees.forEach(item => {
@@ -82,7 +103,7 @@ const barchart_creator = (config_barchart) => {
             if (choice === "x") {
                 val_choisie = origin + i*ecart + d.incr*(x_scale.bandwidth() / taille)
             } else if (choice === "y") {
-                val_choisie = long2 - y_scale(d.value)
+                val_choisie = height2 - y_scale(d.value)
             } else if (choice === "width") {
                 val_choisie = (x_scale.bandwidth() / taille) - varPadding
             } else if (choice === "height") {
@@ -131,7 +152,7 @@ const barchart_creator = (config_barchart) => {
         .attr("y", (d,i) => choix("y", d, i))
         .attr("width", (d,i) => choix("width", d, i))
         .attr("height", (d,i) => choix("height", d, i))
-        .style("fill", d => echelle_couleurs(d.parents))
+        .style("fill", d => colorScale(d.parents))
 
     // Légende
 
@@ -172,8 +193,8 @@ const barchart_creator = (config_barchart) => {
         svg.selectAll("labels")
             .data(uniqueLabels).enter()
             .append("text")
-            .attr("x", (d,i) => longueur/10 + origin + i*ecart)
-            .attr("y", longueur*0.95)
+            .attr("x", (d,i) => width/10 + origin + i*ecart)
+            .attr("y", height*0.95)
             .text(function(d){ return d})
             .attr("text-anchor", "left")
             .style("alignment-baseline", "middle")
@@ -197,7 +218,7 @@ const barchart_creator = (config_barchart) => {
         svg.selectAll("labels")
             .data(uniqueLabels).enter()
             .append("text")
-            .attr("y", (d,i) => longueur/10 + 5*origin + i*ecart)
+            .attr("y", (d,i) => width/10 + 5*origin + i*ecart)
             .attr("x", 5)
             .text(d => d.substring(0, 5))
             .attr("text-anchor", "left")
@@ -214,20 +235,22 @@ const stackedchart_creator = (config_stackedchart) => {
 
     let donnees = config_stackedchart.data
 
-    let longueur = config_stackedchart.options.hasOwnProperty("longueur") ? config_stackedchart.options.longueur : 400
+    let width = config_stackedchart.options.hasOwnProperty("width") ? config_stackedchart.options.width : 400
+    let height = config_stackedchart.options.hasOwnProperty("height") ? config_stackedchart.options.height : 400
     let vertical_bar = config_stackedchart.options.hasOwnProperty("vertical_bar") ? config_stackedchart.options.vertical_bar : true
-    let colors = config_stackedchart.options.hasOwnProperty("colors") ? config_stackedchart.options.colors : couleurs
+    let colors = config_stackedchart.options.hasOwnProperty("colors") ? config_stackedchart.options.colors : d3.schemeCategory10
 
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
-    const svg = d3.select("#d3_visualisation").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const svg = d3.select("#d3_visualisation").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
-    const long2 = longueur*0.8
+    const width2 = width*0.8
+    const height2 = height*0.8
 
     let svg2 = svg.append("svg")
-            .attr("x", longueur*0.15)
-            .attr("y", longueur*0.15)
-            .attr("width", long2)
-            .attr("height", long2)
+            .attr("x", width*0.15)
+            .attr("y", height*0.15)
+            .attr("width", width2)
+            .attr("height", height2)
 
     // Initialisation
 
@@ -259,14 +282,16 @@ const stackedchart_creator = (config_stackedchart) => {
         })
     })
 
-    // Création du svg
-
-    const x_scale = d3.scaleBand()
-        .domain(dataset.map(d => d.group))
-        .range([0, long2])
-        .padding(0.1)
-
+    let x_scale
     let y_scale
+
+    if (vertical_bar === true) {
+        x_scale = d3.scaleBand().domain(dataset.map(d => d.group)).range([0, width2]).padding(0.1)
+        y_scale = d3.scaleLinear().domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)]).range([height2*0.9, 0])
+    } else {
+        x_scale = d3.scaleBand().domain(dataset.map(d => d.group)).range([0, width2]).padding(0.1)
+        y_scale = d3.scaleLinear().domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)]).range([0, width2*0.9])
+    }
 
     // Fonction de choix
 
@@ -275,9 +300,6 @@ const stackedchart_creator = (config_stackedchart) => {
         let val_choisie = 0
 
         if (vertical_bar === true) {
-            y_scale = d3.scaleLinear()
-                .domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)])
-                .range([long2*0.9, 0])
             if (choice === "x") {
                 val_choisie = x_scale(d.data.group)
             } else if (choice === "y") {
@@ -291,9 +313,6 @@ const stackedchart_creator = (config_stackedchart) => {
             }
 
         } else {
-            y_scale = d3.scaleLinear()
-                .domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)])
-                .range([0, long2*0.9])
             if (choice === "x") {
                 val_choisie = y_scale(d[0])
             } else if (choice === "y") {
@@ -360,8 +379,8 @@ const stackedchart_creator = (config_stackedchart) => {
         svg.selectAll("labels")
             .data(uniqueLabels).enter()
             .append("text")
-            .attr("x", (d,i) => longueur*0.15 + origin + i*ecart)
-            .attr("y", longueur*0.95)
+            .attr("x", (d,i) => width*0.15 + origin + i*ecart)
+            .attr("y", height*0.95)
             .text(d => d)
             .attr("text-anchor", "left")
             .style("alignment-baseline", "middle")
@@ -371,7 +390,7 @@ const stackedchart_creator = (config_stackedchart) => {
         svg.selectAll("labels")
             .data(uniqueLabels).enter()
             .append("text")
-            .attr("y", (d,i) => longueur*0.15 + 5*origin + i*ecart)
+            .attr("y", (d,i) => height*0.15 + 5*origin + i*ecart)
             .attr("x", 5)
             .text(d => d.substring(0, 5))
             .attr("text-anchor", "left")
@@ -385,15 +404,19 @@ const piechart_creator = (config_piechart) => {
     console.log(config_piechart)
     let donnees = config_piechart.data
 
-    let longueur = config_piechart.options.hasOwnProperty("longueur") ? config_piechart.options.longueur : 400
-    let colors = config_piechart.options.hasOwnProperty("colors") ? config_piechart.options.colors : couleurs
-    let color_text = config_piechart.options.hasOwnProperty("color_text") ? config_piechart.options.color_text : couleurs[0]
+    let width = config_piechart.options.hasOwnProperty("width") ? config_piechart.options.width : 400
+    let height = config_piechart.options.hasOwnProperty("height") ? config_piechart.options.height : 400
+    let colors = config_piechart.options.hasOwnProperty("colors") ? config_piechart.options.colors : 0
+    let color_text = config_piechart.options.hasOwnProperty("color_text") ? config_piechart.options.color_text : d3.schemeCategory10[0]
 
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
-    const svg = d3.select("#d3_visualisation").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const svg = d3.select("#d3_visualisation").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
+
+    const longueur = Math.min(width, height)
 
     let pie = []
     let data_pie = []
+
     try{
         pie = d3.pie().value(d => d.value)
         data_pie = pie(donnees)
@@ -426,7 +449,14 @@ const piechart_creator = (config_piechart) => {
         console.error("Le dataset n'est pas au bon format : ", error)
     }
 
-    let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(colors)
+    let colorScale
+    
+    if (colors === 0) {
+        colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(keys)
+        colors = d3.schemeCategory10
+    } else {
+        colorScale = d3.scaleOrdinal().domain(keys).range(colors)
+    }
 
     let label = d3.arc()
                     .outerRadius(radius)
@@ -440,7 +470,7 @@ const piechart_creator = (config_piechart) => {
 
     arcs.append("path")
         .attr("fill", function(d, i) {
-            return echelle_couleurs(i)
+            return colorScale(i)
         })
         .attr("d", arc)
 
@@ -466,12 +496,13 @@ function nodelink_creator(config_nodelink) {
     
     let donnees = config_nodelink.data
 
-    let longueur = config_nodelink.options.hasOwnProperty("longueur") ? config_nodelink.options.longueur : 400
-    let colors = config_nodelink.options.hasOwnProperty("colors") ? config_nodelink.options.colors : couleurs
+    let width = config_nodelink.options.hasOwnProperty("width") ? config_nodelink.options.width : 400
+    let height = config_nodelink.options.hasOwnProperty("height") ? config_nodelink.options.height : 400
+    let colors = config_nodelink.options.hasOwnProperty("colors") ? config_nodelink.options.colors : d3.schemeCategory10
     let strength = config_nodelink.options.hasOwnProperty("strength") ? config_nodelink.options.strength : -400
 
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
-    const svg = d3.select("#d3_visualisation").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const svg = d3.select("#d3_visualisation").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
     
     const link = svg.selectAll("line")
         .data(donnees.links)
@@ -502,7 +533,7 @@ function nodelink_creator(config_nodelink) {
         .links(donnees.links)                                 
         )
         .force("charge", d3.forceManyBody().strength(strength))
-        .force("center", d3.forceCenter(longueur / 2, longueur / 2))
+        .force("center", d3.forceCenter(width / 2, height / 2))
         .on("end", ticked)
         
     }
