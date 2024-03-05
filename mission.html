@@ -16,7 +16,7 @@
         }      
     </style>
     <script type="module">
-        import {test, recupererDonnees} from "./mission.js"
+        import {test, recupererDonnees, remplirTableau} from "./mission.js"
 
         document.addEventListener('DOMContentLoaded', function() {
             var boutonEnvoyer = document.querySelector('#test1')
@@ -24,6 +24,7 @@
                 event.preventDefault()
                 test()
                 recupererDonnees()
+                remplirTableau()
             })
         })
     </script>
@@ -35,5 +36,10 @@
         <textarea id="user_text" name="user_message" rows="10"></textarea><br>
         <button id="test1">Envoyer</button>
     </form>
+    <div>
+        <table id = "monTableau" border="1" cellpadding="5"></table>
+    </div>
+    
+
 </body>
 </html>
