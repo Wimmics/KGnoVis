@@ -29,33 +29,30 @@ const dataset_nodelink = {
 
 let couleurs = ["gold", "green"]
 
-function nodelink_creator(data, colors = [], strength = -400, longueur = 380) {
+function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400) {
   
   const donnees = data
   const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
-  let coloration
   if (colors.length != 2) {
-    coloration = ["red", "steelblue"]
-  } else {
-    coloration = colors
+    colors = ["red", "steelblue"]
   }
 
   const svg = d3.select("#d3_nodelink")
-    .attr("width", longueur + margin.left + margin.right)
-    .attr("height", longueur + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
     .append("g")
 
   const link = svg.selectAll("line")
     .data(donnees.links)
     .join("line")
-    .style("stroke", coloration[0])
+    .style("stroke", colors[0])
 
   const node = svg.selectAll("circle")
     .data(donnees.nodes)
     .join("circle")
     .attr("r", 20)
-    .style("fill", coloration[1])
+    .style("fill", colors[1])
     
   function ticked() {
     link
@@ -75,12 +72,12 @@ function nodelink_creator(data, colors = [], strength = -400, longueur = 380) {
       .links(donnees.links)                                 
     )
     .force("charge", d3.forceManyBody().strength(strength))
-    .force("center", d3.forceCenter(longueur / 2, longueur / 2))
+    .force("center", d3.forceCenter(width / 2, height / 2))
     .on("end", ticked)
     
 }
 
-nodelink_creator(dataset_nodelink, couleurs, -400)
+nodelink_creator(dataset_nodelink)
 
 
 

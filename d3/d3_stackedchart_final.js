@@ -1,16 +1,16 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const dataset_stackedchart = [
-    {category :"Clouds", values : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}], fill : "black"},
-    {category :"Flower", values : [{value : 10, label : "Wolf"}, {value : 20, label : "Eagle"}, {value : 15, label : "Deer"}, {value : 25, label : "Lion"}, {value : 30, label : "Dragon"}], fill : "crimson"},
-    {category :"Snow", values :  [{value : 6, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 2, label : "Deer"}, {value : 4, label : "Lion"}, {value : 5, label : "Dragon"}], fill : "silver"},
-    {category :"Wind", values :  [{value : 20, label : "Wolf"}, {value : 30, label : "Eagle"}, {value : 10, label : "Deer"}, {value : 12, label : "Lion"}, {value : 18, label : "Dragon"}], fill : "gold"},
-    {category :"Moon", values :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}], fill : "lightblue"}
+    {category :"Clouds", values : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}]},
+    {category :"Flower", values : [{value : 10, label : "Wolf"}, {value : 20, label : "Eagle"}, {value : 15, label : "Deer"}, {value : 25, label : "Lion"}, {value : 30, label : "Dragon"}]},
+    {category :"Snow", values :  [{value : 6, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 2, label : "Deer"}, {value : 4, label : "Lion"}, {value : 5, label : "Dragon"}]},
+    {category :"Wind", values :  [{value : 20, label : "Wolf"}, {value : 30, label : "Eagle"}, {value : 10, label : "Deer"}, {value : 12, label : "Lion"}, {value : 18, label : "Dragon"}]},
+    {category :"Moon", values :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}]}
 ]
 
-const colors = ["black", "crimson", "silver", "gold", "steelblue"]
+const couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
 
-const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, longueur = 400) => {
+const stackedchart_creator = (data, colors = 0, vertical_bar = true, width = 400, height = 400) => {
 
     // Initialisation
 
@@ -18,22 +18,20 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
     let color = []
     let keys = []
 
-    donnees.forEach(d => {
+    data.forEach(d => {
         
         let object = {"Category" : d.category}
         keys.push(object.Category)
 
-        if (couleurs[0] === 0) {
-            let couleurs = {"color" : d.fill}
-            color.push(couleurs.color)
-        } else {
-            color = couleurs
-        }
     })
+    
+    if (colors === 0 ) {
+        colors = d3.schemeCategory10
+    }
 
-    const dataset = donnees[0].values.map((_, i) => {
-        let obj = {group: donnees[0].values[i].label }
-        donnees.forEach(data => {
+    const dataset = data[0].values.map((_, i) => {
+        let obj = {group: data[0].values[i].label }
+        data.forEach(data => {
             obj[data.category] = data.values[i].value
         })
         return obj
@@ -42,7 +40,7 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
     const item = d3.stack().keys(["Clouds", "Flower", "Snow", "Wind", "Moon"])(dataset)
 
     let uniqueLabels = []
-    donnees.forEach(item => {
+    data.forEach(item => {
         item.values.forEach(val => {
             if (!uniqueLabels.includes(val.label)) {
                 uniqueLabels.push(val.label)
@@ -52,22 +50,27 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
 
     // Création du svg
 
-    const svg = d3.select("#d3_stackedchart").attr("width", longueur + margin.left + margin.right).attr("height", longueur + margin.top + margin.bottom)
+    const svg = d3.select("#d3_stackedchart").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
-    const long2 = longueur*0.8
+    const width2 = width*0.8
+    const height2 = height*0.8
 
     let svg2 = svg.append("svg")
-        .attr("x", longueur*0.15)
-        .attr("y", longueur*0.15)
-        .attr("width", long2)
-        .attr("height", long2)
+        .attr("x", width*0.15)
+        .attr("y", height*0.15)
+        .attr("width", width2)
+        .attr("height", height2)
 
-    const x_scale = d3.scaleBand()
-        .domain(dataset.map(d => d.group))
-        .range([0, long2])
-        .padding(0.1)
-
+    let x_scale
     let y_scale
+
+    if (vertical_bar === true) {
+        x_scale = d3.scaleBand().domain(dataset.map(d => d.group)).range([0, width2]).padding(0.1)
+        y_scale = d3.scaleLinear().domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)]).range([height2*0.9, 0])
+    } else {
+        x_scale = d3.scaleBand().domain(dataset.map(d => d.group)).range([0, width2]).padding(0.1)
+        y_scale = d3.scaleLinear().domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)]).range([0, width2*0.9])
+    }
 
     // Fonction de choix
 
@@ -76,9 +79,7 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
         let val_choisie = 0
 
         if (vertical_bar === true) {
-            y_scale = d3.scaleLinear()
-                .domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)])
-                .range([long2*0.9, 0])
+            
             if (choice === "x") {
                 val_choisie = x_scale(d.data.group)
             } else if (choice === "y") {
@@ -92,9 +93,6 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
             }
 
         } else {
-            y_scale = d3.scaleLinear()
-                .domain([0, d3.max(dataset, d => d.Clouds + d.Flower + d.Snow + d.Wind + d.Moon)])
-                .range([0, long2*0.9])
             if (choice === "x") {
                 val_choisie = y_scale(d[0])
             } else if (choice === "y") {
@@ -115,7 +113,7 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
         .data(item)
         .join(
             enter => enter.append("g")
-                    .attr("fill", (d,i) => color[i]),
+                    .attr("fill", (d,i) => colors[i]),
             update => update,
             exit => exit.remove()
         )
@@ -139,14 +137,14 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
         .attr("cx", function(d,i){ return 20 + i*75})
         .attr("cy", 15)
         .attr("r", 7)
-        .style("fill", (d, i) => color[i])
+        .style("fill", (d, i) => colors[i])
 
     svg.selectAll("categories")
         .data(keys).enter()
         .append("text")
         .attr("x", function(d,i){ return 30 + i*75})
         .attr("y", 15)
-        .style("fill", (d, i) => color[i])
+        .style("fill", (d, i) => colors[i])
         .text(function(d){ return d})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
@@ -161,8 +159,8 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
         svg.selectAll("labels")
             .data(uniqueLabels).enter()
             .append("text")
-            .attr("x", (d,i) => longueur*0.15 + origin + i*ecart)
-            .attr("y", longueur*0.95)
+            .attr("x", (d,i) => width*0.15 + origin + i*ecart)
+            .attr("y", height*0.95)
             .text(function(d){ return d})
             .attr("text-anchor", "left")
             .style("alignment-baseline", "middle")
@@ -172,7 +170,7 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
         svg.selectAll("labels")
             .data(uniqueLabels).enter()
             .append("text")
-            .attr("y", (d,i) => longueur*0.15 + 5*origin + i*ecart)
+            .attr("y", (d,i) => height*0.15 + 5*origin + i*ecart)
             .attr("x", 5)
             .text(d => d.substring(0, 5))
             .attr("text-anchor", "left")
@@ -181,4 +179,4 @@ const stackedchart_creator = (donnees, couleurs = [0], vertical_bar = true, long
 
 }
 
-stackedchart_creator(dataset_stackedchart, colors, false)
+stackedchart_creator(dataset_stackedchart, undefined, false)

@@ -1,21 +1,21 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const dataset_barchart = [
-    {category :"Clouds", values : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}], fill : "black"},
-    {category :"Flower", values : [{value : 10, label : "Wolf"}, {value : 20, label : "Eagle"}, {value : 15, label : "Deer"}, {value : 25, label : "Lion"}, {value : 30, label : "Dragon"}], fill : "crimson"},
-    {category :"Snow", values :  [{value : 6, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 2, label : "Deer"}, {value : 4, label : "Lion"}, {value : 5, label : "Dragon"}], fill : "silver"},
-    {category :"Wind", values :  [{value : 20, label : "Wolf"}, {value : 30, label : "Eagle"}, {value : 10, label : "Deer"}, {value : 12, label : "Lion"}, {value : 18, label : "Dragon"}], fill : "gold"},
-    {category :"Moon", values :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}], fill : "lightblue"}
+    {category :"Clouds", values : [{value : 5, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 12, label : "Deer"}, {value : 7, label : "Lion"}, {value : 9, label : "Dragon"}]},
+    {category :"Flower", values : [{value : 10, label : "Wolf"}, {value : 20, label : "Eagle"}, {value : 15, label : "Deer"}, {value : 25, label : "Lion"}, {value : 30, label : "Dragon"}]},
+    {category :"Snow", values :  [{value : 6, label : "Wolf"}, {value : 8, label : "Eagle"}, {value : 2, label : "Deer"}, {value : 4, label : "Lion"}, {value : 5, label : "Dragon"}]},
+    {category :"Wind", values :  [{value : 20, label : "Wolf"}, {value : 30, label : "Eagle"}, {value : 10, label : "Deer"}, {value : 12, label : "Lion"}, {value : 18, label : "Dragon"}]},
+    {category :"Moon", values :  [{value : 14, label : "Wolf"}, {value : 16, label : "Eagle"}, {value : 24, label : "Deer"}, {value : 8, label : "Lion"}, {value : 17, label : "Dragon"}]}
 ]
 
 const couleurs = ["black", "crimson", "silver", "gold", "steelblue"]
 
-const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, scale = false, width = 400, height = 400) => {
+const barchart_creator = (data, colors = 0, vertical_bar = true, scale = false, width = 400, height = 400) => {
 
-    const taille = Math.max(donnees.length, 5)
+    const taille = Math.max(data.length, 5)
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const varPadding = 1
-    const domaine = d3.max(donnees, d => d3.max(d.values, e => e.value))
+    const domaine = d3.max(data, d => d3.max(d.values, e => e.value))
 
     const svg = d3.select("#d3_barchart").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
 
@@ -32,14 +32,14 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, scale = 
     let y_scale
     
     if (vertical_bar = true) {
-        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width2]).padding(0.1)
+        x_scale = d3.scaleBand().domain(data.map(d => d.category)).range([0, width2]).padding(0.1)
         if (!scale) {
             y_scale = d3.scaleLinear().domain([0, domaine]).range([0, height2*0.9])
         } else {
             y_scale = d3.scaleLog().domain([1, domaine]).range([0, height2*0.9]) 
         }
     } else {
-        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, height2]).padding(0.1)
+        x_scale = d3.scaleBand().domain(data.map(d => d.category)).range([0, height2]).padding(0.1)
         if (!scale) {
             y_scale = d3.scaleLinear().domain([0, domaine]).range([0, width2*0.9])
         } else {
@@ -49,37 +49,35 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, scale = 
 
     let exploitable = []
     let keys = []
-    let color = []
 
     // Transformation des données
 
     try {
-        donnees.forEach((d,i) => {
+        data.forEach((d,i) => {
             let object = {"Category" : d.category}
             object["Value"] = []
 
             for (let j = 0; j < d.values.length ; j++) {
-                object.Value.push({"value" : d.values[j].value, "labels" : d.values[j].label, "parents" : d.category, "color" : d.fill, "incr" : i})
+                object.Value.push({"value" : d.values[j].value, "labels" : d.values[j].label, "parents" : d.category, "incr" : i})
             }
 
             exploitable.push(object)
             keys.push(object.Category)
-
-            if (couleurs[0] === 0) {
-                let couleurs = {"color" : d.fill}
-                color.push(couleurs.color)
-            } else {
-                color = couleurs
-            }
         })
     } catch (error) {
         console.error("Le dataset n'est pas au bon format : ", error)
     }
 
-    let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(color)
-
+    let colorScale
+    
+    if (colors === 0) {
+        colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(keys)
+        colors = d3.schemeCategory10
+    } else {
+        colorScale = d3.scaleOrdinal().domain(keys).range(colors)
+    }
     let uniqueLabels = []
-    donnees.forEach(item => {
+    data.forEach(item => {
         item.values.forEach(val => {
             if (!uniqueLabels.includes(val.label)) {
                 uniqueLabels.push(val.label)
@@ -147,7 +145,7 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, scale = 
         .attr("y", (d,i) => choix("y", d, i))
         .attr("width", (d,i) => choix("width", d, i))
         .attr("height", (d,i) => choix("height", d, i))
-        .style("fill", d => echelle_couleurs(d.parents))
+        .style("fill", d => colorScale(d.parents))
 
     // Légende
 
@@ -157,14 +155,14 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, scale = 
         .attr("cx", function(d,i){ return 20 + i*75})
         .attr("cy", 15)
         .attr("r", 7)
-        .style("fill", (d, i) => color[i])
+        .style("fill", (d, i) => colors[i])
 
     svg.selectAll("categories")
         .data(keys).enter()
         .append("text")
         .attr("x", function(d,i){ return 30 + i*75})
         .attr("y", 15)
-        .style("fill", (d, i) => color[i])
+        .style("fill", (d, i) => colors[i])
         .text(function(d){ return d})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
@@ -224,5 +222,5 @@ const barchart_creator = (donnees, couleurs = [0], vertical_bar = true, scale = 
 
 }
 
-barchart_creator(dataset_barchart, couleurs)
+barchart_creator(dataset_barchart)
 

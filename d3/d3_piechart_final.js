@@ -1,20 +1,25 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const dataset_piechart = [
-    {label :"Clouds", value : 12, fill : "black"},
-    {label :"Flower", value : 19, fill : "crimson"},
-    {label :"Snow", value :  10, fill : "gray"},
-    {label :"Wind", value :  20, fill : "gold"},
-    {label :"Moon", value :  8, fill : "steelblue"}
+    {label :"Clouds", value : 12},
+    {label :"Flower", value : 19},
+    {label :"Snow", value :  10},
+    {label :"Wind", value :  20},
+    {label :"Moon", value :  8}
 ]
 
-const piechart_creator = (donnees, couleurs = [0], longueur = 350) => {
+const couleurs = ["green", "steelblue", "gold", "gray", "crimson"]
+
+const piechart_creator = (data, colors = 0, width = 400, height = 400) => {
+
+    const longueur = Math.min(width, height)
 
     let pie = []
     let data_pie = []
+
     try{
         pie = d3.pie().value(d => d.value)
-        data_pie = pie(donnees)
+        data_pie = pie(data)
     } catch (error) {
         console.log("Le dataset ne peut être pie : ", error)
     }
@@ -28,36 +33,33 @@ const piechart_creator = (donnees, couleurs = [0], longueur = 350) => {
 
     // Initialisation du svg
     
-    const svg = d3.select("#d3_piechart")
-        .attr("width", longueur)
-        .attr("height", longueur)
+    const svg = d3.select("#d3_piechart").attr("width", width).attr("height", height)
 
     const group = svg.append("g")
-        .attr("transform", "translate(" + (longueur) / 2 + "," + (longueur) / 2 + ")")
+        .attr("transform", "translate(" + (width) / 2 + "," + (height) / 2 + ")")
 
 
-    // Récupération des labels et des couleurs
+    // Récupération des labels et des colors
 
-    let color = []
     let keys = []
 
     try {
-        donnees.forEach(d => {
+        data.forEach(d => {
             let object = {"Label" : d.label}
             keys.push(object.Label)
-
-            if (couleurs[0] === 0) {
-                let couleurs = {"color" : d.fill}
-                color.push(couleurs.color)
-            } else {
-                color = couleurs
-            }
         })
     } catch (error) {
         console.error("Le dataset n'est pas au bon format : ", error)
     }
 
-    let echelle_couleurs = d3.scaleOrdinal().domain(keys).range(color)
+    let colorScale
+
+    if (colors === 0) {
+        colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(keys)
+        colors = d3.schemeCategory10
+    } else {
+        colorScale = d3.scaleOrdinal().domain(keys).range(colors)
+    }
 
     let label = d3.arc()
                     .outerRadius(radius)
@@ -71,7 +73,7 @@ const piechart_creator = (donnees, couleurs = [0], longueur = 350) => {
 
     arcs.append("path")
         .attr("fill", function(d, i) {
-            return echelle_couleurs(i)
+            return colorScale(i)
         })
         .attr("d", arc)
 
@@ -92,4 +94,4 @@ const piechart_creator = (donnees, couleurs = [0], longueur = 350) => {
      
 }
 
-piechart_creator(dataset_piechart, ["green", "steelblue", "gold", "gray", "crimson"])
+piechart_creator(dataset_piechart)
