@@ -1,18 +1,16 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
-const test = () => {
-    console.log("Ca marche")
-}
-
 function recupererDonnees() {
     var texte = document.getElementById('user_text').value
-    console.log(texte)
     return texte
+    console.log("texte")
     }
 
 function remplirTableau() {
 
-    var tableau = document.getElementById('result_table')
+    console.log("tableau")
+
+    var tableau = document.getElementById('test')
 
     while (tableau.rows.length > 0) {
         tableau.deleteRow(0);
@@ -65,4 +63,41 @@ const query_deka = `SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activ
     GROUP BY ?endpoint ?sparqlNorm
     ORDER BY ?endpoint ?sparqlNorm`;
 
-export {test, recupererDonnees, remplirTableau, executeSPARQLRequest, query_deka}
+
+function recupererEtAfficherTableau(dataset) {
+
+    console.log("resultat")
+    console.log(dataset)
+    
+    let tableauHtml = document.getElementById('result_table')
+
+    while (tableauHtml.rows.length > 0) {
+        tableauHtml.deleteRow(0);
+    }
+
+    const l1 = dataset.head.vars
+
+    console.log(l1)
+
+    let ligne1 = tableauHtml.insertRow(l1)
+    console.log(ligne1)
+
+    for (const elt of l1) {
+        let cellule = ligne1.insertCell(-1)
+        cellule.innerHTML = elt
+    }
+    
+    for (const element of dataset.results.bindings) {
+        let ligne = tableauHtml.insertRow(-1)
+        console.log(ligne)
+
+        for (const elt of l1) {
+        let cellule = ligne.insertCell(-1)
+        cellule.innerHTML = element[elt]["value"]
+        } 
+    }
+
+    console.log("terminé")
+}
+
+export {recupererDonnees, remplirTableau, executeSPARQLRequest, recupererEtAfficherTableau, query_deka}
