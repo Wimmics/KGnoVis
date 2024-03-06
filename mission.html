@@ -16,15 +16,16 @@
         }      
     </style>
     <script type="module">
-        import {test, recupererDonnees, remplirTableau} from "./mission.js"
+        import {test, recupererDonnees, remplirTableau, executeSPARQLRequest, query_deka} from "./mission.js"
 
         document.addEventListener('DOMContentLoaded', function() {
-            var boutonEnvoyer = document.querySelector('#test1')
-            boutonEnvoyer.addEventListener('click', function(event) {
+            var boutonEnvoyer = document.querySelector('#recolt_request')
+            boutonEnvoyer.addEventListener('click', async function(event) {
                 event.preventDefault()
                 test()
                 recupererDonnees()
                 remplirTableau()
+                console.log(await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees()))
             })
         })
     </script>
@@ -34,10 +35,11 @@
     <form>
         <label for="user_text">Veuillez entrer la requête SparQL</label><br>
         <textarea id="user_text" name="user_message" rows="10"></textarea><br>
-        <button id="test1">Envoyer</button>
+        <button id="recolt_request">Envoyer</button>
     </form>
     <div>
-        <table id = "monTableau" border="1" cellpadding="5"></table>
+        <label for="results_in_table">Résultat</label><br>
+        <table id = "result_table" border="1" cellpadding="5"></table>
     </div>
     
 
