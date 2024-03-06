@@ -11,7 +11,7 @@ const barchart_creator = (config_barchart) => {
     let width = config_barchart.options.hasOwnProperty("width") ? config_barchart.options.width : 400
     let height = config_barchart.options.hasOwnProperty("height") ? config_barchart.options.height : 400
     let vertical_bar = config_barchart.options.hasOwnProperty("vertical_bar") ? config_barchart.options.vertical_bar : true
-    let scale = config_barchart.options.hasOwnProperty("scale") ? config_barchart.options.scale: false
+    let scale = config_barchart.options.hasOwnProperty("scale") ? config_barchart.options.scale: "linear"
     let colors = config_barchart.options.hasOwnProperty("colors") ? config_barchart.options.colors : [0]
 
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
@@ -35,18 +35,17 @@ const barchart_creator = (config_barchart) => {
 
     if (vertical_bar === true) {
         x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, width2]).padding(0.1)
-        if (!scale) {
-            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, height2*0.9])
-        } else {
+        if (scale === "log") {
             y_scale = d3.scaleLog().domain([1, domaine]).range([0, height2*0.9]) 
-        }
-    }
-    if (vertical_bar === false) {
-        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, height2]).padding(0.1)
-        if (!scale) {
-            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, width2*0.9])
         } else {
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, height2*0.9])
+        }
+    } else if (vertical_bar === false) {
+        x_scale = d3.scaleBand().domain(donnees.map(d => d.category)).range([0, height2]).padding(0.1)
+        if (scale === "log") {
             y_scale = d3.scaleLog().domain([1, domaine]).range([0, width2*0.9]) 
+        } else {
+            y_scale = d3.scaleLinear().domain([0, domaine]).range([0, width2*0.9])
         }
     }
     
