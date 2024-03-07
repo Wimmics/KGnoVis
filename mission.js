@@ -3,17 +3,14 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 function recupererDonnees() {
     var texte = document.getElementById('user_text').value
     return texte
-    console.log("texte")
     }
 
 function remplirTableau() {
 
-    console.log("tableau")
-
     var tableau = document.getElementById('test')
 
     while (tableau.rows.length > 0) {
-        tableau.deleteRow(0);
+        tableau.deleteRow(0)
     }
 
     var donnees = [
@@ -48,7 +45,7 @@ const executeSPARQLRequest = async (endpoint, query) => {
     return await result_data.json()
 }
 
-const query_deka = `SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activity) AS ?count) {
+const query_select = `SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activity) AS ?count) {
     GRAPH ?g {
     { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
     UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
@@ -61,18 +58,31 @@ const query_deka = `SELECT DISTINCT ?endpoint ?sparqlNorm (COUNT(DISTINCT ?activ
     }
     }
     GROUP BY ?endpoint ?sparqlNorm
-    ORDER BY ?endpoint ?sparqlNorm`;
+    ORDER BY ?endpoint ?sparqlNorm`
 
+const query_construct = `CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
+    GRAPH ?g {
+    { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
+    UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
+    UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
+    ?metadata <http://ns.inria.fr/kg/index#curated> ?curated, ?dataset .
+        { ?dataset <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity . }
+        UNION { ?metadata <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity .}
+        FILTER(CONTAINS(str(?activity), ?sparqlNorm))
+        VALUES ?sparqlNorm { "SPARQL10" "SPARQL11" }
+    }
+    }
+    GROUP BY ?endpoint ?sparqlNorm
+    ORDER BY ?endpoint ?sparqlNorm`
 
 function recupererEtAfficherTableau(dataset) {
 
-    console.log("resultat")
     console.log(dataset)
     
     let tableauHtml = document.getElementById('result_table')
 
     while (tableauHtml.rows.length > 0) {
-        tableauHtml.deleteRow(0);
+        tableauHtml.deleteRow(0)
     }
 
     const l1 = dataset.head.vars
@@ -80,7 +90,6 @@ function recupererEtAfficherTableau(dataset) {
     console.log(l1)
 
     let ligne1 = tableauHtml.insertRow(l1)
-    console.log(ligne1)
 
     for (const elt of l1) {
         let cellule = ligne1.insertCell(-1)
@@ -89,7 +98,6 @@ function recupererEtAfficherTableau(dataset) {
     
     for (const element of dataset.results.bindings) {
         let ligne = tableauHtml.insertRow(-1)
-        console.log(ligne)
 
         for (const elt of l1) {
         let cellule = ligne.insertCell(-1)
@@ -97,7 +105,22 @@ function recupererEtAfficherTableau(dataset) {
         } 
     }
 
-    console.log("terminé")
 }
 
-export {recupererDonnees, remplirTableau, executeSPARQLRequest, recupererEtAfficherTableau, query_deka}
+function displayRDFGraph(rdfGraph) {
+
+    console.log(rdfGraph)
+    // Loop through the RDF data to construct the display in the HTML document
+    rdfGraph.forEach(triple => { // Pas une fonction : à tester
+        const subject = triple.subject
+        const predicate = triple.predicate
+        const object = triple.object
+
+        // Create HTML elements to represent the triple and add them to the document body
+        const tripleElement = document.createElement('div')
+        tripleElement.textContent = `${subject} ${predicate} ${object}`
+        document.body.appendChild(tripleElement)
+    })
+}
+
+export {recupererDonnees, remplirTableau, executeSPARQLRequest, recupererEtAfficherTableau, displayRDFGraph}

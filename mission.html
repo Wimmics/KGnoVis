@@ -16,15 +16,16 @@
         }      
     </style>
     <script type="module">
-        import {recupererDonnees, remplirTableau, executeSPARQLRequest, recupererEtAfficherTableau, query_deka} from "./mission.js"
+        import {recupererDonnees, remplirTableau, executeSPARQLRequest, recupererEtAfficherTableau, displayRDFGraph} from "./mission.js"
 
         document.addEventListener('DOMContentLoaded', function() {
-            var boutonEnvoyer = document.querySelector('#recolt_request')
+            let boutonEnvoyer = document.querySelector('#recolt_request')
             boutonEnvoyer.addEventListener('click', async function(event) {
                 event.preventDefault()
                 recupererDonnees()
                 remplirTableau()
                 await recupererEtAfficherTableau(await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees()))
+                displayRDFGraph(await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees()))
             })
         })
     </script>
@@ -37,9 +38,9 @@
         <button id="recolt_request">Envoyer</button>
     </form>
     <div>
-        <label for="results_in_table">Résultat</label><br>
+        <p>Résultat</p><br>
         <table id = "result_table" border="1" cellpadding="5"></table>
-        <label for="tests">Test</label><br>
+        <p>Test</p><br>
         <table id = "test" border="1" cellpadding="5"></table>
     </div>
     
