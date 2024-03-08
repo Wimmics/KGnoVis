@@ -109,18 +109,72 @@ function recupererEtAfficherTableau(dataset) {
 
 function displayRDFGraph(rdfGraph) {
 
+    const valeurs = rdfGraph.results.bindings
+
     console.log(rdfGraph)
+    console.log(valeurs)
     // Loop through the RDF data to construct the display in the HTML document
-    rdfGraph.forEach(triple => { // Pas une fonction : à tester
-        const subject = triple.subject
-        const predicate = triple.predicate
-        const object = triple.object
+    valeurs.forEach(triple => { // Pas une fonction : à tester
+        const subject = triple.s.value
+        const predicate = triple.p.value
+        const object = triple.o.value
 
         // Create HTML elements to represent the triple and add them to the document body
         const tripleElement = document.createElement('div')
         tripleElement.textContent = `${subject} ${predicate} ${object}`
         document.body.appendChild(tripleElement)
+        console.log(tripleElement)
     })
 }
 
-export {recupererDonnees, remplirTableau, executeSPARQLRequest, recupererEtAfficherTableau, displayRDFGraph}
+let couleurs = ["gold", "green"]
+
+function nodelink_creator(data, colors = [], strength = -200, width = 1000, height = 1000) {
+  
+  const donnees = data
+  const margin = {top: 5, right: 5, bottom: 5, left: 5}
+
+  if (colors.length != 2) {
+    colors = ["red", "steelblue"]
+  }
+
+  const svg = d3.select("#nodelink_graph")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+
+  const link = svg.selectAll("line")
+    .data(donnees.links)
+    .join("line")
+    .style("stroke", colors[0])
+
+  const node = svg.selectAll("circle")
+    .data(donnees.nodes)
+    .join("circle")
+    .attr("r", 20)
+    .style("fill", colors[1])
+    
+  function ticked() {
+    link
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; })
+    
+      node
+      .attr("cx", function (d) { return d.x+6; })
+      .attr("cy", function(d) { return d.y-6; })
+  }
+
+  const simulation = d3.forceSimulation(donnees.nodes)       
+    .force("link", d3.forceLink()                      
+      .id(function(d) { return d.id; })                
+      .links(donnees.links)                                 
+    )
+    .force("charge", d3.forceManyBody().strength(strength))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .on("end", ticked)
+    
+}
+
+export {recupererDonnees, remplirTableau, executeSPARQLRequest, recupererEtAfficherTableau, displayRDFGraph, nodelink_creator}
