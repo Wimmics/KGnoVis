@@ -23,9 +23,12 @@
             boutonEnvoyer.addEventListener('click', async function(event) {
                 event.preventDefault()
                 console.log("started")
-                await recupererEtAfficherTableau(await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees()))
+                const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees())
+                console.log(dataset)
+                await recupererEtAfficherTableau(dataset)
                 //displayRDFGraph(await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees()))
-                buildNodes(await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees()))
+                const result_data = dataset.results.bindings
+                buildNodes(result_data)
                 console.log("finished")
             })
         })

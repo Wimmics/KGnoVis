@@ -159,12 +159,11 @@ function nodeAlreadyExist(node, nodesList) {
     return false
 }
 
-function buildNodes(dataset) {
+function buildNodes(data) {
 
     const nodes = []
-    const donnees = dataset.results.bindings
 
-    for (const row of donnees) {
+    for (const row of data) {
         let node1 = {
             id : row["s"]["value"],
             label : row["s"]["value"]
@@ -184,6 +183,10 @@ function buildNodes(dataset) {
 
     console.log(nodes)
 
+}
+
+function buildDataset(data) {
+    console.log("bouh")
 }
 
 async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400) {
