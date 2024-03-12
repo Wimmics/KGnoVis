@@ -23,19 +23,27 @@
             boutonEnvoyer.addEventListener('click', async function(event) {
                 event.preventDefault()
                 console.log("started")
+
                 const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees())
-                console.log(dataset)
-                await recupererEtAfficherTableau(dataset)
-                //displayRDFGraph(await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees()))
                 const result_data = dataset.results.bindings
-                buildNodes(result_data)
+
+                //await recupererEtAfficherTableau(dataset)
+
+                let dataset_nodelink = {nodes : buildNodes(result_data), links : result_data}
+
+                dataset_nodelink.links = dataset_nodelink.links.map(collection => {
+                    return {source : collection.s, target: collection.o, relation : collection.p}
+                })
+
+                nodelink_creator(dataset_nodelink, undefined, -10, 1000)
+
                 console.log("finished")
             })
         })
 
         // Je vais devoir transformer mes données de sorte à donner un id à chaque élément de la colonne "s", puis utiliser la colonne p en lien et la colonne o en target?
         
-        const dataset_nodelink = {
+        /*const dataset_nodelink = {
             nodes: [
             {id: 1, label: "https://id.nlm.nih.gov/mesh/sparql"},
             {id: 2, label: "https://ldf.fi/mufi/sparql"},
@@ -61,7 +69,7 @@
         }
 
         nodelink_creator(dataset_nodelink, undefined, -300, 1000)
-
+*/
     </script>
 
 </head>

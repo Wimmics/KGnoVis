@@ -180,18 +180,15 @@ function buildNodes(data) {
             nodes.push(node2)
         }
     }
+    
+    return nodes
 
-    console.log(nodes)
-
-}
-
-function buildDataset(data) {
-    console.log("bouh")
 }
 
 async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400) {
+
+    console.log(data)
   
-    const donnees = data
     const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
     if (colors.length != 2) {
@@ -204,12 +201,12 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .append("g")
 
     const link = svg.selectAll("line")
-        .data(donnees.links)
+        .data(data.links)
         .join("line")
         .style("stroke", colors[0])
 
     const node = svg.selectAll("circle")
-        .data(donnees.nodes)
+        .data(data.nodes)
         .join("circle")
         .attr("r", 20)
         .style("fill", colors[1])
@@ -229,7 +226,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
     function ticked() {
         link
-            .attr("x1", function(d) { return d.source.x })
+            .attr("x1", function(d) {console.log(d.source.x) ; return d.source.x })
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; })
@@ -248,10 +245,10 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
     }
 
-    const simulation = d3.forceSimulation(donnees.nodes)       
+    const simulation = d3.forceSimulation(data.nodes)       
         .force("link", d3.forceLink()                      
             .id(function(d) { return d.id; })                
-            .links(donnees.links)                                 
+            .links(data.links)                                 
         )
         .force("charge", d3.forceManyBody().strength(strength))
         .force("center", d3.forceCenter(width / 2, height / 2))
