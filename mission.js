@@ -242,8 +242,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         )
         .force("charge", d3.forceManyBody().strength(strength))
         .force("center", d3.forceCenter(width / 2, height / 2))
-        .on("end", ticked)
-        /*
+        //.on("end", ticked)
         .on("tick", function () {
 
             ticked()
@@ -253,7 +252,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
                 simulation.stop(); // Arrêter la simulation après le nombre spécifié de ticks
             }
         })
-        */
+        
         
     function ticked() {
 
