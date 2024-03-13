@@ -86,28 +86,32 @@ function nodeAlreadyExist(node, nodesList) {
     return false
 }
 
-function buildNodes(data, nom_col1, nom_col2) {
+function buildNodes(data, edge = [{source : 1, target : 2, relation : 3, color : ["blue", "red"]}, {source : 2, target : 3, relation : 4, color : ["green", "yellow"]}]) {
 
     const nodes = []
 
-    for (const row of data) {
-        let node1 = {
-            id : row[col1]["value"],
-            label : row["s"]["value"]
-        }
-        if (!(nodeAlreadyExist(node1, nodes))) {
-            nodes.push(node1)
-        }
+    for (let triple of edge) {
+        for (let row of data) {
 
-        let node2 = {
-            id : row["o"]["value"],
-            label : row["o"]["value"]
-        }
-        if (!(nodeAlreadyExist(node2, nodes))) {
-            nodes.push(node2)
+            let node1 = {
+                id : row[triple.source]["value"],
+                label : row[triple.source]["value"],
+                color : triple.color[0]
+            }
+            if (!(nodeAlreadyExist(node1, nodes))) {
+                nodes.push(node1)
+            }
+    
+            let node2 = {
+                id : row[triple.target]["value"],
+                label : row[triple.target]["value"],
+                color : triple.color[0]
+            }
+            if (!(nodeAlreadyExist(node2, nodes))) {
+                nodes.push(node2)
+            }
         }
     }
-    
     return nodes
 
 }
