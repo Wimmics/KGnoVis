@@ -86,7 +86,7 @@ function nodeAlreadyExist(node, nodesList) {
     return false
 }
 
-function buildNodes(data, edge = [{source : 1, target : 2, relation : 3, color : ["blue", "red"]}, {source : 2, target : 3, relation : 4, color : ["green", "yellow"]}]) {
+function buildNodes(data, edge) {
 
     const nodes = []
 
@@ -96,7 +96,8 @@ function buildNodes(data, edge = [{source : 1, target : 2, relation : 3, color :
             let node1 = {
                 id : row[triple.source]["value"],
                 label : row[triple.source]["value"],
-                color : triple.color[0]
+                color : triple.color[0],
+                col : triple.source
             }
             if (!(nodeAlreadyExist(node1, nodes))) {
                 nodes.push(node1)
@@ -105,7 +106,8 @@ function buildNodes(data, edge = [{source : 1, target : 2, relation : 3, color :
             let node2 = {
                 id : row[triple.target]["value"],
                 label : row[triple.target]["value"],
-                color : triple.color[0]
+                color : triple.color[1],
+                col : triple.target
             }
             if (!(nodeAlreadyExist(node2, nodes))) {
                 nodes.push(node2)
@@ -150,11 +152,11 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .text(d => d.relation)
     */
 
-    /*let nodes_label = svg.selectAll("nodes")
-        .data(donnees.nodes)
+    let nodes_label = svg.selectAll("nodes")
+        .data(data.nodes)
         .enter().append("text")
         .text(d => d.label)
-    */
+    
 
         /*link_label.attr("x", d => (d.source.x + d.target.x) / 2)
             .attr("y", d => (d.source.y + d.target.y) / 2)
@@ -236,6 +238,8 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             .attr("cx", function (d) { return d.x+6; })
             .attr("cy", function(d) { return d.y-6; })
 
+        nodes_label.attr("x", d => d.x)
+            .attr("y", d => d.y)
     }
 
         
