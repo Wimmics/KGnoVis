@@ -4,32 +4,7 @@ function recupererDonnees() {
     var texte = document.getElementById('user_text').value
     return texte
     }
-/*
-function remplirTableau() {
 
-    var tableau = document.getElementById('test')
-
-    while (tableau.rows.length > 0) {
-        tableau.deleteRow(0)
-    }
-
-    var donnees = [
-        ["Donnée 1", "Donnée 2", "Donnée 3", "Donnée 4", "Donnée 5"],
-        ["Donnée 6", "Donnée 7", "Donnée 8", "Donnée 9", "Donnée 10"],
-        ["Donnée 11", "Donnée 12", "Donnée 13", "Donnée 14", "Donnée 15"],
-        ["Donnée 16", "Donnée 17", "Donnée 18", "Donnée 19", "Donnée 20"],
-        ["Donnée 21", "Donnée 22", "Donnée 23", "Donnée 24", "Donnée 25"]
-    ]
-    
-    for (var i = 0; i < donnees.length; i++) {
-            var ligne = tableau.insertRow(i)
-        for (var j = 0; j < donnees[i].length; j++) {
-            var cellule = ligne.insertCell(j)
-            cellule.innerHTML = donnees[i][j]
-        }
-    }
-}
-*/
 const executeSPARQLRequest = async (endpoint, query) => {
     localStorage.clear()
     const url = `${endpoint}?query=${encodeURIComponent(query)}&format=json`;
@@ -41,7 +16,6 @@ const executeSPARQLRequest = async (endpoint, query) => {
             'Accept': "application/sparql-results+json"
         }
     })
-    //console.log(JSON.stringify(await result_data.text()))
     return await result_data.json()
 }
 
@@ -102,53 +76,6 @@ function recupererEtAfficherTableau(dataset) {
     }
 
 }
-/*
-function displayRDFGraph(rdfGraph) {
-
-    const valeurs = rdfGraph.results.bindings
-
-    // Loop through the RDF data to construct the display in the HTML document
-    valeurs.forEach(triple => { // Pas une fonction : à tester
-        const subject = triple.s.value
-        const predicate = triple.p.value
-        const object = triple.o.value
-
-        // Create HTML elements to represent the triple and add them to the document body
-        const tripleElement = document.createElement('div')
-        tripleElement.textContent = `${subject} ${predicate} ${object}`
-        document.body.appendChild(tripleElement)
-        console.log(tripleElement)
-    })
-}
-
-let couleurs = ["gold", "green"]
-
-// Dataset transformation = datasetgraph.results.bindings
-
-function transformation(dataset) {
-
-    console.log(dataset)
-    const donnees = dataset.results.bindings
-
-    let noeuds = []
-
-    for (const ligne of donnees) {
-        let presence = false
-
-        for (const known of noeuds) {
-            if (noeuds[known] === ligne) {
-                presence = true
-            }
-        
-            if (presence === false) {
-                noeuds.push(known)
-            }
-        }
-    }
-
-    console.log(noeuds)
-}
-*/
 
 function nodeAlreadyExist(node, nodesList) {
     for (let n of nodesList) {
@@ -159,13 +86,13 @@ function nodeAlreadyExist(node, nodesList) {
     return false
 }
 
-function buildNodes(data) {
+function buildNodes(data, nom_col1, nom_col2) {
 
     const nodes = []
 
     for (const row of data) {
         let node1 = {
-            id : row["s"]["value"],
+            id : row[col1]["value"],
             label : row["s"]["value"]
         }
         if (!(nodeAlreadyExist(node1, nodes))) {
