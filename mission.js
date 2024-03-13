@@ -242,6 +242,8 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         )
         .force("charge", d3.forceManyBody().strength(strength))
         .force("center", d3.forceCenter(width / 2, height / 2))
+        .on("end", ticked)
+        /*
         .on("tick", function () {
 
             ticked()
@@ -251,19 +253,60 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
                 simulation.stop(); // Arrêter la simulation après le nombre spécifié de ticks
             }
         })
+        */
         
-        function ticked() { 
-            link
-                .attr("x1", function(d) {console.log(d.source.x) ; return d.source.x })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; })
-        
-            node
-                .attr("cx", function (d) {console.log(d.x+6); return d.x+6; })
-                .attr("cy", function(d) { return d.y-6; })
+    function ticked() {
+
+        link
+            .attr("x1", function(d) {
+                
+                let bonne_node = []
+
+                for(let elt of data.nodes) {
+                    if (elt.id === d.source.value) {
+                        bonne_node = elt
+                    }
+                };
+                return bonne_node.x })
+
+            .attr("y1", function(d) {
+                
+                let bonne_node = []
+
+                for(let elt of data.nodes) {
+                    if (elt.id === d.source.value) {
+                        bonne_node = elt
+                    }
+                };
+                return bonne_node.y })
+
+            .attr("x2", function(d) {
+                
+                let bonne_node = []
+
+                for(let elt of data.nodes) {
+                    if (elt.id === d.target.value) {
+                        bonne_node = elt
+                    }
+                };
+                return bonne_node.x })
+
+            .attr("y2", function(d) {
+                
+                let bonne_node = []
+
+                for(let elt of data.nodes) {
+                    if (elt.id === d.target.value) {
+                        bonne_node = elt
+                    }
+                };
+                return bonne_node.y })
     
-        }
+        node
+            .attr("cx", function (d) { return d.x+6; })
+            .attr("cy", function(d) { return d.y-6; })
+
+    }
 
         
 }
