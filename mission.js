@@ -118,7 +118,7 @@ function buildNodes(data, edge) {
 
 }
 
-async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400) {
+async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false) {
 
     console.log(data)
   
@@ -145,28 +145,22 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .style("fill", colors[1])
 
     let ticksCount = 0
+    let nodes_label
+    let link_label
 
-    /*let link_label = svg.selectAll("links")
-        .data(donnees.links)
+    if (node_named === true) {
+        nodes_label = svg.selectAll("nodes")
+            .data(data.nodes)
+            .enter().append("text")
+            .text(d => d.label)
+    }
+
+    if (link_named === true) {
+        link_label = svg.selectAll("links")
+        .data(data.links)
         .enter().append("text")
         .text(d => d.relation)
-    */
-
-    let nodes_label = svg.selectAll("nodes")
-        .data(data.nodes)
-        .enter().append("text")
-        .text(d => d.label)
-    
-
-        /*link_label.attr("x", d => (d.source.x + d.target.x) / 2)
-            .attr("y", d => (d.source.y + d.target.y) / 2)
-        */
-
-        /*nodes_label.attr("x", d => d.x)
-            .attr("y", d => d.y)
-        */
-
-    
+    }
 
     const simulation = d3.forceSimulation(data.nodes)       
         .force("link", d3.forceLink()                      
@@ -238,11 +232,55 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             .attr("cx", function (d) { return d.x+6; })
             .attr("cy", function(d) { return d.y-6; })
 
-        nodes_label.attr("x", d => d.x)
-            .attr("y", d => d.y)
-    }
 
+        if (node_named === true) {
+            nodes_label.attr("x", d => d.x)
+            .attr("y", d => d.y)
+        }
         
+        if (link_named === true) {
+
+            link_label.attr("x", d => {
+
+                let node_source
+                let node_target
+
+                for(let elt of data.nodes) {
+                    if (elt.id === d.source.value) {
+                        node_source = elt
+                    }
+                }
+
+                for(let elt of data.nodes) {
+                    if (elt.id === d.target.value) {
+                        node_target = elt
+                    }
+                }
+
+                return (node_source.x + node_target.x) / 2
+            })
+            
+            link_label.attr("y", d => {
+
+                let node_source
+                let node_target
+
+                for(let elt of data.nodes) {
+                    if (elt.id === d.source.value) {
+                        node_source = elt
+                    }
+                }
+
+                for(let elt of data.nodes) {
+                    if (elt.id === d.target.value) {
+                        node_target = elt
+                    }
+                }
+
+                return (node_source.y + node_target.y) / 2
+            })
+        }
+    }  
 }
 
 export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes}
