@@ -16,7 +16,7 @@
         }      
     </style>
     <script type="module">
-        import {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes} from "./mission.js"
+        import {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks} from "./mission.js"
 
         document.addEventListener('DOMContentLoaded', function() {
             let boutonEnvoyer = document.querySelector('#recolt_request')
@@ -28,17 +28,17 @@
                 const result_data = dataset.results.bindings
 
                 const edge_test = [
-                    {source : "s", target : "o", relation : "p", color : ["red", "blue", "gold"]},
-                    {source : "o", target : "s", relation : "p", color : ["green", "purple", "silver"]},
+                    {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"}//,
+                    //{source : "o", target : "s", relation : "p", color : ["green", "purple"], color_link : "silver"}
                 ]
+                const noeuds = buildNodes(result_data, edge_test)
+                const liens = buildLinks(result_data, edge_test)
 
-                let dataset_nodelink = {nodes : buildNodes(result_data, edge_test), links : result_data}
-                console.log(dataset_nodelink)
-
-                dataset_nodelink.links = dataset_nodelink.links.map(collection => {
-                    return {source : collection.s, target: collection.o, relation : collection.p}
-                })
-
+                console.log("liens", liens)
+                
+                let dataset_nodelink = {nodes : noeuds, links : liens}
+                console.log("post crea", dataset_nodelink)
+                
                 nodelink_creator(dataset_nodelink, undefined, -10, 2000, 2000, true)
 
                 await console.log("finished")
@@ -78,7 +78,20 @@
 <body>
     <div>
         <label for="user_text">Veuillez entrer la requête SparQL</label><br>
-        <textarea id="user_text" name="user_message" rows="10"></textarea><br>
+        <textarea id="user_text" name="user_message" rows="10">CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
+            GRAPH ?g {
+            { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
+            UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
+            UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
+            ?metadata <http://ns.inria.fr/kg/index#curated> ?curated, ?dataset .
+                { ?dataset <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity . }
+                UNION { ?metadata <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity .}
+                FILTER(CONTAINS(str(?activity), ?sparqlNorm))
+                VALUES ?sparqlNorm { "SPARQL10" "SPARQL11" }
+            }
+            }
+            GROUP BY ?endpoint ?sparqlNorm
+            ORDER BY ?endpoint ?sparqlNorm</textarea><br>
         <button id="recolt_request">Envoyer</button>
     </div>
     <div>

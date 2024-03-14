@@ -115,7 +115,44 @@ function buildNodes(data, edge) {
         }
     }
     return nodes
+}
 
+function linkAlreadyExist(link, linksList) {
+    for (let l of linksList) {
+        if (l.source === link.source && l.target === link.target && l.label === link.label) {
+            return true
+        } else if (l.source === link.target && l.target === link.source && l.label === link.label) {
+            return true
+        }
+    }
+    return false
+}
+
+function buildLinks(data, edge) {
+
+    const links = []
+
+    for (const triple of edge) {
+        for (const row of data) {
+            const source = row[triple.source]["value"]
+            const target = row[triple.target]["value"]
+            const label = row[triple.relation]["value"]
+            const color = triple.color_link
+
+            const link = {
+                source : source,
+                target : target,
+                label : label,
+                color : color
+            }
+
+            if (!(linkAlreadyExist(link, links))) {
+                links.push(link)
+            }
+        }
+    }
+    console.log("dans fonction", links)
+    return links
 }
 
 async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false) {
@@ -136,7 +173,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
     const link = svg.selectAll("line")
         .data(data.links)
         .join("line")
-        .style("stroke", colors[0])
+        .style("stroke", data.links)
 
     const node = svg.selectAll("circle")
         .data(data.nodes)
@@ -283,4 +320,4 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
     }  
 }
 
-export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes}
+export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks}
