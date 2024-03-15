@@ -134,30 +134,32 @@ function buildLinks(data, edge) {
 
     for (const triple of edge) {
         for (const row of data) {
-            const source = row[triple.source]["value"]
-            const target = row[triple.target]["value"]
-            const label = row[triple.relation]["value"]
+            const s = row[triple.source].value      
+            const target = row[triple.target].value
+            const label = row[triple.relation].value
             const color = triple.color_link
-
+            //console.log(triple.source)
             const link = {
-                source : source,
+                source : s,
                 target : target,
                 label : label,
                 color : color
             }
+
+            //console.log(link)
 
             if (!(linkAlreadyExist(link, links))) {
                 links.push(link)
             }
         }
     }
-    console.log("dans fonction", links)
+    //console.log(links)
     return links
 }
 
 async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false) {
 
-    console.log(data)
+    console.log("debut nodelink, dataset", data)
   
     const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
@@ -165,49 +167,61 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         colors = ["red", "steelblue"]
     }
 
-    const svg = d3.select("#nodelink_graph")
+    let svg_graph = d3.select("#nodelink_graph")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
 
-    const link = svg.selectAll("line")
+    const svg_label = d3.select("#labels_nodelink")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+
+    const link = svg_graph.selectAll("line")
         .data(data.links)
         .join("line")
-        .style("stroke", data.links)
+        .style("stroke", d => d.color)
 
-    const node = svg.selectAll("circle")
+    const node = svg_graph.selectAll("circle")
         .data(data.nodes)
         .join("circle")
         .attr("r", 20)
-        .style("fill", colors[1])
+        .style("fill", d => d.color)
 
     let ticksCount = 0
     let nodes_label
     let link_label
 
     if (node_named === true) {
-        nodes_label = svg.selectAll("nodes")
+
+        nodes_label = svg_label.selectAll("nodes")
             .data(data.nodes)
             .enter().append("text")
+            .style("text-align", "center")
+            .style("visibility", "hidden")
             .text(d => d.label)
+
+        svg_graph.selectAll("circle").on("mouseover", function(d){console.log(d.target) ;  svg_label.selectAll(`${this}`).style("visibility", "visible")})
+        .on("mouseout", function(d){d3.select(this).style("visibility", "hidden")})
+            
     }
 
     if (link_named === true) {
-        link_label = svg.selectAll("links")
+        link_label = svg_label.selectAll("liens")
         .data(data.links)
         .enter().append("text")
-        .text(d => d.relation)
+        .text(d => d.label)
     }
 
     const simulation = d3.forceSimulation(data.nodes)       
         .force("link", d3.forceLink()                      
-            .id(function(d) { return d.id; })                
+            .id(d => d.id)                
             .links(data.links)                                 
         )
         .force("charge", d3.forceManyBody().strength(strength))
         .force("center", d3.forceCenter(width / 2, height / 2))
-        //.on("end", ticked)
-        .on("tick", function () {
+        .on("end", ticked)
+        /*.on("tick", function () {
 
             ticked()
             ticksCount++; // Incrémenter le compteur de ticks à chaque itération
@@ -216,108 +230,38 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
                 simulation.stop(); // Arrêter la simulation après le nombre spécifié de ticks
             }
         })
-        
+    */    
         
     function ticked() {
 
         link
-            .attr("x1", function(d) {
-                
-                let bonne_node = []
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y)
 
-                for(let elt of data.nodes) {
-                    if (elt.id === d.source.value) {
-                        bonne_node = elt
-                    }
-                };
-                return bonne_node.x })
-
-            .attr("y1", function(d) {
-                
-                let bonne_node = []
-
-                for(let elt of data.nodes) {
-                    if (elt.id === d.source.value) {
-                        bonne_node = elt
-                    }
-                };
-                return bonne_node.y })
-
-            .attr("x2", function(d) {
-                
-                let bonne_node = []
-
-                for(let elt of data.nodes) {
-                    if (elt.id === d.target.value) {
-                        bonne_node = elt
-                    }
-                };
-                return bonne_node.x })
-
-            .attr("y2", function(d) {
-                
-                let bonne_node = []
-
-                for(let elt of data.nodes) {
-                    if (elt.id === d.target.value) {
-                        bonne_node = elt
-                    }
-                };
-                return bonne_node.y })
-    
         node
-            .attr("cx", function (d) { return d.x+6; })
-            .attr("cy", function(d) { return d.y-6; })
+            .attr("cx", d => {console.log(d) ; return d.x+6})
+            .attr("cy", d => d.y-6)
 
 
         if (node_named === true) {
-            nodes_label.attr("x", d => d.x)
-            .attr("y", d => d.y)
+            nodes_label.attr("x", d => d.x).attr("y", d => d.y)
         }
         
         if (link_named === true) {
 
             link_label.attr("x", d => {
 
-                let node_source
-                let node_target
-
-                for(let elt of data.nodes) {
-                    if (elt.id === d.source.value) {
-                        node_source = elt
-                    }
-                }
-
-                for(let elt of data.nodes) {
-                    if (elt.id === d.target.value) {
-                        node_target = elt
-                    }
-                }
-
-                return (node_source.x + node_target.x) / 2
+                return (d.source.x + d.target.x) / 2
             })
             
             link_label.attr("y", d => {
-
-                let node_source
-                let node_target
-
-                for(let elt of data.nodes) {
-                    if (elt.id === d.source.value) {
-                        node_source = elt
-                    }
-                }
-
-                for(let elt of data.nodes) {
-                    if (elt.id === d.target.value) {
-                        node_target = elt
-                    }
-                }
-
-                return (node_source.y + node_target.y) / 2
+                return (d.source.y + d.target.y) / 2
             })
         }
     }  
+    
 }
 
 export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks}

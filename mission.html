@@ -14,6 +14,10 @@
         textarea {
             width: 100%
         }      
+        .svg-container {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
     <script type="module">
         import {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks} from "./mission.js"
@@ -31,47 +35,66 @@
                     {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"}//,
                     //{source : "o", target : "s", relation : "p", color : ["green", "purple"], color_link : "silver"}
                 ]
+
                 const noeuds = buildNodes(result_data, edge_test)
                 const liens = buildLinks(result_data, edge_test)
+                
+                //console.log(liens)
 
-                console.log("liens", liens)
-                
                 let dataset_nodelink = {nodes : noeuds, links : liens}
-                console.log("post crea", dataset_nodelink)
+                //console.log("pre-appel", dataset_nodelink)
                 
-                nodelink_creator(dataset_nodelink, undefined, -10, 2000, 2000, true)
+                await nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, false, true)
 
                 await console.log("finished")
             })
         })
 
-        /*const dataset_nodelink = {
+        const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees())
+        const result_data = dataset.results.bindings
+
+        const edge_test = [
+            {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"}//,
+            //{source : "o", target : "s", relation : "p", color : ["green", "purple"], color_link : "silver"}
+        ]
+
+        const noeuds = buildNodes(result_data, edge_test)
+        const liens = buildLinks(result_data, edge_test)
+        
+        //console.log(liens)
+
+        let dataset_nodelink = {nodes : noeuds, links : liens}
+
+        console.log(dataset_nodelink)
+
+        const dataset_bis = {
             nodes: [
-            {id: 1, label: "https://id.nlm.nih.gov/mesh/sparql"},
-            {id: 2, label: "https://ldf.fi/mufi/sparql"},
-            {id: 3, label: "https://jsu.eagle-i.net/sparqler/sparql"},
-            {id: 4, label: "https://ld.cultural.jp/sparql"},
-            {id: 5, label: "https://lingualibre.org/bigdata/namespace/wdq/sparql"},
-            {id: 6, label: "http://linkeddata.finki.ukim.mk/sparql"},
-            {id: 7, label: "https://montana.eagle-i.net/sparqler/sparql"},
-            {id: 8, label: "https://lingualibre.fr/bigdata/namespace/wdq/sparql"},
-            {id: 9, label: "SPARQL10"},
-            {id: 10, label: "SPARQL11"}
+            {id: 1, label: "https://id.nlm.nih.gov/mesh/sparql", color : "red"},
+            {id: 2, label: "https://ldf.fi/mufi/sparql", color : "red"},
+            {id: 3, label: "https://jsu.eagle-i.net/sparqler/sparql", color : "red"},
+            {id: 4, label: "https://ld.cultural.jp/sparql", color : "red"},
+            {id: 5, label: "https://lingualibre.org/bigdata/namespace/wdq/sparql", color : "red"},
+            {id: 6, label: "http://linkeddata.finki.ukim.mk/sparql", color : "red"},
+            {id: 7, label: "https://montana.eagle-i.net/sparqler/sparql", color : "red"},
+            {id: 8, label: "https://lingualibre.fr/bigdata/namespace/wdq/sparql", color : "red"},
+            {id: 9, label: "SPARQL10", color : "blue"},
+            {id: 10, label: "SPARQL11", color : "blue"}
             ],
             links: [
-            {source: 1, target: 9, relation : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"},
-            {source: 2, target: 9, relation : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"},
-            {source: 3, target: 9, relation : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"},
-            {source: 4, target: 10, relation : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"},
-            {source: 5, target: 10, relation : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"},
-            {source: 6, target: 10, relation : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"},
-            {source: 7, target: 9, relation : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"},
-            {source: 8, target: 9, relation : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"},
+            {source: 1, target: 9, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
+            {source: 2, target: 9, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
+            {source: 3, target: 9, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
+            {source: 4, target: 10, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
+            {source: 5, target: 10, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
+            {source: 6, target: 10, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
+            {source: 7, target: 9, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
+            {source: 8, target: 9, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
             ]
         }
 
-        nodelink_creator(dataset_nodelink, undefined, -300, 1000)
-*/
+        nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true)
+        //nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000)
+
     </script>
 
 </head>
@@ -102,6 +125,7 @@
     </div>
     <div id="graph">
         <svg id = "nodelink_graph"></svg>
+        <svg id = "labels_nodelink"></svg>
     </div>
     
 
