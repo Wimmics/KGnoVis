@@ -188,6 +188,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .attr("r", 20)
         .style("fill", d => d.color)
         .attr("label", d => d.label)
+        .attr("id", d => d.label)
 
     let ticksCount = 0
     let nodes_label
@@ -200,44 +201,37 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             .enter().append("text")
             .style("text-align", "center")
             .style("visibility", "hidden")
+            .attr("id", d => d.label)
+            .attr("label", d => d.label)
             .text(d => d.label)
 
-        svg_graph.selectAll("circle").on("mouseover", function(d){
-            console.log(d.target.getAttribute("label")) ;  
+        svg_graph.selectAll("circle")
+        .on("mouseover", d => {
+            console.log(d.target, d.target.getAttribute("label")) ;  
             let choosen_node
-           /* console.log(nodes_label)
-            console.log(nodes_label._groups)
-            console.log(nodes_label._groups[0])
-            console.log("resultat cherché", nodes_label._groups[0][0].__data__.label)
-            /*for (let elt in nodes_label._groups) { // Il n'y passe qu'une fois, pour le 0 : à skip
-                console.log(elt)
-                console.log(elt[0])
-                /*if (elt.label === d.target.getAttribute("label")) {
-                    choosen_node = elt
-                    console.log(choosen_node)
-                }
-            }*/
+
             for (let elt in nodes_label._groups[0]) {
-                //console.log(elt)
-                //console.log(nodes_label._groups[0][elt].__data__.label)
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
                     choosen_node = nodes_label._groups[0][elt]
-                    console.log("valeur choisie", choosen_node)
-                    var element = document.querySelector('text'); // Sélection de l'élément <text>
-                    console.log("elt", element)
-                    var valeurTexte = element.textContent; // Récupération de la valeur du texte
-                    console.log("val_txt", valeurTexte)
-                    //let element = document.getElementById(choosen_node)
-                    //console.log(element)
-                    //document.getElementById("choosen_node").style.visibility = "visible"
-                    
+                    choosen_node.style.visibility = "visible"   
+
+                    // Autre méthode d'obtenir la node : 
+                    /*let choosen_id = d.target.getAttribute("id")
+                    choosen_node = document.querySelector('text[label="' + choosen_id + '"]') // Sélection du label "choosen_id" dans un élément texte.
+                    */                
                 }
-                //console.log(elt[0])
-                //console.log(elt[0].__data__)
             }
-            //choosen_node.style("visibility", "visible")})
-        /*.on("mouseout", function(d){d3.select(this).style("visibility", "hidden")*/})
+        })
+        .on("mouseout", d => {console.log(d.target, d.target.getAttribute("label")) ;  
+            let choosen_node
+            for (let elt in nodes_label._groups[0]) {
+                if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
+                    choosen_node = nodes_label._groups[0][elt]
+                    choosen_node.style.visibility = "hidden"
+                }
+            }
             
+        })
     }
 
     if (link_named === true) {
