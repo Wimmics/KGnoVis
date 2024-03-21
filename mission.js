@@ -57,7 +57,14 @@ function recupererEtAfficherTableau(dataset) {
         tableauHtml.deleteRow(0)
     }
 
-    const l1 = dataset.head.vars
+    let l1
+
+    try {
+        l1 = dataset.head.vars
+    } catch(error) {
+        console.log("Le dataset n'a pas d'entête")
+    }
+    
 
     let ligne1 = tableauHtml.insertRow(l1)
 
@@ -131,6 +138,7 @@ function linkAlreadyExist(link, linksList) {
 function buildLinks(data, edge) {
 
     const links = []
+    let number = 0
 
     for (const triple of edge) {
         for (const row of data) {
@@ -138,22 +146,21 @@ function buildLinks(data, edge) {
             const target = row[triple.target].value
             const label = row[triple.relation].value
             const color = triple.color_link
-            //console.log(triple.source)
+
             const link = {
                 source : s,
                 target : target,
                 label : label,
-                color : color
+                color : color,
+                id : number
             }
-
-            //console.log(link)
 
             if (!(linkAlreadyExist(link, links))) {
                 links.push(link)
             }
+            number += 1
         }
     }
-    //console.log(links)
     return links
 }
 
@@ -173,13 +180,15 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .append("g")
 
     const svg_label = d3.select("#labels_nodelink")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", 100)
+        .attr("height", 30)
         .append("g")
 
     const link = svg_graph.selectAll("line")
         .data(data.links)
         .join("line")
+        .attr("label", d => d.label)
+        .attr("id", d => d.id)
         .style("stroke", d => d.color)
 
     const node = svg_graph.selectAll("circle")
@@ -207,8 +216,9 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
         svg_graph.selectAll("circle")
         .on("mouseover", d => {
-            console.log(d.target, d.target.getAttribute("label")) ;  
             let choosen_node
+
+            console.log(nodes_label)
 
             for (let elt in nodes_label._groups[0]) {
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
@@ -239,6 +249,61 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .data(data.links)
         .enter().append("text")
         .text(d => d.label)
+        .attr("label", d => d.label)
+        .attr("id", d => d.id)
+        .attr("visibility", "hidden")
+        
+        svg_graph.selectAll("line")
+        .on("mouseover", d => { 
+            let choosen_link
+        
+            /*console.log("dataset", link_label)
+            console.log("groupes", link_label._groups[0])
+            console.log("1er groupe", link_label._groups[0][0])
+            console.log("1er groupe data", link_label._groups[0][0].__data__.id)*/           
+
+            for (let elt in link_label._groups[0]) {
+                /*console.log(link_label._groups[0][elt])
+                console.log(link_label._groups[0][elt].__data__.id)
+
+                let choosen_id = link_label._groups[0][elt].__data__.id
+                console.log(choosen_id)
+                
+                let label_id = d.target.getAttribute("id")
+                label_id = label_id.replace(/"/g, '')
+                console.log(label_id)
+
+                console.dir(label_id)
+                console.dir(choosen_id)*/
+
+                if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
+                    console.log("j'y suis")
+                    console.log(link_label._groups[0][elt])
+                    console.log(link_label._groups[0][elt].__data__.id)
+                    choosen_link = link_label._groups[0][elt]
+                    choosen_link.style.visibility = "visible"   
+
+                    // Autre méthode d'obtenir la node : 
+                    /*let choosen_id = d.target.getAttribute("id")
+                    choosen_node = document.querySelector('text[label="' + choosen_id + '"]') // Sélection du label "choosen_id" dans un élément texte.
+                    */                
+                }
+            }
+        })
+        .on("mouseout", d => { 
+            let choosen_link       
+
+            for (let elt in link_label._groups[0]) {
+
+                if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
+                    console.log("j'y suis")
+                    console.log(link_label._groups[0][elt])
+                    console.log(link_label._groups[0][elt].__data__.id)
+                    choosen_link = link_label._groups[0][elt]
+                    choosen_link.style.visibility = "hidden"            
+                }
+            }
+        })
     }
 
     const simulation = d3.forceSimulation(data.nodes)       
@@ -253,12 +318,13 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
             ticked()
             ticksCount++; // Incrémenter le compteur de ticks à chaque itération
-        
-            if (ticksCount >= 50) {
-                simulation.stop(); // Arrêter la simulation après le nombre spécifié de ticks
+            console.log(ticksCount)
+
+            if (ticksCount >= 500) {
+                simulation.stop() // Arrêter la simulation après le nombre spécifié de ticks
             }
-        })
-    */    
+        })*/
+     
         
     function ticked() {
 
@@ -274,19 +340,14 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
 
         if (node_named === true) {
-            nodes_label.attr("x", d => d.x).attr("y", d => d.y)
+            nodes_label.attr("x", d => 10).attr("y", d => 10)
         }
         
         if (link_named === true) {
 
-            link_label.attr("x", d => {
-
-                return (d.source.x + d.target.x) / 2
-            })
+            link_label.attr("x", 10)
             
-            link_label.attr("y", d => {
-                return (d.source.y + d.target.y) / 2
-            })
+            link_label.attr("y", 10)
         }
     }  
     
