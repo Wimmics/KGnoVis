@@ -180,8 +180,8 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .append("g")
 
     const svg_label = d3.select("#labels_nodelink")
-        .attr("width", 100)
-        .attr("height", 30)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", 50)
         .append("g")
 
     const link = svg_graph.selectAll("line")
@@ -218,21 +218,15 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .on("mouseover", d => {
             let choosen_node
 
-            console.log(nodes_label)
-
             for (let elt in nodes_label._groups[0]) {
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
                     choosen_node = nodes_label._groups[0][elt]
-                    choosen_node.style.visibility = "visible"   
-
-                    // Autre méthode d'obtenir la node : 
-                    /*let choosen_id = d.target.getAttribute("id")
-                    choosen_node = document.querySelector('text[label="' + choosen_id + '"]') // Sélection du label "choosen_id" dans un élément texte.
-                    */                
+                    choosen_node.style.visibility = "visible"  
+                    choosen_node.style.fontSize = "24px"            
                 }
             }
         })
-        .on("mouseout", d => {console.log(d.target, d.target.getAttribute("label")) ;  
+        .on("mouseout", d => {  
             let choosen_node
             for (let elt in nodes_label._groups[0]) {
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
@@ -252,41 +246,18 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .attr("label", d => d.label)
         .attr("id", d => d.id)
         .attr("visibility", "hidden")
+        .style("fontsize", "70px")
         
         svg_graph.selectAll("line")
         .on("mouseover", d => { 
             let choosen_link
         
-            /*console.log("dataset", link_label)
-            console.log("groupes", link_label._groups[0])
-            console.log("1er groupe", link_label._groups[0][0])
-            console.log("1er groupe data", link_label._groups[0][0].__data__.id)*/           
-
             for (let elt in link_label._groups[0]) {
-                /*console.log(link_label._groups[0][elt])
-                console.log(link_label._groups[0][elt].__data__.id)
-
-                let choosen_id = link_label._groups[0][elt].__data__.id
-                console.log(choosen_id)
-                
-                let label_id = d.target.getAttribute("id")
-                label_id = label_id.replace(/"/g, '')
-                console.log(label_id)
-
-                console.dir(label_id)
-                console.dir(choosen_id)*/
 
                 if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
-                    console.log("j'y suis")
-                    console.log(link_label._groups[0][elt])
-                    console.log(link_label._groups[0][elt].__data__.id)
                     choosen_link = link_label._groups[0][elt]
                     choosen_link.style.visibility = "visible"   
-
-                    // Autre méthode d'obtenir la node : 
-                    /*let choosen_id = d.target.getAttribute("id")
-                    choosen_node = document.querySelector('text[label="' + choosen_id + '"]') // Sélection du label "choosen_id" dans un élément texte.
-                    */                
+                    choosen_link.style.fontSize = "24px"             
                 }
             }
         })
@@ -296,9 +267,6 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             for (let elt in link_label._groups[0]) {
 
                 if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
-                    console.log("j'y suis")
-                    console.log(link_label._groups[0][elt])
-                    console.log(link_label._groups[0][elt].__data__.id)
                     choosen_link = link_label._groups[0][elt]
                     choosen_link.style.visibility = "hidden"            
                 }
@@ -340,14 +308,14 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
 
         if (node_named === true) {
-            nodes_label.attr("x", d => 10).attr("y", d => 10)
+            nodes_label.attr("x", d => 10).attr("y", d => 30)
         }
         
         if (link_named === true) {
 
             link_label.attr("x", 10)
             
-            link_label.attr("y", 10)
+            link_label.attr("y", 30)
         }
     }  
     
