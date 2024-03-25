@@ -100,24 +100,37 @@ function buildNodes(data, edge) {
     for (let triple of edge) {
         for (let row of data) {
 
-            let node1 = {
-                id : row[triple.source]["value"],
-                label : row[triple.source]["value"],
-                color : triple.color[0],
-                col : triple.source
+            let node1
+            let node2
+
+            try {
+                node1 = {
+                    id : row[triple.source]["value"],
+                    label : row[triple.source]["value"],
+                    color : triple.color[0],
+                    col : triple.source
+                }
+            
+                if (!(nodeAlreadyExist(node1, nodes))) {
+                    nodes.push(node1)
+                }
+            } catch(error) {
+                console.log("Le dataset ne contient pas les éléments nécessaires pour créer la 1ère node")
             }
-            if (!(nodeAlreadyExist(node1, nodes))) {
-                nodes.push(node1)
-            }
-    
-            let node2 = {
-                id : row[triple.target]["value"],
-                label : row[triple.target]["value"],
-                color : triple.color[1],
-                col : triple.target
-            }
-            if (!(nodeAlreadyExist(node2, nodes))) {
-                nodes.push(node2)
+
+            try {
+                node2 = {
+                    id : row[triple.target]["value"],
+                    label : row[triple.target]["value"],
+                    color : triple.color[1],
+                    col : triple.target
+                }
+            
+                if (!(nodeAlreadyExist(node2, nodes))) {
+                    nodes.push(node2)
+                }
+            } catch(error) {
+                console.log("Le dataset ne contient pas les éléments nécessaires pour créer la 2ème node")
             }
         }
     }
@@ -139,9 +152,10 @@ function buildLinks(data, edge) {
 
     const links = []
     let number = 0
-
+    
     for (const triple of edge) {
         for (const row of data) {
+            try {
             const s = row[triple.source].value      
             const target = row[triple.target].value
             const label = row[triple.relation].value
@@ -159,8 +173,12 @@ function buildLinks(data, edge) {
                 links.push(link)
             }
             number += 1
+            } catch (error) {
+                console.log("Le dataset ne contient pas les éléments nécessaires pour créer le lien")
+            }
         }
     }
+    
     return links
 }
 
@@ -170,9 +188,9 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
   
     const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
-    if (colors.length != 2) {
+    /*if (colors.length != 2) {
         colors = ["red", "steelblue"]
-    }
+    }*/
 
     let svg_graph = d3.select("#nodelink_graph")
         .attr("width", width + margin.left + margin.right)
@@ -199,9 +217,53 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .attr("label", d => d.label)
         .attr("id", d => d.label)
 
+    /*const zoom = d3.zoom()
+        .scaleExtent([0.5, 4]) // Définir les limites de zoom
+        .on('zoom', () => {
+            svg_graph.attr('transform', d3.event.transform)
+    })
+    //svg_graph.call(zoom)*/
+
     let ticksCount = 0
     let nodes_label
     let link_label
+
+    let node_zoom = true
+    let link_zoom = true
+
+    if (node_zoom === true) {
+        //svg_graph.selectAll("circle")
+        node.on("click", d => {
+            //console.log(d)
+           // console.log(node)
+            const choosen_id = d.target.getAttribute("id")  
+            //console.log("id", choosen_id)
+            const choosen_node = d3.select('circle[label="' + choosen_id + '"]')
+            console.log("node", choosen_node)
+           // console.log(d.target)
+
+           let choosen_x
+           let choosen_y
+
+            for (let elt in choosen_node._groups[0]) {
+                if (choosen_node._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
+                    choosen_x = choosen_node._groups[0][elt].__data__.x
+                    choosen_y = choosen_node._groups[0][elt].__data__.y
+                    console.log("x", choosen_x, "y", choosen_y)
+                }
+            }
+
+            const zoomScale = 2 // Facteur de zoom souhaité
+
+            // Appliquer la transformation de zoom à la node
+            //const zoom = d3.zoom().scaleExtent([1, 2])
+            //choosen_node.call(zoom)
+            choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
+            console.log("final", choosen_node)
+
+        }, {passive : true})
+        
+    }
 
     if (node_named === true) {
 
@@ -257,7 +319,8 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
                 if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
                     choosen_link = link_label._groups[0][elt]
                     choosen_link.style.visibility = "visible"   
-                    choosen_link.style.fontSize = "24px"             
+                    choosen_link.style.fontSize = "24px"
+                    //choosen_link.call(zoom)    
                 }
             }
         })
