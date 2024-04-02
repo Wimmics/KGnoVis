@@ -193,7 +193,7 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
     return links
 }
 
-async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false, node_zoom = true) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
+async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
     console.log("debut nodelink, dataset", data)
   
@@ -248,17 +248,14 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             }
 
             if (choosen_node._groups[0][0].__data__.zoom === false) { // Permet de zoomer
-                zoomScale = 2 // Puissance de zoom
+                zoomScale = zoom_strenght // Puissance de zoom choisie par l'utilisateur
                 choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
                 choosen_node._groups[0][0].__data__.zoom = true
-                //choosen_node.attr("zoom", true)
-                console.log("hi 1", choosen_node._groups[0][0].__data__.zoom)
 
             } else { // Permet de dézoomer
-                zoomScale = 1 // Puissance de zoom
+                zoomScale = 1 // Remet le zoom à 1
                 choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
                 choosen_node._groups[0][0].__data__.zoom = false
-                console.log("hi 2", choosen_node._groups[0][0].__data__.zoom)
             }
 
             // Le double déplacement est nécessaire pour conserver le noeud au même point, sans cela il se téléporte au loin
