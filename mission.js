@@ -1,11 +1,11 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
-function recupererDonnees() {
+function recupererDonnees() { // Cette fonction me permet de récupérer le texte compris dans le text_area
     var texte = document.getElementById('user_text').value
     return texte
     }
 
-const executeSPARQLRequest = async (endpoint, query) => {
+const executeSPARQLRequest = async (endpoint, query) => { // Cette fonction appelle une requête SparQL et l'exécute, et renvoie le dataset de sortie.
     localStorage.clear()
     const url = `${endpoint}?query=${encodeURIComponent(query)}&format=json`
 
@@ -49,42 +49,51 @@ const query_construct = `CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
     GROUP BY ?endpoint ?sparqlNorm
     ORDER BY ?endpoint ?sparqlNorm`
 
-function recupererEtAfficherTableau(dataset) {
+function recupererEtAfficherTableau(dataset) { // Cette fonction permet de créer un tableau de données à partir d'un dataset donné en entrée
     
-    let tableauHtml = document.getElementById('result_table')
+    let tableauHtml = document.getElementById('result_table') 
 
+    // TableauHtml est l'objet html qui va contenir ma table
+   
     while (tableauHtml.rows.length > 0) {
         tableauHtml.deleteRow(0)
     }
 
-    let l1
+    // Cette sous-fonction permet d'effacer les lignes existantes précédemment pour avoir à nouveau un tableau vide
+
+    let en_tete
 
     try {
-        l1 = dataset.head.vars
+        en_tete = dataset.head.vars
     } catch(error) {
         console.log("Le dataset n'a pas d'entête")
     }
     
+    // L'en-tête est calculé séparemment des autres lignes, puisqu'il annonce les colonnes, et non leur contenu.
 
-    let ligne1 = tableauHtml.insertRow(l1)
+    let ligne1 = tableauHtml.insertRow(en_tete)
 
-    for (const elt of l1) {
+    for (const elt of en_tete) {
         let cellule = ligne1.insertCell(-1)
         cellule.innerHTML = elt
     }
+
+    // Cette sous-fonction permet d'afficher la première ligne, avec les en-têtes, dans le tableau.
     
     for (const element of dataset.results.bindings) {
         let ligne = tableauHtml.insertRow(-1)
 
-        for (const elt of l1) {
+        for (const elt of en_tete) {
         let cellule = ligne.insertCell(-1)
         cellule.innerHTML = element[elt]["value"]
         } 
     }
 
+    // Cette sous-fonction affiche les lignes dans le tableau.
+
 }
 
-function nodeAlreadyExist(node, nodesList) {
+function nodeAlreadyExist(node, nodesList) { // Cette fonction récupère une node et une liste et vérifie si la node est déjà comprise dans la liste
     for (let n of nodesList) {
         if (n.id === node.id) {
             return true
@@ -93,7 +102,7 @@ function nodeAlreadyExist(node, nodesList) {
     return false
 }
 
-function buildNodes(data, edge) {
+function buildNodes(data, edge) { // Cette fonction récupère un dataset et une liste de triplets de colonnes, puis récupère les colonnes sources et target afin de créer des nodes pour chaque valeur unique.
 
     const nodes = []
 
@@ -137,7 +146,7 @@ function buildNodes(data, edge) {
     return nodes
 }
 
-function linkAlreadyExist(link, linksList) {
+function linkAlreadyExist(link, linksList) { // Cette fonction récupère un triplet (source, relation, cible) et une liste et vérifie si le triplet (ou le triplet avec source et cible inverse) est déjà comprise dans la liste
     for (let l of linksList) {
         if (l.source === link.source && l.target === link.target && l.label === link.label) {
             return true
@@ -148,7 +157,7 @@ function linkAlreadyExist(link, linksList) {
     return false
 }
 
-function buildLinks(data, edge) {
+function buildLinks(data, edge) { // Cette fonction récupère un dataset et une liste de triplets de colonnes, puis récupère les colonnes dans le dataset afin de créer pour chaque triplet de colonnes les lignes associées pour chaque valeur unique.
 
     const links = []
     let number = 0
@@ -182,7 +191,7 @@ function buildLinks(data, edge) {
     return links
 }
 
-async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false) {
+async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false, node_zoom = true) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
     console.log("debut nodelink, dataset", data)
   
@@ -192,24 +201,24 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         colors = ["red", "steelblue"]
     }*/
 
-    let svg_graph = d3.select("#nodelink_graph")
+    let svg_graph = d3.select("#nodelink_graph") // Créé la zone qui contiendra le nodelink
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
 
-    const svg_label = d3.select("#labels_nodelink")
+    const svg_label = d3.select("#labels_nodelink") // Créé une zone qui contiendra les labels
         .attr("width", width + margin.left + margin.right)
         .attr("height", 50)
         .append("g")
 
-    const link = svg_graph.selectAll("line")
+    const link = svg_graph.selectAll("line") // Créé les liens qui vont relier les différents noeuds
         .data(data.links)
         .join("line")
         .attr("label", d => d.label)
         .attr("id", d => d.id)
         .style("stroke", d => d.color)
 
-    const node = svg_graph.selectAll("circle")
+    const node = svg_graph.selectAll("circle") // Créé les noeuds
         .data(data.nodes)
         .join("circle")
         .attr("r", 20)
@@ -217,49 +226,37 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .attr("label", d => d.label)
         .attr("id", d => d.label)
 
-    /*const zoom = d3.zoom()
-        .scaleExtent([0.5, 4]) // Définir les limites de zoom
-        .on('zoom', () => {
-            svg_graph.attr('transform', d3.event.transform)
-    })
-    //svg_graph.call(zoom)*/
-
-    let ticksCount = 0
     let nodes_label
     let link_label
+    let zoomScale = 1
 
-    let node_zoom = true
-    let link_zoom = true
+    if (node_zoom === true) { // Cette sous-fonction contrôle le zoom des nodes
 
-    if (node_zoom === true) {
-        //svg_graph.selectAll("circle")
         node.on("click", d => {
-            //console.log(d)
-           // console.log(node)
             const choosen_id = d.target.getAttribute("id")  
-            //console.log("id", choosen_id)
-            const choosen_node = d3.select('circle[label="' + choosen_id + '"]')
-            console.log("node", choosen_node)
-           // console.log(d.target)
+            const choosen_node = d3.select('circle[label="' + choosen_id + '"]') // Ces 2 lignes permettent d'obtenir la node cible
+            console.log(choosen_node)
 
-           let choosen_x
-           let choosen_y
+            let choosen_x
+            let choosen_y
 
-            for (let elt in choosen_node._groups[0]) {
-                if (choosen_node._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
-                    choosen_x = choosen_node._groups[0][elt].__data__.x
-                    choosen_y = choosen_node._groups[0][elt].__data__.y
-                    console.log("x", choosen_x, "y", choosen_y)
-                }
+            if (choosen_node._groups[0][0].__data__.label === d.target.getAttribute("label")) { // Cette sous-fonction récupère l'emplacement de la node
+                choosen_x = choosen_node._groups[0][0].__data__.x
+                choosen_y = choosen_node._groups[0][0].__data__.y
             }
 
-            const zoomScale = 2 // Facteur de zoom souhaité
+            if (zoomScale === 1) { // Permet de zoomer
+                zoomScale = 2 // Puissance de zoom
+                choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
+                console.log("hi 1")
 
-            // Appliquer la transformation de zoom à la node
-            //const zoom = d3.zoom().scaleExtent([1, 2])
-            //choosen_node.call(zoom)
-            choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
-            console.log("final", choosen_node)
+            } else { // Permet de dézoomer
+                zoomScale = 1 // Puissance de zoom
+                choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
+                console.log("hi 2")
+            }
+
+            // Le double déplacement est nécessaire pour conserver le noeud au même point, sans cela il se téléporte au loin
 
         }, {passive : true})
         
@@ -267,7 +264,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
     if (node_named === true) {
 
-        nodes_label = svg_label.selectAll("nodes")
+        nodes_label = svg_label.selectAll("nodes") // Créé un texte dans le svg des labels, pour chaque node, puis le cache.
             .data(data.nodes)
             .enter().append("text")
             .style("text-align", "center")
@@ -275,12 +272,14 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             .attr("id", d => d.label)
             .attr("label", d => d.label)
             .text(d => d.label)
+            .attr("x", d => 10).attr("y", d => 30)
+            
 
-        svg_graph.selectAll("circle")
+        svg_graph.selectAll("circle") // Sélectionne les différentes nodes lorsque la souris passe sur la node ou la quitte
         .on("mouseover", d => {
             let choosen_node
 
-            for (let elt in nodes_label._groups[0]) {
+            for (let elt in nodes_label._groups[0]) { // Sélectionne la node dans le svg label qui possède le même label que celle sélectionnée, puis affiche son texte.
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
                     choosen_node = nodes_label._groups[0][elt]
                     choosen_node.style.visibility = "visible"  
@@ -288,7 +287,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
                 }
             }
         })
-        .on("mouseout", d => {  
+        .on("mouseout", d => {  // Sélectionne la node dans le svg label qui possède le même label que celle sélectionnée, puis cache son texte.
             let choosen_node
             for (let elt in nodes_label._groups[0]) {
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
@@ -301,7 +300,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
     }
 
     if (link_named === true) {
-        link_label = svg_label.selectAll("liens")
+        link_label = svg_label.selectAll("liens") // Créé un texte dans le svg des labels, pour chaque lien, puis le cache.
         .data(data.links)
         .enter().append("text")
         .text(d => d.label)
@@ -309,27 +308,25 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .attr("id", d => d.id)
         .attr("visibility", "hidden")
         .style("fontsize", "70px")
+        .attr("x", 10).attr("y", 30)
         
-        svg_graph.selectAll("line")
+        svg_graph.selectAll("line") // Sélectionne les différents liens lorsque la souris passe sur un lien ou le quitte
         .on("mouseover", d => { 
             let choosen_link
         
-            for (let elt in link_label._groups[0]) {
-
+            for (let elt in link_label._groups[0]) { // Sélectionne le lien dans le svg label qui possède le même label que celui sélectionné, puis affiche son texte.
                 if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
                     choosen_link = link_label._groups[0][elt]
                     choosen_link.style.visibility = "visible"   
                     choosen_link.style.fontSize = "24px"
-                    //choosen_link.call(zoom)    
                 }
             }
         })
         .on("mouseout", d => { 
             let choosen_link       
 
-            for (let elt in link_label._groups[0]) {
-
-                if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
+            for (let elt in link_label._groups[0]) { // Sélectionne le lien dans le svg label qui possède le même label que celui sélectionné, puis affiche son texte.
+                if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) { 
                     choosen_link = link_label._groups[0][elt]
                     choosen_link.style.visibility = "hidden"            
                 }
@@ -337,7 +334,11 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         })
     }
 
-    const simulation = d3.forceSimulation(data.nodes)       
+    //let ticksCount = 0
+
+    // Cette ligne est liée à la partie .on("tick"). Cela permet de montrer l'apparition des nodes, et la vitesse à laquelle elles s'écartent les unes des autres.
+
+    const simulation = d3.forceSimulation(data.nodes) // Cette simulation correspond au calcul de positionnement des nodes, et est réalisée par d3.
         .force("link", d3.forceLink()                      
             .id(d => d.id)                
             .links(data.links)                                 
@@ -345,6 +346,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .force("charge", d3.forceManyBody().strength(strength))
         .force("center", d3.forceCenter(width / 2, height / 2))
         .on("end", ticked)
+
         /*.on("tick", function () {
 
             ticked()
@@ -357,7 +359,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         })*/
      
         
-    function ticked() {
+    function ticked() { // Cette fonction assigne les nodes et labels au positionnement indiqué par la simulation
 
         link
             .attr("x1", d => d.source.x)
@@ -368,18 +370,6 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         node
             .attr("cx", d => d.x+6)
             .attr("cy", d => d.y-6)
-
-
-        if (node_named === true) {
-            nodes_label.attr("x", d => 10).attr("y", d => 30)
-        }
-        
-        if (link_named === true) {
-
-            link_label.attr("x", 10)
-            
-            link_label.attr("y", 30)
-        }
     }  
     
 }
