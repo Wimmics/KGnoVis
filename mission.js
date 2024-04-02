@@ -117,7 +117,8 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
                     id : row[triple.source]["value"],
                     label : row[triple.source]["value"],
                     color : triple.color[0],
-                    col : triple.source
+                    col : triple.source,
+                    zoom : false
                 }
             
                 if (!(nodeAlreadyExist(node1, nodes))) {
@@ -132,7 +133,8 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
                     id : row[triple.target]["value"],
                     label : row[triple.target]["value"],
                     color : triple.color[1],
-                    col : triple.target
+                    col : triple.target,
+                    zoom : false
                 }
             
                 if (!(nodeAlreadyExist(node2, nodes))) {
@@ -245,15 +247,18 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
                 choosen_y = choosen_node._groups[0][0].__data__.y
             }
 
-            if (zoomScale === 1) { // Permet de zoomer
+            if (choosen_node._groups[0][0].__data__.zoom === false) { // Permet de zoomer
                 zoomScale = 2 // Puissance de zoom
                 choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
-                console.log("hi 1")
+                choosen_node._groups[0][0].__data__.zoom = true
+                //choosen_node.attr("zoom", true)
+                console.log("hi 1", choosen_node._groups[0][0].__data__.zoom)
 
             } else { // Permet de dézoomer
                 zoomScale = 1 // Puissance de zoom
                 choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
-                console.log("hi 2")
+                choosen_node._groups[0][0].__data__.zoom = false
+                console.log("hi 2", choosen_node._groups[0][0].__data__.zoom)
             }
 
             // Le double déplacement est nécessaire pour conserver le noeud au même point, sans cela il se téléporte au loin
