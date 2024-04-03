@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridjs@1.2.0/dist/gridjs.production.min.js" type="module" defer></script>
     <script src="mission.js" defer type="module"></script>
     <link rel="stylesheet" href="./bordure.css">
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css">
     <title>Analyse de SparQL</title>
 
     <script type="module">
@@ -19,6 +21,7 @@
                 console.log("started")
 
                 const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees())
+                console.log("dataset libre", dataset)
                 const result_data = dataset.results.bindings
 
                 const edge_test = [
@@ -32,26 +35,35 @@
                 //console.log(liens)
 
                 let dataset_nodelink = {nodes : noeuds, links : liens}
+                console.log("traité", dataset_nodelink)
                 //console.log("pre-appel", dataset_nodelink)
                 
-                await nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, false, true)
+                //await nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, false, true)
 
                 await console.log("finished")
             })
         })
 
         const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees())
+        console.log(dataset)
+
         const result_data = dataset.results.bindings
 
         const edge_test = [
-            {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"},
-            {source : "s", target : "p", relation : "o", color : ["green", "purple"], color_link : "silver"}
+            {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"}//,
+            //{source : "s", target : "p", relation : "o", color : ["green", "purple"], color_link : "silver"}
         ]
 
         const noeuds = buildNodes(result_data, edge_test)
         const liens = buildLinks(result_data, edge_test)
 
         let dataset_nodelink = {nodes : noeuds, links : liens}
+
+        console.log("dataset requête", dataset)
+        console.log("dataset traité", dataset_nodelink)
+
+        //recupererEtAfficherTableau(dataset, edge_test)
+        recupererEtAfficherTableau(dataset_nodelink)
 
         //console.log(dataset_nodelink)
 /*
@@ -80,8 +92,7 @@
             ]
         }
 */
-        nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
-        //nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000)
+        //nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
 
     </script>
 

@@ -1,4 +1,5 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
+import * as grid from "https://unpkg.com/gridjs?module"
 
 function recupererDonnees() { // Cette fonction me permet de récupérer le texte compris dans le text_area
     var texte = document.getElementById('user_text').value
@@ -49,8 +50,58 @@ const query_construct = `CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
     GROUP BY ?endpoint ?sparqlNorm
     ORDER BY ?endpoint ?sparqlNorm`
 
+function elementAlreadyExist(element, List) { // Cette fonction récupère une node et une liste et vérifie si la node est déjà comprise dans la liste
+    for (let n of List) {
+        if (n === element) {
+            return true
+        }
+    }
+    return false
+}
+
+
 function recupererEtAfficherTableau(dataset) { // Cette fonction permet de créer un tableau de données à partir d'un dataset donné en entrée
+
+    console.log(dataset)
+/*
+    let liste_o = []
+    let liste_s = []
+    let liste_p = []
+
+    for (let elt of dataset.results.bindings) {
+        console.log(elt.s.value)
+        if (!elementAlreadyExist(elt.o.value, liste_o)) {
+            liste_o.push(elt.o.value)
+        }
+        if (!elementAlreadyExist(elt.s.value, liste_s)) {
+            liste_s.push(elt.s.value)
+        }
+        if (!elementAlreadyExist(elt.p.value, liste_p)) {
+            liste_p.push(elt.p.value)
+        }
+    }
+    console.log("o", liste_o)
+    console.log("p", liste_p)
+    console.log("s", liste_s)
+
+   */
+
+    const tableau = new grid.Grid({
+        columns : ["source", "label", "target"],
+        sort : true,
+        pagination : true,
+        fixedHeader : true,
+        height : "20rem",
+        data : dataset.links
+    })
+
+    console.log(tableau)
     
+    tableau.render(document.getElementById('result_table'))
+
+
+
+    /*
     let tableauHtml = document.getElementById('result_table') 
 
     // TableauHtml est l'objet html qui va contenir ma table
@@ -90,6 +141,8 @@ function recupererEtAfficherTableau(dataset) { // Cette fonction permet de crée
     }
 
     // Cette sous-fonction affiche les lignes dans le tableau.
+*/
+
 
 }
 
