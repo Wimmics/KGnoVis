@@ -6,19 +6,9 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
     <script src="mission.js" defer type="module"></script>
     <link rel="stylesheet" href="./bordure.css">
+    <link rel="stylesheet" href="./style.css">
     <title>Analyse de SparQL</title>
-    <style>
-        .right-align {
-            float: right
-        }
-        textarea {
-            width: 100%
-        }      
-        .svg-container {
-            display: flex;
-            flex-direction: column;
-        }
-    </style>
+
     <script type="module">
         import {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks} from "./mission.js"
 
@@ -90,7 +80,7 @@
             ]
         }
 */
-        nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, true, true, 5)
+        nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
         //nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000)
 
     </script>
@@ -121,9 +111,15 @@
         <p>Test</p><br>
         <table id = "test" border="1" cellpadding="5"></table>
     </div>
+
+    <div id = "div_labels" height = 150px>
+        <p id = "labels" style = "display: inline;"></p>
+    </div>
+
     <div id="graph">
         <svg id = "nodelink_graph"></svg>
-        <svg id = "labels_nodelink"></svg>
+        <!-- <svg id = "labels_nodelink"></svg> -->
+
     </div>
     
 

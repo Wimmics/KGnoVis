@@ -208,10 +208,25 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
 
-    const svg_label = d3.select("#labels_nodelink") // Créé une zone qui contiendra les labels
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", 50)
-        .append("g")
+    const svg_label = d3.select("#labels") // Créé une zone qui contiendra les labels
+
+    const zoom = d3.zoom()
+        .scaleExtent([0.1, 10]) // Définir les limites de l'échelle de zoom
+        .on('zoom', function(event) {
+            svg_graph.attr("transform", event.transform)
+        }, {passive : true})
+        
+    //svg_graph.call(zoom, {passive : true})
+
+    svg_graph.call(zoom,
+        d3.zoom()
+            //.filter(() => !event.ctrlKey && !event.button)
+            //.touchable()
+            .on('zoom', function(event) {
+                svg_graph.attr('transform', event.transform)
+        }), {passive: true})
+
+
 
     const link = svg_graph.selectAll("line") // Créé les liens qui vont relier les différents noeuds
         .data(data.links)
@@ -250,6 +265,8 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             if (choosen_node._groups[0][0].__data__.zoom === false) { // Permet de zoomer
                 zoomScale = zoom_strenght // Puissance de zoom choisie par l'utilisateur
                 choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
+                //scale => remplace toutes les transformations précédentes, y compris l'assignation, et du coup supprime la position
+                
                 choosen_node._groups[0][0].__data__.zoom = true
 
             } else { // Permet de dézoomer
@@ -261,16 +278,16 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             // Le double déplacement est nécessaire pour conserver le noeud au même point, sans cela il se téléporte au loin
 
         }, {passive : true})
-        
+
     }
 
     if (node_named === true) {
 
         nodes_label = svg_label.selectAll("nodes") // Créé un texte dans le svg des labels, pour chaque node, puis le cache.
             .data(data.nodes)
-            .enter().append("text")
+            .enter().append("p")
             .style("text-align", "center")
-            .style("visibility", "hidden")
+            .style("display", "none")
             .attr("id", d => d.label)
             .attr("label", d => d.label)
             .text(d => d.label)
@@ -284,7 +301,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             for (let elt in nodes_label._groups[0]) { // Sélectionne la node dans le svg label qui possède le même label que celle sélectionnée, puis affiche son texte.
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
                     choosen_node = nodes_label._groups[0][elt]
-                    choosen_node.style.visibility = "visible"  
+                    choosen_node.style.display = "inline"  
                     choosen_node.style.fontSize = "24px"            
                 }
             }
@@ -294,7 +311,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
             for (let elt in nodes_label._groups[0]) {
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
                     choosen_node = nodes_label._groups[0][elt]
-                    choosen_node.style.visibility = "hidden"
+                    choosen_node.style.display = "none"
                 }
             }
             
@@ -304,11 +321,11 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
     if (link_named === true) {
         link_label = svg_label.selectAll("liens") // Créé un texte dans le svg des labels, pour chaque lien, puis le cache.
         .data(data.links)
-        .enter().append("text")
+        .enter().append("p")
         .text(d => d.label)
         .attr("label", d => d.label)
         .attr("id", d => d.id)
-        .attr("visibility", "hidden")
+        .attr("display", "none")
         .style("fontsize", "70px")
         .attr("x", 10).attr("y", 30)
         
