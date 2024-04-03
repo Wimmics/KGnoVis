@@ -50,41 +50,9 @@ const query_construct = `CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
     GROUP BY ?endpoint ?sparqlNorm
     ORDER BY ?endpoint ?sparqlNorm`
 
-function elementAlreadyExist(element, List) { // Cette fonction récupère une node et une liste et vérifie si la node est déjà comprise dans la liste
-    for (let n of List) {
-        if (n === element) {
-            return true
-        }
-    }
-    return false
-}
-
-
 function recupererEtAfficherTableau(dataset) { // Cette fonction permet de créer un tableau de données à partir d'un dataset donné en entrée
 
     console.log(dataset)
-/*
-    let liste_o = []
-    let liste_s = []
-    let liste_p = []
-
-    for (let elt of dataset.results.bindings) {
-        console.log(elt.s.value)
-        if (!elementAlreadyExist(elt.o.value, liste_o)) {
-            liste_o.push(elt.o.value)
-        }
-        if (!elementAlreadyExist(elt.s.value, liste_s)) {
-            liste_s.push(elt.s.value)
-        }
-        if (!elementAlreadyExist(elt.p.value, liste_p)) {
-            liste_p.push(elt.p.value)
-        }
-    }
-    console.log("o", liste_o)
-    console.log("p", liste_p)
-    console.log("s", liste_s)
-
-   */
 
     const tableau = new grid.Grid({
         columns : ["source", "label", "target"],
@@ -94,55 +62,8 @@ function recupererEtAfficherTableau(dataset) { // Cette fonction permet de crée
         height : "20rem",
         data : dataset.links
     })
-
-    console.log(tableau)
     
     tableau.render(document.getElementById('result_table'))
-
-
-
-    /*
-    let tableauHtml = document.getElementById('result_table') 
-
-    // TableauHtml est l'objet html qui va contenir ma table
-   
-    while (tableauHtml.rows.length > 0) {
-        tableauHtml.deleteRow(0)
-    }
-
-    // Cette sous-fonction permet d'effacer les lignes existantes précédemment pour avoir à nouveau un tableau vide
-
-    let en_tete
-
-    try {
-        en_tete = dataset.head.vars
-    } catch(error) {
-        console.log("Le dataset n'a pas d'entête")
-    }
-    
-    // L'en-tête est calculé séparemment des autres lignes, puisqu'il annonce les colonnes, et non leur contenu.
-
-    let ligne1 = tableauHtml.insertRow(en_tete)
-
-    for (const elt of en_tete) {
-        let cellule = ligne1.insertCell(-1)
-        cellule.innerHTML = elt
-    }
-
-    // Cette sous-fonction permet d'afficher la première ligne, avec les en-têtes, dans le tableau.
-    
-    for (const element of dataset.results.bindings) {
-        let ligne = tableauHtml.insertRow(-1)
-
-        for (const elt of en_tete) {
-        let cellule = ligne.insertCell(-1)
-        cellule.innerHTML = element[elt]["value"]
-        } 
-    }
-
-    // Cette sous-fonction affiche les lignes dans le tableau.
-*/
-
 
 }
 
@@ -220,13 +141,14 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
     for (const triple of edge) {
         for (const row of data) {
             try {
-            const s = row[triple.source].value      
+            const source = row[triple.source].value
             const target = row[triple.target].value
             const label = row[triple.relation].value
             const color = triple.color_link
 
+
             const link = {
-                source : s,
+                source : row[triple.source].value,
                 target : target,
                 label : label,
                 color : color,
@@ -246,9 +168,11 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
     return links
 }
 
-async function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
+function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
     console.log("debut nodelink, dataset", data)
+
+    const data_used = JSON.parse(JSON.stringify(data))
   
     const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
@@ -268,13 +192,11 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
         .on('zoom', function(event) {
             svg_graph.attr("transform", event.transform)
         }, {passive : true})
-        
-    //svg_graph.call(zoom, {passive : true})
 
-    svg_graph.call(zoom,
+    d3.select("#nodelink_graph").call(zoom,
         d3.zoom()
-            //.filter(() => !event.ctrlKey && !event.button)
-            //.touchable()
+            //.filter(() => !event.ctrlKey && !event.button) // Permet de forcer l'appuie sur ctrl pour le zoom
+            //.touchable() // Permet l'accès au tactile
             .on('zoom', function(event) {
                 svg_graph.attr('transform', event.transform)
         }), {passive: true})
@@ -282,14 +204,14 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
 
     const link = svg_graph.selectAll("line") // Créé les liens qui vont relier les différents noeuds
-        .data(data.links)
+        .data(data_used.links)
         .join("line")
         .attr("label", d => d.label)
         .attr("id", d => d.id)
         .style("stroke", d => d.color)
 
     const node = svg_graph.selectAll("circle") // Créé les noeuds
-        .data(data.nodes)
+        .data(data_used.nodes)
         .join("circle")
         .attr("r", 20)
         .style("fill", d => d.color)
@@ -337,7 +259,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
     if (node_named === true) {
 
         nodes_label = svg_label.selectAll("nodes") // Créé un texte dans le svg des labels, pour chaque node, puis le cache.
-            .data(data.nodes)
+            .data(data_used.nodes)
             .enter().append("p")
             .style("text-align", "center")
             .style("display", "none")
@@ -373,7 +295,7 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
     if (link_named === true) {
         link_label = svg_label.selectAll("liens") // Créé un texte dans le svg des labels, pour chaque lien, puis le cache.
-        .data(data.links)
+        .data(data_used.links)
         .enter().append("p")
         .text(d => d.label)
         .attr("label", d => d.label)
@@ -410,10 +332,10 @@ async function nodelink_creator(data, colors = [], strength = -400, width = 400,
 
     // Cette ligne est liée à la partie .on("tick"). Cela permet de montrer l'apparition des nodes, et la vitesse à laquelle elles s'écartent les unes des autres.
 
-    const simulation = d3.forceSimulation(data.nodes) // Cette simulation correspond au calcul de positionnement des nodes, et est réalisée par d3.
+    const simulation = d3.forceSimulation(data_used.nodes) // Cette simulation correspond au calcul de positionnement des nodes, et est réalisée par d3.
         .force("link", d3.forceLink()                      
             .id(d => d.id)                
-            .links(data.links)                                 
+            .links(data_used.links)                                 
         )
         .force("charge", d3.forceManyBody().strength(strength))
         .force("center", d3.forceCenter(width / 2, height / 2))

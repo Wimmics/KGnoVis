@@ -57,13 +57,12 @@
         const noeuds = buildNodes(result_data, edge_test)
         const liens = buildLinks(result_data, edge_test)
 
-        let dataset_nodelink = {nodes : noeuds, links : liens}
-
-        console.log("dataset requête", dataset)
-        console.log("dataset traité", dataset_nodelink)
+        const dataset_nodelink = {nodes : noeuds, links : liens}
+        const data_table = {nodes : noeuds, links : liens}
+        console.log(data_table)
 
         //recupererEtAfficherTableau(dataset, edge_test)
-        recupererEtAfficherTableau(dataset_nodelink)
+        //recupererEtAfficherTableau(dataset_nodelink)
 
         //console.log(dataset_nodelink)
 /*
@@ -92,7 +91,14 @@
             ]
         }
 */
-        //nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
+ 
+
+        recupererEtAfficherTableau(data_table)
+
+        nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
+
+        //await nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
+
 
     </script>
 
