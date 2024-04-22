@@ -12,7 +12,7 @@
     <title>Analyse de SparQL</title>
 
     <script type="module">
-        import {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks} from "./mission.js"
+        import {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks, buildLegend} from "./mission.js"
 
         document.addEventListener('DOMContentLoaded', function() {
             let boutonEnvoyer = document.querySelector('#recolt_request')
@@ -25,8 +25,8 @@
                 const result_data = dataset.results.bindings
 
                 const edge_test = [
-                    {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"}//,
-                    //{source : "o", target : "s", relation : "p", color : ["green", "purple"], color_link : "silver"}
+                    {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"},
+                    {source : "o", target : "p", relation : "s", color : ["green", "purple"], color_link : "silver"}
                 ]
 
                 const noeuds = buildNodes(result_data, edge_test)
@@ -45,21 +45,25 @@
         })
 
         const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees())
-        console.log(dataset)
+        //console.log(dataset)
 
         const result_data = dataset.results.bindings
 
         const edge_test = [
-            {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"}//,
-            //{source : "s", target : "p", relation : "o", color : ["green", "purple"], color_link : "silver"}
+            {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"},
+            {source : "s", target : "p", relation : "o", color : ["green", "purple"], color_link : "silver"}
         ]
 
         const noeuds = buildNodes(result_data, edge_test)
         const liens = buildLinks(result_data, edge_test)
+        const legende = buildLegend(edge_test)
+        console.log(legende)
 
-        const dataset_nodelink = {nodes : noeuds, links : liens}
-        const data_table = {nodes : noeuds, links : liens}
-        console.log(data_table)
+        const dataset_nodelink = {nodes : noeuds, links : liens, legend : legende}
+
+        recupererEtAfficherTableau(dataset_nodelink)
+
+        nodelink_creator(dataset_nodelink, -1000, 2000, 2000, true, false, true, 5)
 
         //recupererEtAfficherTableau(dataset, edge_test)
         //recupererEtAfficherTableau(dataset_nodelink)
@@ -91,11 +95,6 @@
             ]
         }
 */
- 
-
-        recupererEtAfficherTableau(data_table)
-
-        nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
 
         //await nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
 

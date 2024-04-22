@@ -52,7 +52,7 @@ const query_construct = `CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
 
 function recupererEtAfficherTableau(dataset) { // Cette fonction permet de créer un tableau de données à partir d'un dataset donné en entrée
 
-    console.log(dataset)
+    //console.log(dataset)
 
     const tableau = new grid.Grid({
         columns : ["source", "label", "target"],
@@ -90,7 +90,7 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
                 node1 = {
                     id : row[triple.source]["value"],
                     label : row[triple.source]["value"],
-                    color : triple.color[0],
+                    color : triple.color[0], 
                     col : triple.source,
                     zoom : false
                 }
@@ -148,7 +148,7 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
 
 
             const link = {
-                source : row[triple.source].value,
+                source : source,
                 target : target,
                 label : label,
                 color : color,
@@ -168,7 +168,42 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
     return links
 }
 
-function nodelink_creator(data, colors = [], strength = -400, width = 400, height = 400, node_named = false, link_named = false, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
+function buildLegend(edge) {
+
+    const items = []
+
+    for (const triple of edge) {
+/*
+        items.push({
+            source : triple.source,
+            target : triple.target,
+            link : triple.relation,
+            color : {source : triple.color[0], target : triple.color[1], link : triple.color_link}
+        })
+*/
+        items.push({
+            label : "source", value : triple.source, color : triple.color[0]
+        })
+
+        items.push({
+            label : "target", value : triple.target, color : triple.color[1],
+        })
+
+        items.push({
+            label : "link", value : triple.relation, color : triple.color_link
+        })
+
+
+
+
+    }
+
+    console.log(items)
+
+    return items
+}
+
+function nodelink_creator(data, strength = -400, width = 400, height = 400, node_named = false, link_named = false, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
     console.log("debut nodelink, dataset", data)
 
@@ -176,15 +211,20 @@ function nodelink_creator(data, colors = [], strength = -400, width = 400, heigh
   
     const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
-    /*if (colors.length != 2) {
-        colors = ["red", "steelblue"]
-    }*/
-
-    let svg_graph = d3.select("#nodelink_graph") // Créé la zone qui contiendra le nodelink
+    const svg_total = d3.select("#nodelink_graph") // Créé la zone qui contiendra le nodelink
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-        .append("g")
 
+    const width2 = width*0.9
+    const height2 = height*0.9
+
+    const svg_graph = svg_total.append("svg")
+        .attr("x", width*0.05)
+        .attr("y", height*0.05)
+        .attr("width", width2)
+        .attr("height", height2)    
+        .append("g")
+        
     const svg_label = d3.select("#labels") // Créé une zone qui contiendra les labels
 
     const zoom = d3.zoom()
@@ -200,8 +240,6 @@ function nodelink_creator(data, colors = [], strength = -400, width = 400, heigh
             .on('zoom', function(event) {
                 svg_graph.attr('transform', event.transform)
         }), {passive: true})
-
-
 
     const link = svg_graph.selectAll("line") // Créé les liens qui vont relier les différents noeuds
         .data(data_used.links)
@@ -327,8 +365,49 @@ function nodelink_creator(data, colors = [], strength = -400, width = 400, heigh
             }
         })
     }
+/*
+    console.log(data)
+    console.log(data.legend)
+    console.log(data.legend[0].color)*/
+    //const legend_colors = Object.values(data.legend[0].color)
+    //console.log(legend_colors)
 
-    //let ticksCount = 0
+        
+    const dots = svg_total.selectAll("legend_dots")
+    .data(data.legend)
+    .enter().append("circle") //Changer data legend pour être itérable
+    .attr("cx", (d, i) => 25 + i*125)
+    .attr("cy", 25)
+    .attr("r", 20)
+    .style("fill", (d, i) => {console.log(d); return d.color})
+
+    console.log(dots)
+
+/*
+
+    const node = svg_graph.selectAll("circle") // Créé les noeuds
+        .data(data_used.nodes)
+        .join("circle")
+        .attr("r", 20)
+        .style("fill", d => d.color)
+        .attr("label", d => d.label)
+        .attr("id", d => d.label)
+
+    svg.selectAll("categories")
+        .data(keys).enter()
+        .append("text")
+        .attr("x", (d,i) => 30 + i*75)
+        .attr("y", 15)
+        .style("fill", (d, i) => colors[i])
+        .text(d => d)
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+*/
+
+
+
+
+    let ticksCount = 0
 
     // Cette ligne est liée à la partie .on("tick"). Cela permet de montrer l'apparition des nodes, et la vitesse à laquelle elles s'écartent les unes des autres.
 
@@ -338,19 +417,19 @@ function nodelink_creator(data, colors = [], strength = -400, width = 400, heigh
             .links(data_used.links)                                 
         )
         .force("charge", d3.forceManyBody().strength(strength))
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        .on("end", ticked)
+        .force("center", d3.forceCenter(width2 / 2, height2 / 2))
+        //.on("end", ticked)
 
-        /*.on("tick", function () {
+        .on("tick", function () {
 
             ticked()
             ticksCount++; // Incrémenter le compteur de ticks à chaque itération
-            console.log(ticksCount)
+            //console.log(ticksCount)
 
             if (ticksCount >= 500) {
                 simulation.stop() // Arrêter la simulation après le nombre spécifié de ticks
             }
-        })*/
+        })
      
         
     function ticked() { // Cette fonction assigne les nodes et labels au positionnement indiqué par la simulation
@@ -368,4 +447,4 @@ function nodelink_creator(data, colors = [], strength = -400, width = 400, heigh
     
 }
 
-export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks}
+export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks, buildLegend}
