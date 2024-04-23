@@ -52,15 +52,15 @@ const query_construct = `CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
 
 function recupererEtAfficherTableau(dataset) { // Cette fonction permet de créer un tableau de données à partir d'un dataset donné en entrée
 
-    //console.log(dataset)
-
     const tableau = new grid.Grid({
         columns : ["source", "label", "target"],
         sort : true,
         pagination : true,
         fixedHeader : true,
         height : "20rem",
-        data : dataset.links
+        data : dataset.links,
+        width : "90vw",
+        resizable : true
     })
     
     tableau.render(document.getElementById('result_table'))
@@ -199,7 +199,7 @@ function buildLegend(edge) {
     return items
 }
 
-function nodelink_creator(data, strength = -400, width = 400, height = 400, node_named = false, link_named = false, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
+function nodelink_creator(data, strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
     console.log("debut nodelink, dataset", data)
 
@@ -213,6 +213,8 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
 
     const width2 = width*0.9
     const height2 = height*0.9
+
+    const largeur = Math.min(width2, height2)
 
     const svg_graph = svg_total.append("svg")
         .attr("x", width*0.05)
@@ -247,7 +249,7 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
     const node = svg_graph.selectAll("circle") // Créé les noeuds
         .data(data_used.nodes)
         .join("circle")
-        .attr("r", 20)
+        .attr("r", 0.01*largeur)
         .style("fill", d => d.color)
         .attr("label", d => d.label)
         .attr("id", d => d.label)
@@ -296,11 +298,13 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
             .data(data_used.nodes)
             .enter().append("p")
             .style("text-align", "center")
+            .style("font-size", "12px")
             .style("display", "none")
             .attr("id", d => d.label)
             .attr("label", d => d.label)
             .text(d => d.label)
-            .attr("x", d => 10).attr("y", d => 30)
+            .attr("x", d => 10)
+            .attr("y", d => 30)
             
 
         svg_graph.selectAll("circle") // Sélectionne les différentes nodes lorsque la souris passe sur la node ou la quitte
@@ -310,8 +314,7 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
             for (let elt in nodes_label._groups[0]) { // Sélectionne la node dans le svg label qui possède le même label que celle sélectionnée, puis affiche son texte.
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
                     choosen_node = nodes_label._groups[0][elt]
-                    choosen_node.style.display = "inline"  
-                    choosen_node.style.fontSize = "24px"            
+                    choosen_node.style.display = "inline"           
                 }
             }
         })
@@ -334,9 +337,13 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
         .text(d => d.label)
         .attr("label", d => d.label)
         .attr("id", d => d.id)
-        .attr("display", "none")
-        .style("fontsize", "70px")
-        .attr("x", 10).attr("y", 30)
+        .style("text-align", "center")
+        .style("font-size", "12px")
+        .style("display", "none")
+        .attr("x", 10)
+        .attr("y", 30)
+
+        console.log(link_label)
         
         svg_graph.selectAll("line") // Sélectionne les différents liens lorsque la souris passe sur un lien ou le quitte
         .on("mouseover", d => { 
@@ -345,8 +352,7 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
             for (let elt in link_label._groups[0]) { // Sélectionne le lien dans le svg label qui possède le même label que celui sélectionné, puis affiche son texte.
                 if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
                     choosen_link = link_label._groups[0][elt]
-                    choosen_link.style.visibility = "visible"   
-                    choosen_link.style.fontSize = "24px"
+                    choosen_link.style.display = "inline"
                 }
             }
         })
@@ -356,7 +362,7 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
             for (let elt in link_label._groups[0]) { // Sélectionne le lien dans le svg label qui possède le même label que celui sélectionné, puis affiche son texte.
                 if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) { 
                     choosen_link = link_label._groups[0][elt]
-                    choosen_link.style.visibility = "hidden"            
+                    choosen_link.style.display = "none"           
                 }
             }
         })
@@ -368,9 +374,9 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
     const dots = svg_total.selectAll("legend_dots")
         .data(data.legend)
         .join("circle")
-        .attr("cx", (d, i) => (1/number_legend)*0.1*width + (1/number_legend)*i*width)
-        .attr("cy", 25)
-        .attr("r", 20)
+        .attr("cx", (d, i) => (1/number_legend)*0.20*width + (1/number_legend)*i*width)
+        .attr("cy", 0.02*height)
+        .attr("r", 0.01*largeur)
         .style("fill", (d, i) => d.color)
 
     const legend_text = svg_total.selectAll("legend_names")
@@ -378,9 +384,9 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
         .join("text")
         .text(d => d.value)
         .attr("label", d => d.label)
-        .attr("x", (d, i) => (1/number_legend)*0.1*width + 20 + (1/number_legend)*i*width)
-        .attr("y", 35)
-        .style("font-size", "3rem")
+        .attr("x", (d, i) => (1/number_legend)*0.25*width + 20 + (1/number_legend)*i*width)
+        .attr("y", 0.02*height + 5)
+        .style("font-size", "1rem")
 
     let ticksCount = 0
 

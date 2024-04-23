@@ -6,9 +6,16 @@ textarea {
 }      
 .svg-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: column
 }
 #div_labels {
     margin : 1rem 0rem;
-    height: 2rem;
+    height: 2rem
+}
+body {
+    font-size: 80%;
+    width: 90vw
+}
+.line {
+    stroke-width: 1px
 }
