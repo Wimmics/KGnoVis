@@ -168,37 +168,33 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
     return links
 }
 
+function LegendAlreadyExist(new_l, liste_l) {
+    for (let l of liste_l) {
+        if (l.source === new_l.source) {
+            return true
+        } else if (l.source === new_l.target) {
+            return true
+        }
+    }
+    return false
+}
+
 function buildLegend(edge) {
 
     const items = []
 
     for (const triple of edge) {
-/*
-        items.push({
-            source : triple.source,
-            target : triple.target,
-            link : triple.relation,
-            color : {source : triple.color[0], target : triple.color[1], link : triple.color_link}
-        })
-*/
+
         items.push({
             label : "source", value : triple.source, color : triple.color[0]
         })
+    //faire un mix des couleurs
 
         items.push({
-            label : "target", value : triple.target, color : triple.color[1],
+            label : "target", value : triple.target, color : triple.color[1]
         })
-
-        items.push({
-            label : "link", value : triple.relation, color : triple.color_link
-        })
-
-
-
-
-    }
-
-    console.log(items)
+        
+    } 
 
     return items
 }
@@ -365,47 +361,26 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
             }
         })
     }
-/*
-    console.log(data)
-    console.log(data.legend)
-    console.log(data.legend[0].color)*/
-    //const legend_colors = Object.values(data.legend[0].color)
-    //console.log(legend_colors)
 
+    const number_legend = data.legend.length
+    console.log(number_legend)
         
     const dots = svg_total.selectAll("legend_dots")
-    .data(data.legend)
-    .enter().append("circle") //Changer data legend pour être itérable
-    .attr("cx", (d, i) => 25 + i*125)
-    .attr("cy", 25)
-    .attr("r", 20)
-    .style("fill", (d, i) => {console.log(d); return d.color})
-
-    console.log(dots)
-
-/*
-
-    const node = svg_graph.selectAll("circle") // Créé les noeuds
-        .data(data_used.nodes)
+        .data(data.legend)
         .join("circle")
+        .attr("cx", (d, i) => (1/number_legend)*0.1*width + (1/number_legend)*i*width)
+        .attr("cy", 25)
         .attr("r", 20)
-        .style("fill", d => d.color)
+        .style("fill", (d, i) => d.color)
+
+    const legend_text = svg_total.selectAll("legend_names")
+        .data(data.legend)
+        .join("text")
+        .text(d => d.value)
         .attr("label", d => d.label)
-        .attr("id", d => d.label)
-
-    svg.selectAll("categories")
-        .data(keys).enter()
-        .append("text")
-        .attr("x", (d,i) => 30 + i*75)
-        .attr("y", 15)
-        .style("fill", (d, i) => colors[i])
-        .text(d => d)
-        .attr("text-anchor", "left")
-        .style("alignment-baseline", "middle")
-*/
-
-
-
+        .attr("x", (d, i) => (1/number_legend)*0.1*width + 20 + (1/number_legend)*i*width)
+        .attr("y", 35)
+        .style("font-size", "3rem")
 
     let ticksCount = 0
 
@@ -423,11 +398,11 @@ function nodelink_creator(data, strength = -400, width = 400, height = 400, node
         .on("tick", function () {
 
             ticked()
-            ticksCount++; // Incrémenter le compteur de ticks à chaque itération
+            ticksCount++; // Incrémente le compteur de ticks à chaque itération
             //console.log(ticksCount)
 
             if (ticksCount >= 500) {
-                simulation.stop() // Arrêter la simulation après le nombre spécifié de ticks
+                simulation.stop() // Arrête la simulation après le nombre spécifié de ticks
             }
         })
      
