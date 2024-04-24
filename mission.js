@@ -1,5 +1,8 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
-import * as grid from "https://unpkg.com/gridjs?module"
+import * as grid from 'https://unpkg.com/gridjs?module'
+
+// Besoin de dl le fichier dans la librairie?
+// Prendre exemple import dans index, je mets dans le lib, et pas besoin d'import dans le .js
 
 function recupererDonnees() { // Cette fonction me permet de récupérer le texte compris dans le text_area
     var texte = document.getElementById('user_text').value
@@ -146,7 +149,6 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
             const label = row[triple.relation].value
             const color = triple.color_link
 
-
             const link = {
                 source : source,
                 target : target,
@@ -168,17 +170,6 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
     return links
 }
 
-function LegendAlreadyExist(new_l, liste_l) {
-    for (let l of liste_l) {
-        if (l.source === new_l.source) {
-            return true
-        } else if (l.source === new_l.target) {
-            return true
-        }
-    }
-    return false
-}
-
 function buildLegend(edge) {
 
     const items = []
@@ -198,6 +189,68 @@ function buildLegend(edge) {
 
     return items
 }
+
+const liste_test_couleur = {
+    CouleurA : {valeurs : [255, 0, 0], poids : 0.5},
+    CouleurB : {valeurs : [200, 120, 130], poids : 0.2},
+    CouleurC : {valeurs : [0, 230, 140], poids : 0.3}
+}
+
+const liste_poids = [0.5, 0.3, 0.2]
+
+function fusion_couleurs(liste_couleur, liste_poids = null) {
+
+    let rouge = [], bleu = [], vert = []
+
+    console.log(liste_couleur)
+
+    for (let elt in liste_couleur) {
+
+        rouge.push(liste_couleur[elt].valeurs[0])
+        bleu.push(liste_couleur[elt].valeurs[1])
+        vert.push(liste_couleur[elt].valeurs[2])
+/*
+        console.log(elt)
+        console.log(liste_couleur[elt].valeurs)
+        console.log(liste_couleur[elt].poids)
+*/
+    }
+
+    const moy_rouge = Math.round(rouge.reduce((a, b) => a + b, 0) / rouge.length)
+    const moy_bleu = Math.round(bleu.reduce((a, b) => a + b, 0) / bleu.length)
+    const moy_vert = Math.round(vert.reduce((a, b) => a + b, 0) / vert.length)
+
+    console.log("rouge", rouge, moy_rouge)
+    console.log("bleu", bleu, moy_bleu)
+    console.log("vert", vert, moy_vert)
+}
+
+/*
+//colorChannelA and colorChannelB are ints ranging from 0 to 255
+function colorChannelMixer(colorChannelA, colorChannelB, amountToMix){
+    const channelA = colorChannelA*amountToMix
+    const channelB = colorChannelB*(1-amountToMix)
+    //console.log(channelA, channelB)
+    return parseInt(channelA+channelB);
+}
+//rgbA and rgbB are arrays, amountToMix ranges from 0.0 to 1.0
+//example (red): rgbA = [255,0,0]
+function colorMixer(rgbA, rgbB, amountToMix){
+    //console.log(rgbA[0], rgbA[1], rgbA[2])
+    const r = colorChannelMixer(rgbA[0],rgbB[0],amountToMix)
+    const g = colorChannelMixer(rgbA[1],rgbB[1],amountToMix)
+    const b = colorChannelMixer(rgbA[2],rgbB[2],amountToMix)
+    //console.log(r, g, b)
+    return "rgb("+r+","+g+","+b+")";
+}
+
+/*
+const colA = new fabric.Color("red")
+const colB = new fabric.Color("blue")
+console.log("ColA", colA._source, "colB", colB._source)
+const colC = colorMixer(colA._source, colB._source, 0.5)
+console.log("colC", colC)
+*/
 
 function nodelink_creator(data, strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
@@ -370,6 +423,8 @@ function nodelink_creator(data, strength = -50, width = 400, height = 400, node_
 
     const number_legend = data.legend.length
     console.log(number_legend)
+
+
         
     const dots = svg_total.selectAll("legend_dots")
         .data(data.legend)
@@ -428,4 +483,4 @@ function nodelink_creator(data, strength = -50, width = 400, height = 400, node_
     
 }
 
-export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks, buildLegend}
+export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, fusion_couleurs, nodelink_creator, buildNodes, buildLinks, buildLegend}

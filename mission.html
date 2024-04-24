@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/d3@7/+esm" type="module" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridjs@1.2.0/dist/gridjs.production.min.js" type="module" defer></script>
+    <script src="lib/fabric.min.js"></script>
     <script src="mission.js" defer type="module"></script>
     <link rel="stylesheet" href="./bordure.css">
     <link rel="stylesheet" href="./style.css">
@@ -12,7 +11,7 @@
     <title>Analyse de SparQL</title>
 
     <script type="module">
-        import {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, nodelink_creator, nodeAlreadyExist, buildNodes, linkAlreadyExist, buildLinks, buildLegend} from "./mission.js"
+        import {recupererDonnees, executeSPARQLRequest, fusion_couleurs, recupererEtAfficherTableau, nodelink_creator, buildNodes, buildLinks, buildLegend} from "./mission.js"
 
         document.addEventListener('DOMContentLoaded', function() {
             let boutonEnvoyer = document.querySelector('#recolt_request')
@@ -63,7 +62,17 @@
 
         recupererEtAfficherTableau(dataset_nodelink)
 
-        nodelink_creator(dataset_nodelink)
+        const liste_test_couleur = {
+            CouleurA : {valeurs : [255, 0, 0], poids : 0.5},
+            CouleurB : {valeurs : [200, 120, 130], poids : 0.2},
+            CouleurC : {valeurs : [0, 230, 140], poids : 0.3}
+        }
+
+        const liste_poids = [0.5, 0.3, 0.2]
+
+        fusion_couleurs(liste_test_couleur)
+
+        //nodelink_creator(dataset_nodelink)
 
         //recupererEtAfficherTableau(dataset, edge_test)
         //recupererEtAfficherTableau(dataset_nodelink)
