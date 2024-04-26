@@ -89,17 +89,23 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
             let node1
             let node2
 
+
             try {
                 node1 = {
                     id : row[triple.source]["value"],
                     label : row[triple.source]["value"],
-                    color : triple.color[0], 
                     col : triple.source,
+                    place : "source",
                     zoom : false
                 }
-            
+
                 if (!(nodeAlreadyExist(node1, nodes))) {
                     nodes.push(node1)
+                } else {
+                    let dict_existant = nodes.find(dictionnaire => dictionnaire.id === node1.id)
+                    if (dict_existant.place === "target") {
+                        dict_existant.place = "mix"
+                    }
                 }
             } catch(error) {
                 console.log("Le dataset ne contient pas les éléments nécessaires pour créer la 1ère node")
@@ -109,17 +115,27 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
                 node2 = {
                     id : row[triple.target]["value"],
                     label : row[triple.target]["value"],
-                    color : triple.color[1],
                     col : triple.target,
+                    place : "target",
                     zoom : false
                 }
             
                 if (!(nodeAlreadyExist(node2, nodes))) {
                     nodes.push(node2)
+                } else {
+                    let dict_existant = nodes.find(dictionnaire => dictionnaire.id === node2.id)
+                    if (dict_existant.place === "source") {
+                        dict_existant.place = "mix"
+                    }
                 }
+
             } catch(error) {
                 console.log("Le dataset ne contient pas les éléments nécessaires pour créer la 2ème node")
             }
+            console.log("source", triple.source)
+            console.log("target", triple.target)
+            console.log("row target", row[triple.target]["value"])
+            console.log("row source", row[triple.source]["value"])
         }
     }
     return nodes
@@ -177,12 +193,12 @@ function buildLegend(edge) {
     for (const triple of edge) {
 
         items.push({
-            label : "source", value : triple.source, color : triple.color[0]
+            label : "source", value : triple.source
         })
     //faire un mix des couleurs
 
         items.push({
-            label : "target", value : triple.target, color : triple.color[1]
+            label : "target", value : triple.target
         })
         
     } 
@@ -239,7 +255,7 @@ function fusion_couleurs(liste_couleur, liste_poids = null) {
     console.log("green", green, moy_green)
 }
 
-function nodelink_creator(data, strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
+function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "purple", strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
     console.log("debut nodelink, dataset", data)
 
@@ -290,9 +306,18 @@ function nodelink_creator(data, strength = -50, width = 400, height = 400, node_
         .data(data_used.nodes)
         .join("circle")
         .attr("r", 0.01*largeur)
-        .style("fill", d => d.color)
         .attr("label", d => d.label)
-        .attr("id", d => d.label)
+        .attr("id", d => d.id)
+        .style("fill", function(d) {
+            console.log(d.place)
+            if (d.place === "source") {
+                return node_colors[0]
+            } else if (d.place === "target") {
+                return node_colors[1]
+            } else {
+                return mixed_colors
+            }
+        })
 
     let nodes_label
     let link_label
@@ -383,7 +408,7 @@ function nodelink_creator(data, strength = -50, width = 400, height = 400, node_
         .attr("x", 10)
         .attr("y", 30)
 
-        console.log(link_label)
+        //console.log(link_label)
         
         svg_graph.selectAll("line") // Sélectionne les différents liens lorsque la souris passe sur un lien ou le quitte
         .on("mouseover", d => { 
@@ -409,7 +434,7 @@ function nodelink_creator(data, strength = -50, width = 400, height = 400, node_
     }
 
     const number_legend = data.legend.length
-    console.log(number_legend)
+    //console.log(number_legend)
 
 
         

@@ -49,14 +49,14 @@
         const result_data = dataset.results.bindings
 
         const edge_test = [
-            {source : "s", target : "o", relation : "p", color : ["red", "blue"], color_link : "gold"},
-            {source : "s", target : "p", relation : "o", color : ["green", "purple"], color_link : "silver"}
+            {source : "s", target : "o", relation : "p", color_link : "gold"},
+            {source : "p", target : "s", relation : "o", color_link : "silver"}
         ]
 
         const noeuds = buildNodes(result_data, edge_test)
         const liens = buildLinks(result_data, edge_test)
         const legende = buildLegend(edge_test)
-        console.log(legende)
+        //console.log(legende)
 
         const dataset_nodelink = {nodes : noeuds, links : liens, legend : legende}
 
@@ -70,10 +70,10 @@
 
         const liste_poids = [0.5, 0.3, 0.2]
 
-        fusion_couleurs(liste_test_couleur)
+        //fusion_couleurs(liste_test_couleur)
 
-        const groupes = regrouperParValeur(legende)
-        console.log(groupes)
+        //const groupes = regrouperParValeur(legende)
+        //console.log(groupes)
 
 
         nodelink_creator(dataset_nodelink)
