@@ -198,59 +198,46 @@ const liste_test_couleur = {
 
 const liste_poids = [0.5, 0.3, 0.2]
 
+function regrouperParValeur(objets) {
+    const resultat = {};
+
+    for (let i = 0; i < objets.length; i++) {
+        const objet = objets[i];
+        if (!resultat[objet.value]) {
+            resultat[objet.value] = [];
+        }
+        resultat[objet.value].push(objet);
+    }
+
+    return resultat;
+}
+
 function fusion_couleurs(liste_couleur, liste_poids = null) {
 
-    let rouge = [], bleu = [], vert = []
+    let red = [], blue = [], green = []
 
     console.log(liste_couleur)
 
     for (let elt in liste_couleur) {
 
-        rouge.push(liste_couleur[elt].valeurs[0])
-        bleu.push(liste_couleur[elt].valeurs[1])
-        vert.push(liste_couleur[elt].valeurs[2])
-/*
-        console.log(elt)
-        console.log(liste_couleur[elt].valeurs)
-        console.log(liste_couleur[elt].poids)
-*/
+        const new_red = liste_couleur[elt].valeurs[0] *  liste_couleur[elt].poids
+        const new_blue = liste_couleur[elt].valeurs[1] *  liste_couleur[elt].poids
+        const new_green = liste_couleur[elt].valeurs[2] *  liste_couleur[elt].poids
+
+        red.push(new_red)
+        blue.push(new_blue)
+        green.push(new_green)
+
     }
 
-    const moy_rouge = Math.round(rouge.reduce((a, b) => a + b, 0) / rouge.length)
-    const moy_bleu = Math.round(bleu.reduce((a, b) => a + b, 0) / bleu.length)
-    const moy_vert = Math.round(vert.reduce((a, b) => a + b, 0) / vert.length)
+    const moy_red = Math.round(red.reduce((a, b) => a + b, 0))
+    const moy_blue = Math.round(blue.reduce((a, b) => a + b, 0))
+    const moy_green = Math.round(green.reduce((a, b) => a + b, 0))
 
-    console.log("rouge", rouge, moy_rouge)
-    console.log("bleu", bleu, moy_bleu)
-    console.log("vert", vert, moy_vert)
+    console.log("red", red, moy_red)
+    console.log("blue", blue, moy_blue)
+    console.log("green", green, moy_green)
 }
-
-/*
-//colorChannelA and colorChannelB are ints ranging from 0 to 255
-function colorChannelMixer(colorChannelA, colorChannelB, amountToMix){
-    const channelA = colorChannelA*amountToMix
-    const channelB = colorChannelB*(1-amountToMix)
-    //console.log(channelA, channelB)
-    return parseInt(channelA+channelB);
-}
-//rgbA and rgbB are arrays, amountToMix ranges from 0.0 to 1.0
-//example (red): rgbA = [255,0,0]
-function colorMixer(rgbA, rgbB, amountToMix){
-    //console.log(rgbA[0], rgbA[1], rgbA[2])
-    const r = colorChannelMixer(rgbA[0],rgbB[0],amountToMix)
-    const g = colorChannelMixer(rgbA[1],rgbB[1],amountToMix)
-    const b = colorChannelMixer(rgbA[2],rgbB[2],amountToMix)
-    //console.log(r, g, b)
-    return "rgb("+r+","+g+","+b+")";
-}
-
-/*
-const colA = new fabric.Color("red")
-const colB = new fabric.Color("blue")
-console.log("ColA", colA._source, "colB", colB._source)
-const colC = colorMixer(colA._source, colB._source, 0.5)
-console.log("colC", colC)
-*/
 
 function nodelink_creator(data, strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
@@ -477,10 +464,10 @@ function nodelink_creator(data, strength = -50, width = 400, height = 400, node_
             .attr("y2", d => d.target.y)
 
         node
-            .attr("cx", d => d.x+6)
-            .attr("cy", d => d.y-6)
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
     }  
     
 }
 
-export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, fusion_couleurs, nodelink_creator, buildNodes, buildLinks, buildLegend}
+export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, regrouperParValeur, fusion_couleurs, nodelink_creator, buildNodes, buildLinks, buildLegend}
