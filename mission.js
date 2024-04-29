@@ -1,9 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 import * as grid from 'https://unpkg.com/gridjs?module'
 
-// Besoin de dl le fichier dans la librairie?
-// Prendre exemple import dans index, je mets dans le lib, et pas besoin d'import dans le .js
-
 function recupererDonnees() { // Cette fonction me permet de récupérer le texte compris dans le text_area
     var texte = document.getElementById('user_text').value
     return texte
@@ -132,10 +129,7 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
             } catch(error) {
                 console.log("Le dataset ne contient pas les éléments nécessaires pour créer la 2ème node")
             }
-            console.log("source", triple.source)
-            console.log("target", triple.target)
-            console.log("row target", row[triple.target]["value"])
-            console.log("row source", row[triple.source]["value"])
+
         }
     }
     return nodes
@@ -195,7 +189,6 @@ function buildLegend(edge) {
         items.push({
             label : "source", value : triple.source
         })
-    //faire un mix des couleurs
 
         items.push({
             label : "target", value : triple.target
@@ -205,7 +198,7 @@ function buildLegend(edge) {
 
     return items
 }
-
+/*
 const liste_test_couleur = {
     CouleurA : {valeurs : [255, 0, 0], poids : 0.5},
     CouleurB : {valeurs : [200, 120, 130], poids : 0.2},
@@ -213,53 +206,80 @@ const liste_test_couleur = {
 }
 
 const liste_poids = [0.5, 0.3, 0.2]
+*/
 
-function regrouperParValeur(objets) {
-    const resultat = {};
+function rgbToHex(color) {
 
-    for (let i = 0; i < objets.length; i++) {
-        const objet = objets[i];
-        if (!resultat[objet.value]) {
-            resultat[objet.value] = [];
-        }
-        resultat[objet.value].push(objet);
+    const r = color[0]
+    const b = color[1]
+    const g = color[2]
+
+    // Vérifier que les valeurs sont valides (entre 0 et 255)
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+        return "Valeurs RGB invalides";
     }
 
-    return resultat;
+    // Convertir chaque composante RGB en hexadécimal
+    const rHex = r.toString(16).padStart(2, '0');
+    const gHex = g.toString(16).padStart(2, '0');
+    const bHex = b.toString(16).padStart(2, '0');
+
+    // Concaténer les valeurs hexadécimales
+    const hexColor = '#' + rHex + gHex + bHex;
+
+    return hexColor;
 }
 
 function fusion_couleurs(liste_couleur, liste_poids = null) {
 
     let red = [], blue = [], green = []
 
-    console.log(liste_couleur)
+    //console.log(liste_couleur)
 
     for (let elt in liste_couleur) {
 
-        const new_red = liste_couleur[elt].valeurs[0] *  liste_couleur[elt].poids
-        const new_blue = liste_couleur[elt].valeurs[1] *  liste_couleur[elt].poids
-        const new_green = liste_couleur[elt].valeurs[2] *  liste_couleur[elt].poids
+        //console.log(liste_couleur[elt])
+
+        let item = liste_couleur[elt]._source
+        //console.log(item)
+
+        const new_red = item[0] //*  liste_couleur[elt].poids
+        const new_green = item[2] //*  liste_couleur[elt].poids
+        const new_blue = item[1] //*  liste_couleur[elt].poids
 
         red.push(new_red)
-        blue.push(new_blue)
         green.push(new_green)
+        blue.push(new_blue)
 
     }
 
-    const moy_red = Math.round(red.reduce((a, b) => a + b, 0))
-    const moy_blue = Math.round(blue.reduce((a, b) => a + b, 0))
-    const moy_green = Math.round(green.reduce((a, b) => a + b, 0))
+    const moy_red = Math.round(red.reduce((a, b) => a + b, 0)/liste_couleur.length)
+    const moy_green = Math.round(green.reduce((a, b) => a + b, 0)/liste_couleur.length)
+    const moy_blue = Math.round(blue.reduce((a, b) => a + b, 0)/liste_couleur.length)
+    
+    let fused_color = [moy_red, moy_green, moy_blue]
 
+    let hex_color = rgbToHex(fused_color)
+
+/*
     console.log("red", red, moy_red)
     console.log("blue", blue, moy_blue)
     console.log("green", green, moy_green)
+    */
+
+    return hex_color
 }
 
-function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "purple", strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
+function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "green", strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
 
     console.log("debut nodelink, dataset", data)
 
     const data_used = JSON.parse(JSON.stringify(data))
+
+    const col1 = new fabric.Color(node_colors[0])
+    const col2 = new fabric.Color(node_colors[1])
+
+    let rgb_node_colors = [col1, col2]
   
     const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
@@ -309,13 +329,17 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "p
         .attr("label", d => d.label)
         .attr("id", d => d.id)
         .style("fill", function(d) {
-            console.log(d.place)
+            //console.log(d.place)
             if (d.place === "source") {
                 return node_colors[0]
             } else if (d.place === "target") {
                 return node_colors[1]
             } else {
-                return mixed_colors
+
+                //console.log(rgb_node_colors)
+                let fused_colors = fusion_couleurs(rgb_node_colors)
+
+                return fused_colors
             }
         })
 
@@ -432,19 +456,31 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "p
             }
         })
     }
-
+/*
     const number_legend = data.legend.length
     //console.log(number_legend)
-
-
-        
+    
     const dots = svg_total.selectAll("legend_dots")
         .data(data.legend)
         .join("circle")
         .attr("cx", (d, i) => (1/number_legend)*0.20*width + (1/number_legend)*i*width)
         .attr("cy", 0.02*height)
         .attr("r", 0.01*largeur)
-        .style("fill", (d, i) => d.color)
+        .style("fill", function(d) {
+            if (d.place === "source") {
+                return node_colors[0]
+            } else if (d.place === "target") {
+                return node_colors[1]
+            } else {
+
+                //console.log(rgb_node_colors)
+                let fused_colors = fusion_couleurs(rgb_node_colors)
+
+                console.log(fused_colors)
+
+                return fused_colors
+            }
+        })
 
     const legend_text = svg_total.selectAll("legend_names")
         .data(data.legend)
@@ -454,6 +490,48 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "p
         .attr("x", (d, i) => (1/number_legend)*0.25*width + 20 + (1/number_legend)*i*width)
         .attr("y", 0.02*height + 5)
         .style("font-size", "1rem")
+
+    A utiliser quand je voudrais avoir les différents patterns affichés au lieu des couleurs
+
+*/
+
+    const legend = [
+        {label : "source"},
+        {label : "target"},
+        {label : "mix"}
+    ]
+
+    const dots = svg_total.selectAll("legend_dots")
+        .data(legend)
+        .join("circle")
+        .attr("cx", (d, i) => (1/3)*0.20*width + (1/3)*i*width)
+        .attr("cy", 0.02*height)
+        .attr("r", 0.01*largeur)
+        .style("fill", function(d) {
+            if (d.label === "source") {
+                return node_colors[0]
+            } else if (d.label === "target") {
+                return node_colors[1]
+            } else {
+                let fused_colors = fusion_couleurs(rgb_node_colors)
+
+                console.log(fused_colors)
+
+                return fused_colors
+            }
+        })
+
+     const legend_text = svg_total.selectAll("legend_names")
+        .data(legend)
+        .join("text")
+        .text(d => d.label)
+        .attr("label", d => d.label)
+        .attr("x", (d, i) => (1/3)*0.25*width + 20 + (1/3)*i*width)
+        .attr("y", 0.02*height + 5)
+        .style("font-size", "1rem")
+    
+
+
 
     let ticksCount = 0
 
@@ -495,4 +573,4 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "p
     
 }
 
-export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, regrouperParValeur, fusion_couleurs, nodelink_creator, buildNodes, buildLinks, buildLegend}
+export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, fusion_couleurs, nodelink_creator, buildNodes, buildLinks, buildLegend}
