@@ -11,16 +11,14 @@
     <title>Analyse de SparQL</title>
 
     <script type="module">
-        import {recupererDonnees, executeSPARQLRequest, fusion_couleurs, recupererEtAfficherTableau, nodelink_creator, buildNodes, buildLinks, buildLegend} from "./mission.js"
-
+        import {recolt_Data, executeSPARQLRequest, table_creator, color_merger, nodelink_creator, buildNodes, buildLinks, buildLegend} from "./mission.js"
+/*
         document.addEventListener('DOMContentLoaded', function() {
-            let boutonEnvoyer = document.querySelector('#recolt_request')
-            boutonEnvoyer.addEventListener('click', async function(event) {
+            let send_button = document.querySelector('#recolt_request')
+            send_button.addEventListener('click', async function(event) {
                 event.preventDefault()
-                console.log("started")
 
-                const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees())
-                console.log("dataset libre", dataset)
+                const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recolt_Data())
                 const result_data = dataset.results.bindings
 
                 const edge_test = [
@@ -28,23 +26,21 @@
                     {source : "o", target : "p", relation : "s", color : ["green", "purple"], color_link : "silver"}
                 ]
 
-                const noeuds = buildNodes(result_data, edge_test)
-                const liens = buildLinks(result_data, edge_test)
-                
-                //console.log(liens)
+                const nodes = buildNodes(result_data, edge_test)
+                const links = buildLinks(result_data, edge_test)
 
-                let dataset_nodelink = {nodes : noeuds, links : liens}
-                console.log("traité", dataset_nodelink)
-                //console.log("pre-appel", dataset_nodelink)
-                
-                //await nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, false, true)
+                let dataset_nodelink = {nodes : nodes, links : links}
 
-                await console.log("finished")
+                table_creator(dataset_nodelink)
+
+                nodelink_creator(dataset_nodelink)
+
             })
-        })
+        }) 
 
-        const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recupererDonnees())
-        //console.log(dataset)
+        Allow to create the dataset with an input to the button. In comment for the tests for a faster execution.
+*/ 
+        const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recolt_Data())
 
         const result_data = dataset.results.bindings
 
@@ -53,36 +49,18 @@
             {source : "p", target : "s", relation : "o", color_link : "silver"}
         ]
 
-        const noeuds = buildNodes(result_data, edge_test)
-        const liens = buildLinks(result_data, edge_test)
-        const legende = buildLegend(edge_test)
-        //console.log(legende)
+        const nodes = buildNodes(result_data, edge_test)
+        const links = buildLinks(result_data, edge_test)
+        const legend = buildLegend(edge_test)
 
-        const dataset_nodelink = {nodes : noeuds, links : liens, legend : legende}
+        const dataset_nodelink = {nodes : nodes, links : links, legend : legend}
 
-        recupererEtAfficherTableau(dataset_nodelink)
-
-        const liste_test_couleur = {
-            CouleurA : {valeurs : [255, 0, 0], poids : 0.5},
-            CouleurB : {valeurs : [200, 120, 130], poids : 0.2},
-            CouleurC : {valeurs : [0, 230, 140], poids : 0.3}
-        }
-
-        const liste_poids = [0.5, 0.3, 0.2]
-
-        //fusion_couleurs(liste_test_couleur)
-
-        //const groupes = regrouperParValeur(legende)
-        //console.log(groupes)
-
+        table_creator(dataset_nodelink)
 
         nodelink_creator(dataset_nodelink)
 
-        //recupererEtAfficherTableau(dataset, edge_test)
-        //recupererEtAfficherTableau(dataset_nodelink)
+/*  The next part is a 2nd test dataset, less usefull but kept for faster use if needed.
 
-        //console.log(dataset_nodelink)
-/*
         const dataset_bis = {
             nodes: [
             {id: 1, label: "https://id.nlm.nih.gov/mesh/sparql", color : "red"},
@@ -107,17 +85,18 @@
             {source: 8, target: 9, label : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", color : "gold"},
             ]
         }
-*/
 
-        //await nodelink_creator(dataset_nodelink, undefined, -1000, 2000, 2000, true, false, true, 5)
+        //nodelink_creator(dataset_bis)
+
+        */
 
 
     </script>
 
 </head>
 <body>
-    <div>
-        <label for="user_text">Veuillez entrer la requête SparQL</label><br>
+    <div style>
+        <label for="user_text">Please enter the SparQL request</label><br>
         <textarea id="user_text" name="user_message" rows="10">CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
             GRAPH ?g {
             { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
@@ -132,25 +111,20 @@
             }
             GROUP BY ?endpoint ?sparqlNorm
             ORDER BY ?endpoint ?sparqlNorm</textarea><br>
-        <button id="recolt_request">Envoyer</button>
+        <button id="recolt_request">Send</button>
     </div>
-    <div>
-        <p>Résultat</p><br>
-        <table id = "result_table" border="1" cellpadding="5"></table>
-        <p>Test</p><br>
-        <table id = "test" border="1" cellpadding="5"></table>
-    </div>
-
-    <div id = "div_labels" height = 150px>
-        <p id = "labels" style = "display: inline;"></p>
+    <div class = "table_svg_container" style = "display: flex;">
+        <div class = "table_container" style = "display: flex;">
+            <table id = "result_table" border="1" cellpadding="5" class = "table"></table>
+        </div>
+        <div class = "graph_container" style = "display: flex;" padding = "0 2rem">
+            <svg id = "nodelink_graph" style = "display: flex;" class = "svg_container"></svg>
+        </div>
     </div>
 
-    <div id="graph">
-        <svg id = "nodelink_graph"></svg>
-        <!-- <svg id = "labels_nodelink"></svg> -->
-
-    </div>
-    
+    <div id = "div_labels" height = 150px style = "display: flex;">
+        <p id = "labels" style = "display: flex;"></p>
+    </div>    
 
 </body>
 </html>

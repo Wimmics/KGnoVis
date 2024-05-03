@@ -1,16 +1,9 @@
-.right-align {
-    float: right
-}
 textarea {
     width: 100%
 }      
-.svg-container {
-    display: flex;
-    flex-direction: column
-}
 #div_labels {
     margin : 1rem 0rem;
-    height: 2rem
+    height: 2rem;
 }
 body {
     font-size: 80%;
@@ -18,4 +11,12 @@ body {
 }
 .line {
     stroke-width: 1px
+}
+.graph_container {
+    padding : 0 2rem;
+}
+.table_svg_container {
+    margin-top: 1rem;
+    width : 100%;
+    flex-direction: row;
 }

@@ -1,12 +1,12 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 import * as grid from 'https://unpkg.com/gridjs?module'
 
-function recupererDonnees() { // Cette fonction me permet de récupérer le texte compris dans le text_area
-    var texte = document.getElementById('user_text').value
-    return texte
+function recolt_Data() { // Get the text written in the text_area.
+    var text = document.getElementById('user_text').value
+    return text
     }
 
-const executeSPARQLRequest = async (endpoint, query) => { // Cette fonction appelle une requête SparQL et l'exécute, et renvoie le dataset de sortie.
+const executeSPARQLRequest = async (endpoint, query) => { // Call a SPARQL request and use it, then return the dataset collected.
     localStorage.clear()
     const url = `${endpoint}?query=${encodeURIComponent(query)}&format=json`
 
@@ -50,24 +50,23 @@ const query_construct = `CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
     GROUP BY ?endpoint ?sparqlNorm
     ORDER BY ?endpoint ?sparqlNorm`
 
-function recupererEtAfficherTableau(dataset) { // Cette fonction permet de créer un tableau de données à partir d'un dataset donné en entrée
+function table_creator(dataset) { // Create a grid and complete it with the called dataset.
 
-    const tableau = new grid.Grid({
+    const table = new grid.Grid({
         columns : ["source", "label", "target"],
         sort : true,
         pagination : true,
         fixedHeader : true,
         height : "20rem",
         data : dataset.links,
-        width : "90vw",
+        width : "50vw",
         resizable : true
     })
     
-    tableau.render(document.getElementById('result_table'))
-
+    table.render(document.getElementById('result_table'))
 }
 
-function nodeAlreadyExist(node, nodesList) { // Cette fonction récupère une node et une liste et vérifie si la node est déjà comprise dans la liste
+function nodeAlreadyExist(node, nodesList) { // Call a node and a list of nodes, and check if the id in the node match the id of one of the nodes in the list.
     for (let n of nodesList) {
         if (n.id === node.id) {
             return true
@@ -76,8 +75,8 @@ function nodeAlreadyExist(node, nodesList) { // Cette fonction récupère une no
     return false
 }
 
-function buildNodes(data, edge) { // Cette fonction récupère un dataset et une liste de triplets de colonnes, puis récupère les colonnes sources et target afin de créer des nodes pour chaque valeur unique.
-
+function buildNodes(data, edge) { // Call a dataset and a list of patterns (source, target, relation). For each unique value in the source and target columns, create a node. If a node is both in source and target, give the node the status of "mix".
+    
     const nodes = []
 
     for (let triple of edge) {
@@ -85,7 +84,6 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
 
             let node1
             let node2
-
 
             try {
                 node1 = {
@@ -99,13 +97,13 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
                 if (!(nodeAlreadyExist(node1, nodes))) {
                     nodes.push(node1)
                 } else {
-                    let dict_existant = nodes.find(dictionnaire => dictionnaire.id === node1.id)
-                    if (dict_existant.place === "target") {
-                        dict_existant.place = "mix"
+                    let old_node = nodes.find(node => node.id === node1.id)
+                    if (old_node.place === "target") {
+                        old_node.place = "mix"
                     }
                 }
             } catch(error) {
-                console.log("Le dataset ne contient pas les éléments nécessaires pour créer la 1ère node")
+                console.log("The dataset doesn't contain necessary elements to create the 1st node.")
             }
 
             try {
@@ -120,22 +118,20 @@ function buildNodes(data, edge) { // Cette fonction récupère un dataset et une
                 if (!(nodeAlreadyExist(node2, nodes))) {
                     nodes.push(node2)
                 } else {
-                    let dict_existant = nodes.find(dictionnaire => dictionnaire.id === node2.id)
-                    if (dict_existant.place === "source") {
-                        dict_existant.place = "mix"
+                    let old_node = nodes.find(node => node.id === node2.id)
+                    if (old_node.place === "source") {
+                        old_node.place = "mix"
                     }
                 }
-
             } catch(error) {
-                console.log("Le dataset ne contient pas les éléments nécessaires pour créer la 2ème node")
+                console.log("The dataset doesn't contain necessary elements to create the 2nd node.")
             }
-
         }
     }
     return nodes
 }
 
-function linkAlreadyExist(link, linksList) { // Cette fonction récupère un triplet (source, relation, cible) et une liste et vérifie si le triplet (ou le triplet avec source et cible inverse) est déjà comprise dans la liste
+function linkAlreadyExist(link, linksList) { // Call a pattern (source, target, relation) and a list of patterns. Check if the pattern (or an alternative pattern where source and target are reversed) is in the list.
     for (let l of linksList) {
         if (l.source === link.source && l.target === link.target && l.label === link.label) {
             return true
@@ -146,8 +142,8 @@ function linkAlreadyExist(link, linksList) { // Cette fonction récupère un tri
     return false
 }
 
-function buildLinks(data, edge) { // Cette fonction récupère un dataset et une liste de triplets de colonnes, puis récupère les colonnes dans le dataset afin de créer pour chaque triplet de colonnes les lignes associées pour chaque valeur unique.
-
+function buildLinks(data, edge) { // Call a dataset and a list of patterns. For each pattern and row in the dataset, create all the unique links.
+   
     const links = []
     let number = 0
     
@@ -172,15 +168,14 @@ function buildLinks(data, edge) { // Cette fonction récupère un dataset et une
             }
             number += 1
             } catch (error) {
-                console.log("Le dataset ne contient pas les éléments nécessaires pour créer le lien")
+                console.log("The dataset doesn't contain necessary elements to create the link.")
             }
         }
     }
-    
     return links
 }
 
-function buildLegend(edge) {
+function buildLegend(edge) { // Call a list of patterns. Create a list of each source and target.
 
     const items = []
 
@@ -195,57 +190,47 @@ function buildLegend(edge) {
         })
         
     } 
-
     return items
 }
-/*
-const liste_test_couleur = {
-    CouleurA : {valeurs : [255, 0, 0], poids : 0.5},
-    CouleurB : {valeurs : [200, 120, 130], poids : 0.2},
-    CouleurC : {valeurs : [0, 230, 140], poids : 0.3}
-}
 
-const liste_poids = [0.5, 0.3, 0.2]
-*/
-
-function rgbToHex(color) {
+function rgbToHex(color) { // Call a rgb color, and convert it in hexadecimal values.
 
     const r = color[0]
     const b = color[1]
     const g = color[2]
 
-    // Vérifier que les valeurs sont valides (entre 0 et 255)
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-        return "Valeurs RGB invalides";
+        return "The RGB values are out of bounds"
     }
 
-    // Convertir chaque composante RGB en hexadécimal
-    const rHex = r.toString(16).padStart(2, '0');
-    const gHex = g.toString(16).padStart(2, '0');
-    const bHex = b.toString(16).padStart(2, '0');
+    const rHex = r.toString(16).padStart(2, '0')
+    const gHex = g.toString(16).padStart(2, '0')
+    const bHex = b.toString(16).padStart(2, '0')
 
-    // Concaténer les valeurs hexadécimales
-    const hexColor = '#' + rHex + gHex + bHex;
+    const hexColor = '#' + rHex + gHex + bHex
 
-    return hexColor;
+    return hexColor
 }
 
-function fusion_couleurs(liste_couleur, liste_poids = null) {
+function color_merger(color_list, weight_list = null) { // Call a list of colors, and in bonus parameters the possibility to give a weight to each color. Mix the colors then convert them thanks to the rgbToHex function.
+
+    let weight
+
+    if (weight_list === null) {
+        weight = color_list.length
+    } else {
+        weight = weight_list
+    }
 
     let red = [], blue = [], green = []
 
-    //console.log(liste_couleur)
+    for (let elt in color_list) {
 
-    for (let elt in liste_couleur) {
+        let item = color_list[elt]._source
 
-        //console.log(liste_couleur[elt])
-
-        let item = liste_couleur[elt]._source
-        //console.log(item)
-
-        const new_red = item[0] //*  liste_couleur[elt].poids
-        const new_green = item[2] //*  liste_couleur[elt].poids
-        const new_blue = item[1] //*  liste_couleur[elt].poids
+        const new_red = item[0]
+        const new_green = item[2]
+        const new_blue = item[1]
 
         red.push(new_red)
         green.push(new_green)
@@ -253,93 +238,96 @@ function fusion_couleurs(liste_couleur, liste_poids = null) {
 
     }
 
-    const moy_red = Math.round(red.reduce((a, b) => a + b, 0)/liste_couleur.length)
-    const moy_green = Math.round(green.reduce((a, b) => a + b, 0)/liste_couleur.length)
-    const moy_blue = Math.round(blue.reduce((a, b) => a + b, 0)/liste_couleur.length)
+    const avg_red = Math.round(red.reduce((a, b) => a + b, 0)/weight)
+    const avg_green = Math.round(green.reduce((a, b) => a + b, 0)/weight)
+    const avg_blue = Math.round(blue.reduce((a, b) => a + b, 0)/weight)
     
-    let fused_color = [moy_red, moy_green, moy_blue]
+    let fused_color = [avg_red, avg_green, avg_blue]
 
     let hex_color = rgbToHex(fused_color)
-
-/*
-    console.log("red", red, moy_red)
-    console.log("blue", blue, moy_blue)
-    console.log("green", green, moy_green)
-    */
 
     return hex_color
 }
 
-function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "green", strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2) { // Cette fonction récupère un dataset et un certain nombre d'options, puis créé le nodelink et ses 
+// The next function is the big part. It calls a dataset and a long list of optionnal parameters (ie they all have a default parameter).
+// Node_colors and mixed_color grants the user the choice of the color of the nodes. The first color of node_colors is the source, the second the target. Mixed_color is the color of nodes that are both source and target in the edges. The default parameter of mixed_color is null because it allows to use the color_merger function.
+// Strength is the repulsive force between the nodes.
+// Width and height are the dimensions of the svg.
+// node_named and link_named let the user choose if he wants to see the name of the nodes above the graph
+// node_zoom allow to zoom on node when the user click on them, and zoom strengh define at which point the node is zoomed.
 
-    console.log("debut nodelink, dataset", data)
+
+function nodelink_creator(data, node_colors = ["red", "blue"], mixed_color = null, strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2, number_ticks = 500) {
 
     const data_used = JSON.parse(JSON.stringify(data))
-
-    const col1 = new fabric.Color(node_colors[0])
-    const col2 = new fabric.Color(node_colors[1])
-
-    let rgb_node_colors = [col1, col2]
   
     const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
-    const svg_total = d3.select("#nodelink_graph") // Créé la zone qui contiendra le nodelink
+    const svg_total = d3.select("#nodelink_graph") // Define the svg containing the graph and the legend.
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
 
     const width2 = width*0.9
     const height2 = height*0.9
 
-    const largeur = Math.min(width2, height2)
+    const surface = Math.min(width2, height2)
 
-    const svg_graph = svg_total.append("svg")
+    const svg_graph = svg_total.append("svg") // Create a sub-svg that will only contain the graph.
         .attr("x", width*0.05)
         .attr("y", height*0.05)
         .attr("width", width2)
         .attr("height", height2)    
         .append("g")
         
-    const svg_label = d3.select("#labels") // Créé une zone qui contiendra les labels
+    const svg_label = d3.select("#labels") // Define the svg containing the labels.
 
     const zoom = d3.zoom()
-        .scaleExtent([0.1, 10]) // Définir les limites de l'échelle de zoom
+        .scaleExtent([0.1, 10]) // Define the zoom limits
         .on('zoom', function(event) {
             svg_graph.attr("transform", event.transform)
         }, {passive : true})
 
     d3.select("#nodelink_graph").call(zoom,
         d3.zoom()
-            //.filter(() => !event.ctrlKey && !event.button) // Permet de forcer l'appuie sur ctrl pour le zoom
-            //.touchable() // Permet l'accès au tactile
+            //.filter(() => !event.ctrlKey && !event.button) // Force the user to use ctrl to zoom (can allow to not zoom while trying to move on the page).
+            //.touchable() // For mobile users : allow touch-sensitive screen to zoom
             .on('zoom', function(event) {
                 svg_graph.attr('transform', event.transform)
         }), {passive: true})
 
-    const link = svg_graph.selectAll("line") // Créé les liens qui vont relier les différents noeuds
+
+    const link = svg_graph.selectAll("line") // Create the multiple links between the nodes. Must be placed in the code BEFORE the nodes.
         .data(data_used.links)
         .join("line")
         .attr("label", d => d.label)
         .attr("id", d => d.id)
         .style("stroke", d => d.color)
 
-    const node = svg_graph.selectAll("circle") // Créé les noeuds
+    const col1 = new fabric.Color(node_colors[0])
+    const col2 = new fabric.Color(node_colors[1])
+
+    let rgb_node_colors = [col1, col2]    
+    let color_mixed
+
+    if (mixed_color === null) { // Allow to use the color for the mix elements defined by the user, or to use the mix of the 2 node colors if none was choosen
+        color_mixed = color_merger(rgb_node_colors)
+    } else {
+        color_mixed = mixed_color
+    }
+
+    const node = svg_graph.selectAll("circle") // Create the multiples nodes on the graph
         .data(data_used.nodes)
         .join("circle")
-        .attr("r", 0.01*largeur)
+        .attr("r", 0.01*surface)
         .attr("label", d => d.label)
         .attr("id", d => d.id)
         .style("fill", function(d) {
-            //console.log(d.place)
             if (d.place === "source") {
                 return node_colors[0]
             } else if (d.place === "target") {
                 return node_colors[1]
             } else {
-
-                //console.log(rgb_node_colors)
-                let fused_colors = fusion_couleurs(rgb_node_colors)
-
-                return fused_colors
+                return color_mixed
             }
         })
 
@@ -347,43 +335,39 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
     let link_label
     let zoomScale = 1
 
-    if (node_zoom === true) { // Cette sous-fonction contrôle le zoom des nodes
+    if (node_zoom === true) { // Allow to zoom on click on the nodes. Can be disabled by the user.
 
         node.on("click", d => {
             const choosen_id = d.target.getAttribute("id")  
-            const choosen_node = d3.select('circle[label="' + choosen_id + '"]') // Ces 2 lignes permettent d'obtenir la node cible
+            const choosen_node = d3.select('circle[label="' + choosen_id + '"]') // Focus on the clicked node
             console.log(choosen_node)
 
             let choosen_x
             let choosen_y
 
-            if (choosen_node._groups[0][0].__data__.label === d.target.getAttribute("label")) { // Cette sous-fonction récupère l'emplacement de la node
+            if (choosen_node._groups[0][0].__data__.label === d.target.getAttribute("label")) {
                 choosen_x = choosen_node._groups[0][0].__data__.x
                 choosen_y = choosen_node._groups[0][0].__data__.y
             }
 
-            if (choosen_node._groups[0][0].__data__.zoom === false) { // Permet de zoomer
-                zoomScale = zoom_strenght // Puissance de zoom choisie par l'utilisateur
+            if (choosen_node._groups[0][0].__data__.zoom === false) { 
+                zoomScale = zoom_strenght 
                 choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
-                //scale => remplace toutes les transformations précédentes, y compris l'assignation, et du coup supprime la position
+                // The zoom function contain some translations because without them, the zoom would replace all other changes, and that include the position.
                 
                 choosen_node._groups[0][0].__data__.zoom = true
-
-            } else { // Permet de dézoomer
-                zoomScale = 1 // Remet le zoom à 1
+            } else { // This part is for the dezoom.
+                zoomScale = 1
                 choosen_node.transition().attr("transform", `translate(${choosen_x}, ${choosen_y}) scale(${zoomScale}) translate(${-choosen_x}, ${-choosen_y})`)
                 choosen_node._groups[0][0].__data__.zoom = false
             }
-
-            // Le double déplacement est nécessaire pour conserver le noeud au même point, sans cela il se téléporte au loin
-
         }, {passive : true})
 
     }
 
     if (node_named === true) {
 
-        nodes_label = svg_label.selectAll("nodes") // Créé un texte dans le svg des labels, pour chaque node, puis le cache.
+        nodes_label = svg_label.selectAll("nodes") // Create a text in the labels svg for each node, and hide it.
             .data(data_used.nodes)
             .enter().append("p")
             .style("text-align", "center")
@@ -396,18 +380,18 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
             .attr("y", d => 30)
             
 
-        svg_graph.selectAll("circle") // Sélectionne les différentes nodes lorsque la souris passe sur la node ou la quitte
+        svg_graph.selectAll("circle") // Select the node when the mouse pass over it.
         .on("mouseover", d => {
             let choosen_node
 
-            for (let elt in nodes_label._groups[0]) { // Sélectionne la node dans le svg label qui possède le même label que celle sélectionnée, puis affiche son texte.
+            for (let elt in nodes_label._groups[0]) { // Print the associated label.
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
                     choosen_node = nodes_label._groups[0][elt]
-                    choosen_node.style.display = "inline"           
+                    choosen_node.style.display = "flex"           
                 }
             }
         })
-        .on("mouseout", d => {  // Sélectionne la node dans le svg label qui possède le même label que celle sélectionnée, puis cache son texte.
+        .on("mouseout", d => {  // Same function but to hide the label when mouse quit the node.
             let choosen_node
             for (let elt in nodes_label._groups[0]) {
                 if (nodes_label._groups[0][elt].__data__.label === d.target.getAttribute("label")) {
@@ -420,7 +404,7 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
     }
 
     if (link_named === true) {
-        link_label = svg_label.selectAll("liens") // Créé un texte dans le svg des labels, pour chaque lien, puis le cache.
+        link_label = svg_label.selectAll("liens") // Create a text in the labels svg for each link, and hide it.
         .data(data_used.links)
         .enter().append("p")
         .text(d => d.label)
@@ -431,24 +415,22 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
         .style("display", "none")
         .attr("x", 10)
         .attr("y", 30)
-
-        //console.log(link_label)
         
-        svg_graph.selectAll("line") // Sélectionne les différents liens lorsque la souris passe sur un lien ou le quitte
+        svg_graph.selectAll("line") // Select the link when the mouse pass over it.
         .on("mouseover", d => { 
             let choosen_link
         
-            for (let elt in link_label._groups[0]) { // Sélectionne le lien dans le svg label qui possède le même label que celui sélectionné, puis affiche son texte.
+            for (let elt in link_label._groups[0]) { // Print the associated label.
                 if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) {
                     choosen_link = link_label._groups[0][elt]
-                    choosen_link.style.display = "inline"
+                    choosen_link.style.display = "flex"
                 }
             }
         })
-        .on("mouseout", d => { 
+        .on("mouseout", d => { // Same function but to hide the label when mouse quit the node.
             let choosen_link       
 
-            for (let elt in link_label._groups[0]) { // Sélectionne le lien dans le svg label qui possède le même label que celui sélectionné, puis affiche son texte.
+            for (let elt in link_label._groups[0]) {
                 if (parseInt(link_label._groups[0][elt].__data__.id) === parseInt(d.target.getAttribute("id"))) { 
                     choosen_link = link_label._groups[0][elt]
                     choosen_link.style.display = "none"           
@@ -456,44 +438,6 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
             }
         })
     }
-/*
-    const number_legend = data.legend.length
-    //console.log(number_legend)
-    
-    const dots = svg_total.selectAll("legend_dots")
-        .data(data.legend)
-        .join("circle")
-        .attr("cx", (d, i) => (1/number_legend)*0.20*width + (1/number_legend)*i*width)
-        .attr("cy", 0.02*height)
-        .attr("r", 0.01*largeur)
-        .style("fill", function(d) {
-            if (d.place === "source") {
-                return node_colors[0]
-            } else if (d.place === "target") {
-                return node_colors[1]
-            } else {
-
-                //console.log(rgb_node_colors)
-                let fused_colors = fusion_couleurs(rgb_node_colors)
-
-                console.log(fused_colors)
-
-                return fused_colors
-            }
-        })
-
-    const legend_text = svg_total.selectAll("legend_names")
-        .data(data.legend)
-        .join("text")
-        .text(d => d.value)
-        .attr("label", d => d.label)
-        .attr("x", (d, i) => (1/number_legend)*0.25*width + 20 + (1/number_legend)*i*width)
-        .attr("y", 0.02*height + 5)
-        .style("font-size", "1rem")
-
-    A utiliser quand je voudrais avoir les différents patterns affichés au lieu des couleurs
-
-*/
 
     const legend = [
         {label : "source"},
@@ -506,18 +450,14 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
         .join("circle")
         .attr("cx", (d, i) => (1/3)*0.20*width + (1/3)*i*width)
         .attr("cy", 0.02*height)
-        .attr("r", 0.01*largeur)
+        .attr("r", 0.01*surface)
         .style("fill", function(d) {
             if (d.label === "source") {
                 return node_colors[0]
             } else if (d.label === "target") {
                 return node_colors[1]
             } else {
-                let fused_colors = fusion_couleurs(rgb_node_colors)
-
-                console.log(fused_colors)
-
-                return fused_colors
+                return color_mixed
             }
         })
 
@@ -534,10 +474,9 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
 
 
     let ticksCount = 0
+    // That line is linked to the .on("tick") in the next part. It allows the user to see the deployment of the nodes.
 
-    // Cette ligne est liée à la partie .on("tick"). Cela permet de montrer l'apparition des nodes, et la vitesse à laquelle elles s'écartent les unes des autres.
-
-    const simulation = d3.forceSimulation(data_used.nodes) // Cette simulation correspond au calcul de positionnement des nodes, et est réalisée par d3.
+    const simulation = d3.forceSimulation(data_used.nodes) // Compute the places of the nodes.
         .force("link", d3.forceLink()                      
             .id(d => d.id)                
             .links(data_used.links)                                 
@@ -549,16 +488,15 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
         .on("tick", function () {
 
             ticked()
-            ticksCount++; // Incrémente le compteur de ticks à chaque itération
-            //console.log(ticksCount)
+            ticksCount++
 
-            if (ticksCount >= 500) {
-                simulation.stop() // Arrête la simulation après le nombre spécifié de ticks
+            if (ticksCount >= number_ticks) {
+                simulation.stop() // Stop the simulation after the specified number of ticks.
             }
         })
      
         
-    function ticked() { // Cette fonction assigne les nodes et labels au positionnement indiqué par la simulation
+    function ticked() { // Place the nodes and links.
 
         link
             .attr("x1", d => d.source.x)
@@ -573,4 +511,4 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_colors = "g
     
 }
 
-export {recupererDonnees, executeSPARQLRequest, recupererEtAfficherTableau, fusion_couleurs, nodelink_creator, buildNodes, buildLinks, buildLegend}
+export {recolt_Data, executeSPARQLRequest, table_creator, color_merger, nodelink_creator, buildNodes, buildLinks, buildLegend}
