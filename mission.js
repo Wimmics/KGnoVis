@@ -249,15 +249,21 @@ function color_merger(color_list, weight_list = null) { // Call a list of colors
     return hex_color
 }
 
-// The next function is the big part. It calls a dataset and a long list of optionnal parameters (ie they all have a default parameter).
-// Node_colors and mixed_color grants the user the choice of the color of the nodes. The first color of node_colors is the source, the second the target. Mixed_color is the color of nodes that are both source and target in the edges. The default parameter of mixed_color is null because it allows to use the color_merger function.
-// Strength is the repulsive force between the nodes.
-// Width and height are the dimensions of the svg.
-// node_named and link_named let the user choose if he wants to see the name of the nodes above the graph
-// node_zoom allow to zoom on node when the user click on them, and zoom strengh define at which point the node is zoomed.
+/*
+The next function is the big part. It calls a dataset and a long list of optionnal parameters (ie they all have a default parameter).
 
+Node_colors and mixed_color grants the user the choice of the color of the nodes. The first color of node_colors is the source, the second the target.
+Mixed_color is the color of nodes that are both source and target in the edges.
+The default parameter of mixed_color is null because it allows to use the color_merger function.
+Strength is the repulsive force between the nodes.
+Width and height are the dimensions of the svg.
+node_named and link_named let the user choose if he wants to see the name of the nodes above the graph
+node_zoom allow to zoom on node when the user click on them, and zoom strengh define at which point the node is zoomed.
+*/
 
 function nodelink_creator(data, node_colors = ["red", "blue"], mixed_color = null, strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2, number_ticks = 500) {
+
+    console.log(data)
 
     const data_used = JSON.parse(JSON.stringify(data))
   

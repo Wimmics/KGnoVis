@@ -4313,8 +4313,7 @@ window.onload = function() {
 <h2 data-number="1.1" class="anchored" data-anchor-id="part-1-text-area"><span class="header-section-number">1.1</span> Part 1 : Text Area</h2>
 <p>The Text Area is the part where the user can enter the SparQL request which he wants to see the graph of. Once the request is written, the user just have to use the “send” button under the Text Area.</p>
 <p>During the test phase, the request used was this one :</p>
-<div class="cell" data-layout-align="center">
-<pre class="sparql cell-code"><code>
+<pre class="sparql"><code>
 CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
     GRAPH ?g {
     { ?curated &lt;http://www.w3.org/ns/sparql-service-description#endpoint&gt; ?endpoint . }
@@ -4330,7 +4329,6 @@ CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
     GROUP BY ?endpoint ?sparqlNorm
     ORDER BY ?endpoint ?sparqlNorm
             </code></pre>
-</div>
 </section>
 <section id="part-2-table" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="part-2-table"><span class="header-section-number">1.2</span> Part 2 : Table</h2>
