@@ -1,4 +1,4 @@
-The LDViz library is a javascript library created in order to facilitate the creation of SPARQL graphs. When used, a website page is temporarily created, allowing the user to post a SPARQL request, and obtain the results in a table and in a graph results. Later, a graph pattern will be added to the page.
+This library is a javascript library created in order to facilitate the creation of SPARQL graphs. When used, a website page is temporarily created, allowing the user to post a SPARQL request, and obtain the results in a table and in a graph results. Later, a graph pattern will be added to the page.
 
 This presentation focus on the code, and is directed toward a Javascript developper.
 
@@ -9,13 +9,11 @@ I will go in detail to review each of them.
 
 ![photo du site](Page nodelink-SparQL.png)
 
-### Rajouter une photo de la page, why the website
-
 ## Part 1 : Text Area
 
 The Text Area is the part where the user can enter the SPARQL request which he wants to see the graph of. Once the request is written, the user just have to use the "send" button under the Text Area.
 
-Once the send button is clicked, the results are put in an object named "result_data", and the edges are hard-defined in the code. In the futur, those edges will be choosen on the website by the user.
+Once the send button is clicked, the results are put in an object named "result_data", and the edges are defined manually in the code. In the futur, those edges will be choosen on the website by the user.
 
 Then, these results and the edges are send in 3 different functions to create the nodes, the links, and the legend. Those 3 elements are finally put in a dataset.
 
@@ -95,11 +93,13 @@ The dataset obtained should look like this:
 
 ## Part 2 : Table
 
-The table contains the SPARQL results from the select. Those values are spread into x columns based on the variables given in the select part. We choosed 3 variables that will be the nodes and the links of the graph.
+The table uses the Grid.js library.
+
+The table contains the SPARQL results from the select. Those values are spread into x columns, based on the variables given in the select part. We manually defined 3 variables that will be the nodes and the links of the graph.
 
 The table prints by default 10 lines of data at a time, but the user can explore them and change the lines.
 
-Since there are for the moment no optionnal parameters in the function building the table, you need to simply input the dataset to call the table function in the code. For a user of the interface, there is no need to call anything except the dataset.
+Since there are for the moment no optionnal parameters in the function building the table, you need to simply input the dataset to call the table function in the code. The function render the table and requires only one parameter that is the dataset.
 
 ```javascript
 
@@ -109,7 +109,9 @@ table_creator(dataset_nodelink)
 
 ## Part 3 : Graph Results View
 
-The graph results view is the visualisation of the graph result based on the query send by the user.
+The graph results view is the visualisation of the graph result based on the query sent by the user.
+
+The only mandatory parameter is the dataset, all other paramaters are optionnal.
 
 ```javascript
 
@@ -117,9 +119,9 @@ nodelink_creator(dataset_nodelink)
 
 ```
 
-For the color choices, they can be changed in the parameters of the function. By default, the source nodes are red, and the target nodes are blue. If a node is both source and target (being called by different patterns), then the colors are mixed.
+To personnalize the graph render, the color parameter can be changed. By default, the source nodes are red, and the target nodes are blue. If a node is both source and target, then node colors are mixed.
 
-The user can zoom on the graph or on specific nodes (by clicking on those nodes). They can also see the label of each nodes and each link below the table, when his mouse goes over the node or link in question.
+The user can zoom on the graph (by wheeling) or on specific nodes (by clicking on those nodes). They can also see the label of each node and each link in a specific area below the table, when their mouse goes over the node or link in question.
 
 Here is a call with all parameters : 
 
@@ -134,7 +136,7 @@ nodelink_creator(dataset_nodelink,
 
 ```
 
-Finally, you can here see an example of a call with only some parameters
+Not all the parameters are mandatory, you can here see an example of a call with only some parameters.
 
 ```javascript
 
@@ -144,24 +146,8 @@ nodelink_creator(dataset_nodelink, undefined, "gold", -25, 500, undefined, false
 
 # Things to improve
 
-Put buttons with the different possible colors for the legend.
+Add a support interaction that enable the user to choose the color of different elements of the vizualisation.
 
-Allow to change the number of lines in the dataset.
+Allow to change the number of lines display in the table.
 
-Ajout que le graph result est un objet déclaré par le développeur suivi de 2 blocks (1 creation objet, puis appel à nodelink-dataset)
-Refaire l'intro (en faire une vraie)
-
-1 doc dev, 1 doc user
-
-
-
-
-
-
-
-
-
-
-
-
-
+Allow the user to choose which column is defined as source, target, and link.

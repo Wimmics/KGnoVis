@@ -1,6 +1,6 @@
-The LDViz library is a javascript library created in order to facilitate the creation of SPARQL graphs. When used, a website page is temporarily created, allowing the user to post a SPARQL request, and obtain the results in a table and in a graph results. Later, a graph pattern will be added to the page.
+This library is a javascript library created in order to facilitate the creation of SPARQL graphs. When used, a website page is temporarily created, allowing the user to post a SPARQL request, and obtain the results in a table and in a graph results. Later, a graph pattern will be added to the page.
 
-This presentation focus on the website, and is directed toward a user that don't want to go too much in the code.
+This presentation focus on the website, and is directed toward a user point of view.
 
 # Website presentation
 
@@ -8,8 +8,6 @@ The website is a simple html page containing for the moment 3 major different pa
 I will go in detail to review each of them.
 
 ![photo du site](Page nodelink-SparQL.png)
-
-### Rajouter une photo de la page, why the website
 
 ## Part 1 : Text Area
 
@@ -38,43 +36,24 @@ CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
             
 ```
 
-The dataset obtained with this request should look like this:
-
 ## Part 2 : Table
 
-The table contains the SPARQL results from the select. Those values are spread into x columns based on the variables given in the select part. We choosed 3 variables that will be the nodes and the links of the graph.
+The table contains the SPARQL results from the select. Those values are spread into x columns based on the variables given in the select part. We've manually defined in the code 3 variables that will be the nodes and the links of the graph.
 
-The table prints by default 10 lines of data at a time, but the user can explore them and change the lines.
-
-Since there are for the moment no optionnal parameters in the function building the table, you need to simply input the dataset to call the table function in the code. For a user of the interface, there is no need to call anything except the dataset.
+The table displays by default 10 lines of data at a time, but the user can explore them.
 
 ## Part 3 : Graph Results View
 
-The graph results view is the visualisation of the graph result based on the query send by the user. A default graph is created when the request is send, but the user will be able to modify it.
+The graph results view is a nodelink representing the graph result based on the query sent by the user. A default graph is created when the request is sent, but the user will be able to modify it.
 
-For the color choices, 2 colors are choosen by default for the nodes (for the source and target), and for the nodes that are both source and target, a third color is created by mixing both colors.
+2 colors are choosen by default for the nodes (red: for the source, blue: for the target), and for the nodes that are both source and target, a third color is created by mixing both colors.
 
-The user can zoom on the graph or on specific nodes (by clicking on those nodes). They can also see the label of each nodes and each link below the table, when their mouse goes over the node or link in question.
+The user can zoom on the graph (by wheeling) or on specific nodes (by clicking on those nodes). They can also see the label of each node and each link below the table, when their mouse goes over the node or link in question.
 
 # Things to improve
 
-Add a support interaction that enable the user to choose the color of the different elements of the graph visualisation.
+Add a support interaction that enable the user to choose the color of different elements of the vizualisation.
 
-Add the possibility for the user to choose what is source, target, and relation in the request and the graph.
+Allow to change the number of lines display in the table.
 
-Allow the user to change the number of lines in the dataset.
-
-Ajout que le graph result est un objet déclaré par le développeur suivi de 2 blocks (1 creation objet, puis appel à nodelink-dataset)
-Refaire l'intro (en faire une vraie)
-
-
-
-
-
-
-
-
-
-
-
-
+Allow the user to choose which column is defined as source, target, and link.

@@ -319,7 +319,7 @@ function nodelink_creator(data, node_colors = ["red", "blue"], mixed_color = nul
         color_mixed = color_merger(rgb_node_colors)
     } else {
         color_mixed = mixed_color
-    }
+    } //Ajouter un if #
 
     const node = svg_graph.selectAll("circle") // Create the multiples nodes on the graph
         .data(data_used.nodes)
