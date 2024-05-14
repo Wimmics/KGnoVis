@@ -1,19 +1,19 @@
-This library is a javascript library created in order to facilitate the creation of SPARQL graphs. When used, a website page is temporarily created, allowing the user to post a SPARQL request, and obtain the results in a table and in a graph results. Later, a graph pattern will be added to the page.
+This library is a javascript library created in order to facilitate the creation of visualizations to represent the result of SPARQL queries. When used, a website page is temporarily created, allowing the user to submit a SPARQL request, and obtain the results in a table and in a node-link diagram. Later, a graph pattern will be added to the page.
+
+# Développer graph pattern
 
 This presentation focus on the website, and is directed toward a user point of view.
 
 # Website presentation
 
-The website is a simple html page containing for the moment 3 major different parts.
-I will go in detail to review each of them.
+The website is a simple html page containing for the moment 3 major differents parts, as depicted in the figure below.
+Hereafter, you will find the description of each part.
 
 ![photo du site](Page nodelink-SparQL.png)
 
 ## Part 1 : Text Area
 
-The Text Area is the part where the user can enter the SPARQL request which he wants to see the graph of. Once the request is written, the user just have to use the "send" button under the Text Area.
-
-### Expliquer utilisation requête
+The Text Area is the part where the user can type the SPARQL request which they want to see the graph of. Once the request is written, the user just have to use the "send" button under the Text Area.
 
 Here is an example of request :
 
@@ -38,9 +38,11 @@ CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
 
 ## Part 2 : Table
 
-The table contains the SPARQL results from the select. Those values are spread into x columns based on the variables given in the select part. We've manually defined in the code 3 variables that will be the nodes and the links of the graph.
+The table contains the SPARQL results from the select. Those values are spread into x columns based on the variables given in the select part of the request (meaning ?s, ?p, ?o).
 
-The table displays by default 10 lines of data at a time, but the user can explore them.
+We've manually defined in the code 3 variables that will be the nodes and the links of the graph.
+
+The table displays 10 lines of data at a time.
 
 ## Part 3 : Graph Results View
 
@@ -50,7 +52,7 @@ The graph results view is a nodelink representing the graph result based on the 
 
 The user can zoom on the graph (by wheeling) or on specific nodes (by clicking on those nodes). They can also see the label of each node and each link below the table, when their mouse goes over the node or link in question.
 
-# Things to improve
+# Future work
 
 Add a support interaction that enable the user to choose the color of different elements of the vizualisation.
 
