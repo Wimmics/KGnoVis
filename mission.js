@@ -1,6 +1,35 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 import * as grid from 'https://unpkg.com/gridjs?module'
 
+/*
+function loadXML() {
+    let xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            displayXML(this)
+        }
+    }
+    xhttp.open("GET", "exemple.xml", true)
+    xhttp.send()
+}
+
+function displayXML(xml) {
+    const xmlDoc = xml.responseXML;
+    const content = "";
+    const books = xmlDoc.getElementsByTagName("book");
+    for (let i = 0; i < books.length; i++) {
+        const title = books[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
+        const author = books[i].getElementsByTagName("author")[0].childNodes[0].nodeValue;
+        const year = books[i].getElementsByTagName("year")[0].childNodes[0].nodeValue;
+        content += "<p><strong>" + title + "</strong> - " + author + " (" + year + ")</p>";
+    }
+    document.getElementById("xmlContent").innerHTML = content;
+}
+
+// Charger le fichier XML au chargement de la page
+window.onload = loadXML;
+*/
+
 function recolt_Data() { // Get the text written in the text_area.
     var text = document.getElementById('user_text').value
     return text

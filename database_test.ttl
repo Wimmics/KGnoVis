@@ -1,0 +1,162 @@
+@prefix ex: <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex_ont: <http://example.org/ontology#> .
+
+ex:Wimmics
+    rdf:type ex:Team;
+    ex_ont:full_name "Web-Instrumented Man-Machine Interactions, Communities and Semantics";
+    ex_ont:dependency "Inria" ;
+    ex_ont:partnership "CNRS/UCA" ;
+    ex_ont:subject "Web Semantique" .
+
+ex:UCA
+    rdf:type ex:Team:;
+    ex_ont:full_name "Universite Nice Côte d'Azur";
+    ex_ont:dependency "France" ;
+    ex_ont:partnership "CNRS/INRIA" ;
+    ex_ont:subject "Apprentissage" .
+
+ex:Other
+    rdf:type ex:Team;
+    ex_ont:full_name "Other team";
+    ex_ont:dependency "Other" ;
+    ex_ont:partnership "Other" ;
+    ex_ont:subject "Variety" .
+
+
+
+
+
+
+ex:Nice
+    rdf:type ex:City ;
+    ex_ont:name "Nice" ; 
+    ex_ont:country "France" ;
+    ex_ont:region "Provence Alpes Cote d'Azur" ;
+    ex_ont:county "Alpes-Maritimes" .
+
+ex:Antibes
+    rdf:type ex:City ;
+    ex_ont:name "Antibes" ; 
+    ex_ont:country "France" ;
+    ex_ont:region "Provence Alpes Cote d'Azur" ;
+    ex_ont:county "Alpes-Maritimes" .
+
+ex:Cannes
+    rdf:type ex:City ;
+    ex_ont:name "Cannes" ; 
+    ex_ont:country "France" ;
+    ex_ont:region "Provence Alpes Cote d'Azur" ;
+    ex_ont:county "Alpes-Maritimes" .
+
+ex:Grasse
+    rdf:type ex:City ;
+    ex_ont:name "Grasse" ; 
+    ex_ont:country "France" ;
+    ex_ont:region "Provence Alpes Cote d'Azur" ;
+    ex_ont:county "Alpes-Maritimes" .
+
+ex:Sophia
+    rdf:type ex:City ;
+    ex_ont:name "Sophia" ; 
+    ex_ont:country "France" ;
+    ex_ont:region "Provence Alpes Cote d'Azur" ;
+    ex_ont:county "Alpes-Maritimes" .
+
+
+
+
+
+
+
+ex:Nicolas_Robert
+    rdf:type ex:Person ;
+    ex_ont:first_name "Nicolas" ;
+    ex_ont:last_name "Robert" ;
+    ex_ont:gender "Homme";
+    ex_ont:city "Grasse" ;
+    ex_ont:research_subject "HyperAgent" ;
+    ex_ont:team <http://wimmics_team.org/> .
+
+ex:Arnaud_Barbe
+    rdf:type ex:Person ;
+    ex_ont:first_name "Arnaud" ;
+    ex_ont:last_name "Barbe" ;
+    ex_ont:gender "Homme";
+    ex_ont:city "Nice" ;
+    ex_ont:research_subject "Librairie Javascript" ;
+    ex_ont:team <http://wimmics_team.org/> .
+
+ex:Hugo_Carton
+    rdf:type ex:Person ;
+    ex_ont:first_name "Hugo" ;
+    ex_ont:last_name "Carton" ;
+    ex_ont:gender "Homme";
+    ex_ont:city "Sophia" ;
+    ex_ont:research_subject "Librairie Javascript" ;
+    ex_ont:team <http://wimmics_team.org/> .
+
+ex:Fabien_Gandon
+    rdf:type ex:Person ;
+    ex_ont:first_name "Fabien" ;
+    ex_ont:last_name "Gandon" ;
+    ex_ont:gender "Homme";
+    ex_ont:city "Nice" ;
+    ex_ont:research_subject "Web Semantique et Gestion Equipe de Recherche" ;
+    ex_ont:team <http://wimmics_team.org/> .
+
+ex:Pierre_Monnin
+    rdf:type ex:Person ;
+    ex_ont:first_name "Pierre" ;
+    ex_ont:last_name "Monnin" ;
+    ex_ont:gender "Homme";
+    ex_ont:city "Cannes" ;
+    ex_ont:research_subject "Cycle de vie des graph de connaissance" ;
+    ex_ont:team <http://UCA_team.org/> .
+
+ex:Eric_Carton
+    rdf:type ex:Person ;
+    ex_ont:first_name "Eric" ;
+    ex_ont:last_name "Carton" ;
+    ex_ont:gender "Homme";
+    ex_ont:city "Nice" ;
+    ex_ont:research_subject "Histoire de l'animation" ;
+    ex_ont:team <http://other_team.org/> .
+
+ex:Catherine_Faron
+    rdf:type ex_ont:Person ;
+    ex_ont:first_name "Catherine" ;
+    ex_ont:last_name "Faron" ;
+    ex_ont:gender "Femme";
+    ex_ont:city "Nice" ;
+    ex_ont:research_subject "Web Semantique et Gestion de connaissance" ;
+    ex_ont:team <http://UCA_team.org/> .
+
+ex:Aline_Menin
+    rdf:type ex:Person;
+    ex_ont:first_name "Aline" ;
+    ex_ont:last_name "Menin" ;
+    ex_ont:gender "Femme" ;
+    ex_ont:city "Antibes" ;
+    ex_ont:research_subject "Géo-visualisation de données liées" ;
+    ex_ont:team <http://UCA_team.org/> .
+
+ex:Pierre_Maillot
+    rdf:type ex:Person;
+    ex_ont:first_name "Pierre" ;
+    ex_ont:last_name "Maillot" ;
+    ex_ont:gender "Homme" ;
+    ex_ont:city "Cannes" ;
+    ex_ont:research_subject "Web Semantique et Data Mining" ;
+    ex_ont:team <http://wimmics_team.org/> .
+
+ex:Remi_Ceres
+    rdf:type ex:Person;
+    ex_ont:first_name "Rémi" ;
+    ex_ont:last_name "Cérès" ;
+    ex_ont:gender "Homme" ;
+    ex_ont:city "Cannes" ;
+    ex_ont:research_subject "Corese" ;
+    ex_ont:team <http://wimmics_team.org/> .
+

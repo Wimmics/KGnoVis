@@ -1,0 +1,96 @@
+@prefix ex: <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex_ont: <http://example.org/ontology#> .
+
+ex:Person a rdfs:Class ;
+    rdfs:label "Personne" ;
+    rdfs:comment "Classe représentant une personne" .
+
+ex_ont:first_name a rdf:Property ;
+    rdfs:label "Prénom" ;
+    rdfs:comment "Propriété pour représenter le prénom d'une personne" ;
+    rdfs:domain ex:Person .
+
+ex_ont:last_name a rdf:Property ;
+    rdfs:label "Nom" ;
+    rdfs:comment "Propriété pour représenter le nom d'une personne" ;
+    rdfs:domain ex:Person .
+
+ex_ont:gender a rdf:Property ;
+    rdfs:label "Genre" ;
+    rdfs:comment "Propriété pour représenter le genre d'une personne" ;
+    rdfs:domain ex:Person .
+
+ex_ont:city a rdf:Property ;
+    rdfs:label "Ville" ;
+    rdfs:comment "Propriété pour représenter la ville où habite une personne" ;
+    rdfs:domain ex:Person .
+
+ex_ont:research_subject a rdf:Property ;
+    rdfs:label "Sujet_recherche" ;
+    rdfs:comment "Propriété pour représenter le sujet des recherches d'une personne" ;
+    rdfs:domain ex:Person .
+
+ex_ont:team a rdf:Property ;
+    rdfs:label "Equipe" ;
+    rdfs:comment "Propriété pour représenter l'équipe dans laquelle travaille une personne" ;
+    rdfs:domain ex:Person .
+
+
+
+
+
+ex:Team a rdfs:Class ;
+    rdfs:label "Equipe" ;
+    rdfs:comment "Classe représentant une équipe de travail ou institution" .
+
+ex:full_name a rdf:Property ;
+    rdfs:label "Nom complet" ;
+    rdfs:comment "Propriété pour représenter le nom complet d'une équipe";
+    rdfs:domain ex:Team .
+
+ex:dependency a rdf:Property ;
+    rdfs:label "Dépendance" ;
+    rdfs:comment "Propriété pour représenter l'organisme dont dépend l'équipe" ;
+    rdfs:domain ex:Team .
+
+ex:partnership a rdf:Property ;
+    rdfs:label "Partenaires" ;
+    rdfs:comment "Propriété pour représenter les organismes en partenariat avec l'équipe" ;
+    rdfs:domain ex:Team .
+
+ex:subject a rdf:Property ;
+    rdfs:label "Sujet" ;
+    rdfs:comment "Propriété pour représenter le sujet des recherches d'une équipe" ;
+    rdfs:domain ex:Team .
+
+
+
+
+
+
+ex:City a rdfs:Class ;
+    rdfs:label "Ville" ;
+    rdfs:comment "Classe représentant une ville" .
+
+ex:name a rdf:Property ;
+    rdfs:label "Nom" ;
+    rdfs:comment "Propriété pour représenter le nom de la ville";
+    rdfs:domain ex:Team .
+
+ex:country a rdf:Property ;
+    rdfs:label "Pays" ;
+    rdfs:comment "Propriété pour représenter le pays dans lequel se situe la ville" ;
+    rdfs:domain ex:Team .
+
+ex:region a rdf:Property ;
+    rdfs:label "Région" ;
+    rdfs:comment "Propriété pour représenter la région dans lequelle se situe la ville" ;
+    rdfs:domain ex:Team .
+
+ex:county a rdf:Property ;
+    rdfs:label "Département" ;
+    rdfs:comment "Propriété pour représenter le département dans lequel se situe la ville" ;
+    rdfs:domain ex:Team .
+

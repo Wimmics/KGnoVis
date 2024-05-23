@@ -1,0 +1,465 @@
+<?xml version="1.0" ?>
+<sparql xmlns='http://www.w3.org/2005/sparql-results#'>
+<head>
+<variable name='x'/>
+<variable name='p'/>
+<variable name='y'/>
+</head>
+<results>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://example.org/Team</uri></binding>
+<binding name='y'><uri>http://wimmics_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne1</uri></binding>
+<binding name='p'><uri>http://example.org/age</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>28</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne2</uri></binding>
+<binding name='p'><uri>http://example.org/age</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>30</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne3</uri></binding>
+<binding name='p'><uri>http://example.org/age</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>19</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://example.org/age</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>48</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne5</uri></binding>
+<binding name='p'><uri>http://example.org/age</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>32</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne6</uri></binding>
+<binding name='p'><uri>http://example.org/age</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>60</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne7</uri></binding>
+<binding name='p'><uri>http://example.org/age</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>52</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/age</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>26</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne1</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Homme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne2</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Homme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne3</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Homme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Homme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne5</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Homme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne6</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Homme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne7</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Femme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne8</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Femme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne9</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Homme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/genre</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Homme</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne1</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'></literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne2</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Barbe</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne3</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Carton</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Gandon</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne5</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Monnin</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne6</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Carton</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne7</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Faron</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne8</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Menin</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne9</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Maillot</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>CÃ©rÃ¨s</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/nom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>CÃƒÂ©rÃƒÂ¨s</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne1</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Nicolas</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne2</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Arnaud</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne3</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Hugo</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Fabien</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne5</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Pierre</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne6</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Eric</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne7</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Catherine</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne8</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Aline</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne9</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Pierre</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>RÃ©mi</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/prenom</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>RÃƒÂ©mi</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne1</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>HyperAgent</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne2</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Librairie Javascript</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne3</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Librairie Javascript</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Web Semantique et Gestion Equipe de Recherche</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne5</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Cycle de vie des graph de connaissance</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne6</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Histoire de l'animation</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne7</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Web Semantique et Gestion de connaissance</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne8</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>GÃ©o-visualisation de donnÃ©es liÃ©es</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne8</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>GÃƒÂ©o-visualisation de donnÃƒÂ©es liÃƒÂ©es</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne9</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Web Semantique et Data Mining</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Corese</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne1</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://wimmics_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne2</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://wimmics_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne3</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://wimmics_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://wimmics_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne5</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://UCA_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne6</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://other_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne7</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://UCA_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne8</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://UCA_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne9</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://wimmics_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/team</uri></binding>
+<binding name='y'><uri>http://wimmics_team.org/</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne1</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Grasse</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne2</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Nice</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne3</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Sophia</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Nice</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne5</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Cannes</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne6</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Nice</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne7</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Nice</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne8</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Antibes</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne9</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Cannes</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://example.org/ville</uri></binding>
+<binding name='y'><literal datatype='http://www.w3.org/2001/XMLSchema#string'>Cannes</literal></binding>
+</result>
+<result>
+<binding name='x'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne1</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/prenom</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/nom</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/age</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/genre</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/ville</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/sujet_recherche</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/team</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne2</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne3</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne4</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/Team</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#Property</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne5</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne6</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne7</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne8</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne9</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+<result>
+<binding name='x'><uri>http://example.org/personne10</uri></binding>
+<binding name='p'><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri></binding>
+<binding name='y'><uri>http://example.org/Person</uri></binding>
+</result>
+</results>
+</sparql>

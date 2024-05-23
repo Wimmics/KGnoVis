@@ -12,6 +12,43 @@
 
     <script type="module">
         import {recolt_Data, executeSPARQLRequest, table_creator, color_merger, nodelink_creator, buildNodes, buildLinks, buildLegend} from "./mission.js"
+
+        const endpointUrl = 'http://localhost:8080/sparql'
+
+        const query = recolt_Data()
+
+        let dataset = await fetch(endpointUrl + '?query=' + encodeURIComponent(query), {
+            headers: {
+                'Accept': 'application/sparql-results+json'
+            }
+        })
+        .then(response => response.json())
+        .catch(error => console.error(error));
+        
+        console.log(dataset)
+
+
+
+        /*
+        fetch('post_corese.xml')
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser()
+                const xml = parser.parseFromString(data, 'text/xml')
+                const results = xml.querySelectorAll('result')
+                console.log(results)
+
+                results.forEach(result => {
+                    console.log(result)
+                    let row = ''
+                    let output
+                    Array.from(result.children).forEach(element => {
+                        row += `<td>${element.tagName}: ${element.textContent}</td>`
+                    })
+                    output += `<tr>${row}</tr>`
+                })
+
+            })
 /*
         document.addEventListener('DOMContentLoaded', function() {
             let send_button = document.querySelector('#recolt_request')
@@ -39,9 +76,20 @@
         }) 
 
         Allow to create the dataset with an input to the button. In comment for the tests for a faster execution.
-*/ 
+ 
         const dataset = await executeSPARQLRequest("http://prod-dekalog.inria.fr/sparql", recolt_Data())
+*/
 
+        const result_data = dataset.results.bindings
+
+        const edges = [
+            {source : "s", target : "city", relation : "p", color_link : "silver"}
+        ]
+
+        const nodes = buildNodes(result_data, edges)
+        const links = buildLinks(result_data, edges)
+        const legend = buildLegend(edges)
+/*
         const result_data = dataset.results.bindings
 
         const edge_test = [
@@ -52,7 +100,7 @@
         const nodes = buildNodes(result_data, edge_test)
         const links = buildLinks(result_data, edge_test)
         const legend = buildLegend(edge_test)
-
+*/
         const dataset_nodelink = {nodes : nodes, links : links, legend : legend}
 
         table_creator(dataset_nodelink)
@@ -88,6 +136,12 @@
 
         //nodelink_creator(dataset_bis)
 
+        PREFIX ex_ont: <http://example.org/ontology#> 
+SELECT ?s ?city
+WHERE {
+    ?s ex_ont:city ?city
+}
+
         */
 
 
@@ -97,20 +151,15 @@
 <body>
     <div style>
         <label for="user_text">Please enter the SparQL request</label><br>
-        <textarea id="user_text" name="user_message" rows="10">CONSTRUCT{ ?endpoint rdf:value ?sparqlNorm } {
-            GRAPH ?g {
-            { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpoint . }
-            UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpoint . }
-            UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
-            ?metadata <http://ns.inria.fr/kg/index#curated> ?curated, ?dataset .
-                { ?dataset <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity . }
-                UNION { ?metadata <http://www.w3.org/ns/prov#wasGeneratedBy> ?activity .}
-                FILTER(CONTAINS(str(?activity), ?sparqlNorm))
-                VALUES ?sparqlNorm { "SPARQL10" "SPARQL11" }
-            }
-            }
-            GROUP BY ?endpoint ?sparqlNorm
-            ORDER BY ?endpoint ?sparqlNorm</textarea><br>
+        <textarea id="user_text" name="user_message" rows="10">
+
+PREFIX ex_ont: <http://example.org/ontology#> 
+SELECT ?s ?city("is in" as ?p)
+WHERE {
+    ?s ex_ont:country ?city
+}
+        
+        </textarea><br>
         <button id="recolt_request">Send</button>
     </div>
     <div class = "table_svg_container" style = "display: flex;">
