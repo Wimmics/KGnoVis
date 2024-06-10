@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./../css/styles.css">
+    <link rel="stylesheet" href="./../css/prism.css">
+    <link rel="stylesheet" href="./../css/leaflet.css">
+    <script src="./../lib/echarts.js" defer></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="./../lib/leaflet-src.js"></script>
+
+    <script src="lib/prism.js" defer></script>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
+
+    <script src="https://unpkg.com/topojson@3"></script>
+    <title>SPARQL Visualisation Library</title>
+</head>
+
+<body>
+    <section id="body">
+        <h1>Dotmap visualisation</h1>
+        <h2>1. Description of dotmap visualisation usage</h2>
+        <p>Also known as a Point Map, Dot Distribution Map, Dot Density Map.
+            Dot Maps are a way of detecting spatial patterns or the distribution of data over a geographical region,
+            by placing equally sized points over a geographical region.
+            There are two types of Dot Map: one-to-one (one point represents a single count or object) and one-to-many
+            (one point represents a particular unit, e.g. 1 point = 10 trees).
+            Dot Maps are ideal for seeing how things are distributed over a geographical region and can reveal patterns
+            when the points cluster on the map. Dot Maps are easy to grasp and are better at giving an overview of the
+            data,
+            but are not great for retrieving exact values.
+        </p>
+        <p>Source: <a href="https://datavizcatalogue.com/methods/dot_map.html">Dataviz Catalog - Dot map</a></p>
+        <h2>2. How to use</h2>
+        <p>To add a dot map visualisation, you have to define a parameters data-object with the following
+            attributes:
+        </p>
+        <ul>
+            <li>endpoint: the SPARQL endpoint URL to be queried</li>
+            <li>query: The SPARQL query</li>
+            <li>title: A representativ title for the visualisation</li>
+            <li>type: Type "map" to specified that you want a Dot map visualisation</li>
+            <li>config: An array of variable matching that correspond to the different information</li>
+            <li>options: An array of options to personnalise the visualisation</li>
+        </ul>
+        <p>The following section will details the different key for config and options parameters.</p>
+        <h3>2.1 Config parameter</h3>
+        <p>The config parameters requires 3 mandatory keys: '<b>latitude</b>', '<b>longitude</b>', '<b>label</b>'.<br>
+            These parameters can takes, as value, a variable from the SPARQL Query that contain the value.<br>
+            Latitude and longitude require a <a href="https://en.wikipedia.org/wiki/Decimal_degrees">decimal degree
+                (DD)</a> value to work.<br>
+            The following code definition present an example of config parameter</p>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>SPARQL Query</h4>
+                <pre><code class="language-sparql line-numbers">SELECT DISTINCT ?endpoint ?lat ?lon 
+WHERE {
+    ?endpoint ex:latitude ?lat;
+            ex:longitude ?lon.
+}</code></pre>
+            </div>
+            <div class="code-right">
+                <h4>Javascript</h4>
+                <pre class="code-block">
+<code class="language-javascript line-numbers">config: [{
+        latitude: "lat",
+        longitude: "lon",
+        label: "endpoint"
+    }]</code>
+</pre>
+            </div>
+        </section>
+        <h3>2.2 Options parameters</h3>
+        <p>The options parameter allow the developper to customise the visualisation with a set of pre-defined key.
+            Currently, only the render type of the map is available. 2 value can be selected: (1) the simple render
+            which is a simple implementation
+            with D3.JS using geomap JSON to display the worldmap, (2) the leaflet render which use leaflet geomap.</p>
+        <p>The following code show how to set the render you want. By default, the render is set to 'simple'.</p>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>Javascript</h4>
+                <pre><code class="language-javascript line-numbers">options: {
+    render: 'simple'
+}
+</code></pre>
+            </div>
+            <div class="code-right">
+            </div>
+        </section>
+        <h2>3. Example of 'simple' render</h2>
+        <p>Dekalog: geolocation of SPARQL endpoint</p>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>SPARQL Query</h4>
+                <pre><code class="language-sparql line-numbers">SELECT DISTINCT ?endpoint ?lat ?lon {
+    ?endpoint void:sparqlEndpoint ?endpoint ;
+        pav:createdAt ?coord .
+    ?coord geo:lat ?lat ;
+        geo:lon ?lon .
+}
+</code></pre>
+            </div>
+            <div class="code-right">
+                <h4>Javascript</h4>
+                <pre class="code-block">
+<code class="language-javascript line-numbers">&lt;div id="map1"&gt;&lt;/div&gt;
+
+const parameters_geomap1 = {
+    endpoint: "http://localhost:8080/sparql",
+    query: query_weKG,
+    title: "Geomap test",
+    type: 'map',
+    config: [{
+        latitude: "lat",
+        longitude: "lon",
+        label: "endpoint"
+    }],
+    option: {
+        render: "simple"
+    }
+}
+
+loadChartViz("map1", parameters_geomap1);
+</code></pre>
+            </div>
+        </section>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>Simple render</h4>
+                <div id="map1"></div>
+            </div>
+            <div class="code-right">
+                <h4>Leaflet render</h4>
+                <div id="map"></div>
+            </div>
+        </section>
+
+
+    </section>
+    <script type="module">
+        import loadChartViz from "./modules/visualisationManager.js";
+        const query_weKG = `PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX kgi: <http://ns.inria.fr/kg/index#>
+PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
+PREFIX pav: <http://purl.org/pav/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+SELECT DISTINCT ?endpoint ?lat ?lon {
+ ?endpoint void:sparqlEndpoint ?endpoint ;
+     pav:createdAt ?coord .
+ ?coord geo:lat ?lat ;
+     geo:lon ?lon .
+}`
+        const parameters_geomap1 = {
+            endpoint: "http://localhost:8080/sparql",
+            query: query_weKG,
+            title: "Geomap test",
+            type: 'map',
+            config: [{
+                latitude: "lat",
+                longitude: "lon",
+                label: "endpoint"
+            }],
+            option: {
+                render: "simple"
+            }
+        }
+        loadChartViz("map1", parameters_geomap1);
+
+        const parameters_geomap2 = {
+            endpoint: "http://localhost:8080/sparql",
+            query: query_weKG,
+            title: "Geomap test",
+            type: 'map',
+            config: [{
+                latitude: "lat",
+                longitude: "lon",
+                label: "endpoint"
+            }],
+            option: {
+                render: "leaflet"
+            }
+        }
+        loadChartViz("map", parameters_geomap2);
+    </script>
+</body>
+
+</html>

@@ -4,29 +4,29 @@ import {
     makeDotMapOption,
     makeNodeLinkChartOption,
     makePieChartOption
- } from "./visualisationManagerDependencies.js";
+} from "./visualisationManagerDependencies.js";
 
- /**
-  * This function add **mandatory field** for the visualisation object such as:
-  * - The title of the visualisation
-  * - The possibility to zoom
-  * - The display of the legend
-  * @param {Parameters_object} parameters 
-  */
+/**
+ * This function add **mandatory field** for the visualisation object such as:
+ * - The title of the visualisation
+ * - The possibility to zoom
+ * - The display of the legend
+ * @param {Parameters_object} parameters 
+ */
 const makeMandatoryOption = (parameters) => {
     return {
-        title : {
-            text : parameters.title
+        title: {
+            text: parameters.title
         },
         dataZoom: {
             type: 'inside'
         },
-        tooltip : {},
-        legend : {
-            right : 'right',
+        tooltip: {},
+        legend: {
+            right: 'right',
             type: 'scroll',
             orient: 'vertical',
-            textStyle : {
+            textStyle: {
                 fontSize: 10,
                 width: '150',
                 overflow: 'truncate',
@@ -44,7 +44,7 @@ const makeMandatoryOption = (parameters) => {
  */
 const generateChart = (context, data, parameters) => {
     let option = makeMandatoryOption(parameters)
-    switch (parameters.type){
+    switch (parameters.type) {
         case 'bar': makeBarChartOption(data, option, parameters); break;
         case 'pie': makePieChartOption(data, option, parameters); break;
         case 'graph': makeNodeLinkChartOption(data, option, parameters); break;
@@ -63,16 +63,16 @@ const generateChart = (context, data, parameters) => {
  * @param {Parameters_object} parameters 
  */
 const loadChartViz = async (context, parameters) => {
-    let visualisation = echarts.init(document.getElementById(context), null, {
+    /*let visualisation = echarts.init(document.getElementById(context), null, {
         renderer: 'canvas',
         useDirtyRect: false
     })
-    visualisation.showLoading();
+    visualisation.showLoading();*/
 
     const data = await executeSPARQLRequest(parameters.endpoint, parameters.query);
     let option = generateChart(context, data, parameters)
 
-    visualisation.hideLoading();
+    /*visualisation.hideLoading();
     visualisation.setOption(option)
 
 
@@ -93,7 +93,7 @@ const loadChartViz = async (context, parameters) => {
             }
         }
         //window.open(params.name)
-    })
+    })*/
 }
 
 export default loadChartViz;

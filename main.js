@@ -1,7 +1,7 @@
 import loadChartViz from "./modules/visualisationManager.js";
 import { displayCode } from "./modules/utils/utils.js";
 
-const endpoint_local = "http://localhost:8080/sparql";
+/*const endpoint_local = "http://localhost:8080/sparql";
 const query_ex_1 = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix ex:      <http://www.example.org/ontology#>
@@ -19,7 +19,7 @@ const parameters_ex_1 = {
     query: query_ex_1,
     type: 'bar',
     title: "Number of article per team per year",
-    config : [{
+    config: [{
         category: "year",
         label: "teamname",
         value: "nb_paper"
@@ -49,16 +49,16 @@ const parameters_bar_2 = {
     query: query_bar_2,
     type: 'bar',
     title: "Number of paper and number of person per team",
-    config : [{
-            category: "nb paper",
-            label: "teamname",
-            value: "nb_paper"
-        },
-        {
-            category: "nb person",
-            label: "teamname",
-            value: "nb_person"
-        }
+    config: [{
+        category: "nb paper",
+        label: "teamname",
+        value: "nb_paper"
+    },
+    {
+        category: "nb person",
+        label: "teamname",
+        value: "nb_person"
+    }
     ]
 };
 loadChartViz("ex-bar2", parameters_bar_2)
@@ -68,7 +68,7 @@ const parameters_bar_3 = {
     query: query_bar_2,
     type: 'bar',
     title: "Number of paper and number of person per team",
-    config : [{
+    config: [{
         label: "teamname",
         value: "nb_paper"
     },
@@ -85,7 +85,7 @@ const parameters_stacked_bar = {
     type: 'bar',
     stacked: true,
     title: "Number of paper and number of person per team",
-    config : [{
+    config: [{
         label: "teamname",
         value: "nb_paper"
     },
@@ -110,7 +110,7 @@ const parameters_ex_pie = {
     query: query_pie_1,
     type: 'pie',
     title: "Number of people per team",
-    config : [{
+    config: [{
         label: "teamname",
         value: "nb_person"
     }]
@@ -123,7 +123,7 @@ const paramters_simple_bar = {
     query: query_pie_1,
     type: 'bar',
     title: "Number of people per team",
-    config : [{
+    config: [{
         label: "teamname",
         value: "nb_person"
     }]
@@ -136,7 +136,7 @@ const parameters_simple_bar_row = {
     type: 'bar',
     display: "row",
     title: "Number of people per team",
-    config : [{
+    config: [{
         label: "teamname",
         value: "nb_person"
     }]
@@ -178,7 +178,7 @@ const query_deka3 = `SELECT DISTINCT ?endpointUrl (MAX(?raw2) AS ?properties) {
         UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpointUrl . }
         UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpointUrl . }
         ?metadata <http://ns.inria.fr/kg/index#curated> ?curated .
-    	?curated <http://rdfs.org/ns/void#properties> ?raw2 .
+        ?curated <http://rdfs.org/ns/void#properties> ?raw2 .
     }
 } GROUP BY ?endpointUrl`
 
@@ -188,12 +188,12 @@ PREFIX schema:  <http://schema.org/>
 PREFIX paragraph: <http://www.zoomathia.com/>
 
 SELECT DISTINCT ?paragraph 
-	(str(?name_animal) as ?animal)
-	(str(?name_relation) as ?relationship)
-	(str(?name_anthro) as ?anthroponyme) 
+    (str(?name_animal) as ?animal)
+    (str(?name_relation) as ?relationship)
+    (str(?name_anthro) as ?anthroponyme) 
 WHERE {
   ?annotation1 a oa:Annotation; oa:hasBody ?animal;
-	oa:hasTarget [ oa:hasSource ?paragraph;
+    oa:hasTarget [ oa:hasSource ?paragraph;
       oa:hasSelector [ oa:exact ?mention_animal]].
 
   ?annotation2 oa:hasBody ?relation;
@@ -211,12 +211,12 @@ WHERE {
        skos:member ?animal.
 
   ?relation skos:prefLabel ?name_relation;
-     	            skos:broader+ ?relation_generique.
+                      skos:broader+ ?relation_generique.
   ?relation_generique skos:prefLabel  "special relationship"@en.
 
  ?anthro skos:prefLabel ?name_anthro.
  ?anthro_collection skos:prefLabel ?anthro_collection_name;
-	skos:member ?anthro.
+    skos:member ?anthro.
 
   FILTER (lang(?name_animal) = "en").
   FILTER (lang(?name_relation) = "en")
@@ -226,21 +226,21 @@ WHERE {
 ORDER BY ?paragraph`;
 
 const parameters = {
-    endpoint : "http://prod-dekalog.inria.fr/sparql",
-    query : query_deka,
-    type : 'bar',
+    endpoint: "http://prod-dekalog.inria.fr/sparql",
+    query: query_deka,
+    type: 'bar',
     stacked: true,
-    title : "Number feature per norm",
-    config : [{
-        category : "sparqlNorm",
-        label : "endpoint",
-        value : "count"
+    title: "Number feature per norm",
+    config: [{
+        category: "sparqlNorm",
+        label: "endpoint",
+        value: "count"
     }]
 }
 loadChartViz("dekalog-1", parameters);
 displayCode("#parameters-dekalog1", parameters);
 
-const parameters2 = {
+/*const parameters2 = {
     endpoint: "http://prod-dekalog.inria.fr/sparql",
     query: query_deka2,
     type: "bar",
@@ -248,19 +248,23 @@ const parameters2 = {
     scale: "log",
     display: "row",
     config: [{
-        category : "nb triples",
-        label : "endpointUrl",
-        value : "triples"
+        category: "nb triples",
+        label: "endpointUrl",
+        value: "triples"
+
+        category: "endpointUrl",
+        value: ["triples", "classes", "properties"],
+        labels: ["nb triples", "nb classes", "nb properties"]
     },
     {
-        category : "nb classes",
-        label : "endpointUrl",
-        value : "classes"
+        category: "nb classes",
+        label: "endpointUrl",
+        value: "classes"
     },
     {
-        category : "nb properties",
-        label : "endpointUrl",
-        value : "properties"
+        category: "nb properties",
+        label: "endpointUrl",
+        value: "properties"
     }]
 }
 loadChartViz("dekalog-2", parameters2)
@@ -290,19 +294,19 @@ const parameters4 = {
     title: "Relationship between human, place and animal",
     config: [
         {
-            source:"animal",
-            target:"anthroponyme",
-            relation:"relationship"
+            source: "animal",
+            target: "anthroponyme",
+            relation: "relationship"
         }
     ],
     options: [{
         name: "animal",
         color: "brown"
-    },{
+    }, {
         name: "anthroponyme",
         color: "purple"
     }
-]
+    ]
 }
 loadChartViz("zoomathia", parameters4);
 
@@ -324,14 +328,14 @@ const parameters_node_deka = {
     display: 'force',
     type: "graph",
     config: [{
-        source:"endpointUrl",
-        target:"vocabulary",
+        source: "endpointUrl",
+        target: "vocabulary",
         relation: "use"
     }],
     options: [{
         name: "endpointUrl",
         color: "blue"
-    },{
+    }, {
         name: "vocabulary",
         color: "red"
     }]
@@ -359,7 +363,7 @@ const parameters_oriented = {
     config: [{
         source: "teamname",
         target: "person_name",
-    },{
+    }, {
         source: "person_name",
         target: "paper",
         relation: "author"
@@ -367,40 +371,74 @@ const parameters_oriented = {
     options: [{
         name: "teamname",
         color: "red"
-    },{
+    }, {
         name: "person_name",
         color: "blue",
-    },{
+    }, {
         name: "paper",
         color: "green"
     }]
 }
-loadChartViz("oriented-simple", parameters_oriented)
+loadChartViz("oriented-simple", parameters_oriented) */
 
-const query_weKG = `PREFIX geo:        <http://www.w3.org/2003/01/geo/wgs84_pos#> 
-PREFIX weo:        <http://ns.inria.fr/meteo/ontology/> 
-PREFIX geosparql:  <http://www.opengis.net/ont/geosparql#> 
-PREFIX geof:       <http://www.opengis.net/def/function/geosparql/>
-PREFIX uom:        <http://www.opengis.net/def/uom/OGC/1.0/>
+const query_weKG = `PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX kgi: <http://ns.inria.fr/kg/index#>
+PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
+PREFIX pav: <http://purl.org/pav/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 
-SELECT  ?label ?lat ?long ?coordinates WHERE {
-        ?x rdfs:label ?label ;
-           geosparql:hasGeometry [ geosparql:asWKT ?coordinates];
-           geo:lat ?lat; geo:long ?long .
-        BIND("Point(0.1413499 45.1423348)"^^geosparql:wktLiteral as ?Currentposition)
-        BIND (geof:distance(?coordinates,?Currentposition , uom:metre) as ?distance)        
-}
-ORDER BY ?distance`
+SELECT DISTINCT ?endpoint ?lat ?lon {
+ ?endpoint void:sparqlEndpoint ?endpoint ;
+     pav:createdAt ?coord .
+ ?coord geo:lat ?lat ;
+     geo:lon ?lon .
+}`
 const parameters_geomap = {
-    endpoint: "http://weakg.i3s.unice.fr/sparql",
+    endpoint: "http://localhost:8080/sparql",
     query: query_weKG,
     title: "Geomap test",
     type: 'map',
-    config:[{
+    config: [{
         latitude: "lat",
-        longitude: "long",
+        longitude: "lon",
         value: "coordinates",
-        label: "label"
+        label: "endpoint"
+    }],
+    option: {
+        render: "leaflet"
+    }
+}
+loadChartViz("map", parameters_geomap);
+
+/*const req_2 = `PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX voaf: <http://purl.org/vocommons/voaf#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?vocab1 ?vocab2 (COUNT(DISTINCT ?endpointUrl) AS ?count) {
+    ?elem1 rdfs:isDefinedBy ?vocab1 ;
+        voaf:usageInDataset ?occurence1 .
+    ?occurence1 voaf:inDataset ?endpointUrl .
+   OPTIONAL {
+    ?elem2 rdfs:isDefinedBy ?vocab2 ;
+        voaf:usageInDataset ?occurence2 .
+    ?occurence2 voaf:inDataset ?endpointUrl .
+        FILTER(STR(?vocab1) < STR(?vocab2))
+  }
+} GROUP BY ?vocab1 ?vocab2`
+
+const parameters_obj = {
+    endpoint: "http://localhost:8080/sparql",
+    query: req_2,
+    type: "graph",
+    animation: false,
+    display: 'force',
+    title: "Cooccurence of meta-vocabularies",
+    config: [{
+        source: "vocab1",
+        target: "vocab2",
+        relation: "count"
     }]
 }
-loadChartViz("geomap", parameters_geomap);
+loadChartViz("vocab", parameters_obj);*/

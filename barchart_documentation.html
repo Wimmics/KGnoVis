@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./../css/styles.css">
+    <link rel="stylesheet" href="./../css/prism.css">
+    <link rel="stylesheet" href="./../css/leaflet.css">
+    <script src="./../lib/echarts.js" defer></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="./../lib/leaflet-src.js"></script>
+
+    <script src="lib/prism.js" defer></script>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
+
+    <script src="https://unpkg.com/topojson@3"></script>
+    <title>SPARQL Visualisation Library</title>
+</head>
+
+<body>
+    <section id="body">
+        <h1>Barchart visualisation</h1>
+        <h2>1. Description of barchart visualisation usage</h2>
+        <p>Also known as Bar Graph or Column Graph. A Bar Chart uses either horizontal or vertical bars
+            (column chart) to show discrete, numerical comparisons across categories. One axis of the chart
+            shows the specific categories being compared and the other axis represents a discrete value scale.
+            Bar Charts are distinguished from Histograms, as they do not display continuous developments over
+            an interval. Instead, Bar Chart's discrete data is categorical and therefore answers the question
+            of "how many?" in each category. </p>
+        <p>Source: <a href="https://datavizcatalogue.com/methods/bar_chart.html">Dataviz Catalog - Barchart</a></p>
+        <h2>2. How to use</h2>
+        <p>To add a barchart visualisation, you have to define a parameters data-object with the following attributes:
+        </p>
+        <ul>
+            <li>endpoint: the SPARQL endpoint URL to be queried</li>
+            <li>query: The SPARQL query</li>
+            <li>title: A representativ title for the visualisation</li>
+            <li>type: Type "map" to specified that you want a Dot map visualisation</li>
+            <li>config: An array of variable matching that correspond to the different information</li>
+            <li>options: An array of options to personnalise the visualisation</li>
+        </ul>
+        <p>The following section will details the different key for config and options parameters.</p>
+        <h3>2.1 Config parameters</h3>
+        <p>The barchart requieres 2 mandatory keys: (1) <b>catorgy</b> and (2) <b>value</b></p>
+        <h3>2.2 Options parameters</h3>
+        <h2>3. Examples</h2>
+    </section>
+</body>
+
+</html>
