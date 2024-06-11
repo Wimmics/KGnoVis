@@ -14,20 +14,30 @@ h1 {
     margin: 0;
     text-align: center;
     font-size: 3rem;
+    color: rgb(74, 74, 74);
 }
 
 h2 {
     font-size: 2rem;
+    color: rgb(74, 74, 74);
 }
 
 h3 {
     font-size: 1.6rem;
+    padding-left: 6rem;
+    color: rgb(74, 74, 74);
+}
+
+h4 {
+    font-size: 1.3rem;
+    ;
 }
 
 p,
 li,
 a {
     font-size: 1.3rem;
+    color: rgb(74, 74, 74);
 }
 
 .code-display {
@@ -35,7 +45,8 @@ a {
     flex-direction: row;
 }
 
-h4 {
+.code-left>h4,
+.code-right>h4 {
     text-align: center;
 }
 
@@ -54,4 +65,9 @@ h4 {
 
 #map1>svg {
     width: fit-content;
+}
+
+.chart-div {
+    width: 600px;
+    height: 400px;
 }

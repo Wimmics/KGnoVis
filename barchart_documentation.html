@@ -3,13 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="./../css/styles.css">
+    <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="./../css/prism.css">
     <link rel="stylesheet" href="./../css/leaflet.css">
-    <script src="./../lib/echarts.js" defer></script>
     <script src="https://d3js.org/d3.v6.js"></script>
-    <script src="./../lib/leaflet-src.js"></script>
-
+    <script src="./lib/echarts.js"></script>
     <script src="lib/prism.js" defer></script>
     <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
 
@@ -19,8 +17,9 @@
 
 <body>
     <section id="body">
-        <h1>Barchart visualisation</h1>
-        <h2>1. Description of barchart visualisation usage</h2>
+        <h1>Barchart, Stacked Barchart and Multi-set Barchart visualisation</h1>
+        <h2>1. Description of barchart and multi-set barchart visualisation usage</h2>
+        <h3>1.1 - Barchart</h3>
         <p>Also known as Bar Graph or Column Graph. A Bar Chart uses either horizontal or vertical bars
             (column chart) to show discrete, numerical comparisons across categories. One axis of the chart
             shows the specific categories being compared and the other axis represents a discrete value scale.
@@ -28,6 +27,27 @@
             an interval. Instead, Bar Chart's discrete data is categorical and therefore answers the question
             of "how many?" in each category. </p>
         <p>Source: <a href="https://datavizcatalogue.com/methods/bar_chart.html">Dataviz Catalog - Barchart</a></p>
+        <h3>1.2 - Multi-set Barchart</h3>
+        <p> Also known as a Grouped Bar Chart or Clustered Bar Chart.
+
+            This variation of a Bar Chart can be used when two or more data series need to be plotted all on the same
+            axis and grouped into parent categories.
+
+            Like on a Bar Chart, the length of each bar on a Multiset Bar Chart is used to show discrete, numerical
+            comparisons amongst categories. Each bar for a data series is assigned a colour to distinguish them apart.
+            Bars in the same group are placed together and are then spaced apart from other bar groupings.
+
+            The use of Multiset Bar Charts is usually to compare across categories that contain the same sub-categorical
+            variables between them. Each bar is a subcategory that is grouped into a larger parent category.
+
+            Multiset Bar Charts can also be used to compare mini Histograms to each other, so each bar in the group
+            would represent the significant intervals of a variable. Another use could be to use Multiset Bar Charts to
+            show data changing over time by having, for example, each bar represent a point in time such as a year.
+
+            The downside of Multiset Bar Charts is that they become harder to read the more bars you have in one group.
+            Therefore, you should try to limit the number of bars per group. </p>
+        <p>Source : <a href="https://datavizcatalogue.com/methods/multiset_barchart.html">Dataviz catalog - Multi-set
+                Barchart</a></p>
         <h2>2. How to use</h2>
         <p>To add a barchart visualisation, you have to define a parameters data-object with the following attributes:
         </p>
@@ -35,16 +55,256 @@
             <li>endpoint: the SPARQL endpoint URL to be queried</li>
             <li>query: The SPARQL query</li>
             <li>title: A representativ title for the visualisation</li>
-            <li>type: Type "map" to specified that you want a Dot map visualisation</li>
+            <li>type: Type "barchart" to specified that you want a barchart visualisation</li>
+            <li>stacked: Specified if the series should be stacked</li>
+            <li>scale: Specified the scale based of the bar (log or linear)</li>
+            <li>display: Specified if the display of bar should be vertical or horizontal</li>
             <li>config: An array of variable matching that correspond to the different information</li>
-            <li>options: An array of options to personnalise the visualisation</li>
+            <li>options: An array of options to customize the visualisation</li>
         </ul>
         <p>The following section will details the different key for config and options parameters.</p>
-        <h3>2.1 Config parameters</h3>
-        <p>The barchart requieres 2 mandatory keys: (1) <b>catorgy</b> and (2) <b>value</b></p>
-        <h3>2.2 Options parameters</h3>
+        <h3>2.1 - Display parameters</h3>
+        <p>Few parameters available can customise the display of the barchart:</p>
+        <p>- <b>stacked</b>: boolean [true, false] (<i>false by default</i>). Set the display of bar to stacked.<br>
+        <pre><code class="language-javascript"> stacked: true </code></pre>
+        </p>
+        <p>- <b>scale</b>: string [linear, log] (<i>'linear' by default</i>). Change the base of displayed value.<br>
+        <pre><code class="language-javascript"> scale: 'log' </code></pre>
+        <p>- <b>display</b>: string [row, column] (<i>'column' by default</i>). <br>
+        <pre><code class="language-javascript"> display: 'row' </code></pre>
+        </p>
+
+        </p>
+        <h3>2.2 - Config parameters</h3>
+        <p>The barchart requieres 2 mandatory keys: (1) <b>category</b> and (2) <b>value</b><br>
+            An extra key <b>label</b> can be specified.</p>
+        <h3>2.3 - Options parameters</h3>
+        <p>Currently not implemented</p>
         <h2>3. Examples</h2>
+        <h3>3.1 - Simple barchart</h3>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>SPARQL Query</h4>
+                <pre><code class="language-sparql line-numbers">PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+prefix ex:      &lt;http://www.example.org/ontology#&gt;
+
+SELECT ?teamname (count(?person) as ?nb_person) WHERE {
+    ?person ex:belong ?team.
+    ?team ex:Name ?teamname.
+}GROUP BY ?team</code></pre>
+            </div>
+            <div class="code-right">
+                <h4>Javascript</h4>
+                <pre><code class="language-javascript line-numbers">const parameters_ex_1 = {
+    endpoint: endpoint_local,
+    query: query_ex_1,
+    type: 'bar',
+    title: "Number of people per team",
+    config: [{
+        label: "teamname",
+        value: "nb_person"
+    }]
+}</code></pre>
+            </div>
+        </section>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>barchart render</h4>
+                <div id="barchart_1" class="chart-div"></div>
+            </div>
+            <div class="code-right"></div>
+        </section>
+        <h3>3.2 - Barchart with label specified</h3>
+        <p>On this example, we want to show how many papers each team from the dataset publish per year.</p>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>SPARQL Query</h4>
+                <pre><code class="language-sparql line-numbers">PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX ex:      &lt;http://www.example.org/ontology#&gt;
+
+SELECT ?teamname ?year (count(?paper) as ?nb_paper) WHERE {
+    ?paper ex:author ?person;
+            ex:year ?year.
+    ?person ex:belong ?team.
+    ?team ex:Name ?teamname.
+}
+GROUP BY ?team ?year</code></pre>
+            </div>
+            <div class="code-right">
+                <h4>Javascript</h4>
+                <pre class="code-block">
+<code class="language-javascript line-numbers">&lt;div id="map1"&gt;&lt;/div&gt;
+
+const parameters_ex_1 = {
+    endpoint: endpoint_local,
+    query: query_ex_1,
+    type: 'bar',
+    title: "Number of article per team per year",
+    config: [{
+        category: "teamname",
+        label: "year",
+        value: "nb_paper"
+    }]
+};
+loadChartViz("barchart_1", parameters_ex_1)
+</code></pre>
+            </div>
+        </section>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>Barchart render</h4>
+                <div id="barchart_2" class="chart-div"></div>
+            </div>
+            <div class="code-right">
+            </div>
+        </section>
+        <h3>3.3 - Multi-set barchart with multiple variable config definition</h3>
+        <p>This is an example of a declaration of a multi-set barchart visualisation with the use of multiple variable
+            config definition.</p>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>SPARQL Query</h4>
+                <pre><code class="language-sparql line-numbers">PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX ex:   &lt;http://www.example.org/ontology#&gt;
+
+SELECT ?teamname ?nb_person ?nb_paper WHERE{
+  {SELECT ?teamname (count(?person) as ?nb_person) WHERE {
+    ?person ex:belong ?team.
+    ?team ex:Name ?teamname.
+  }GROUP BY ?team}
+  
+  {SELECT ?teamname (count(?paper) as ?nb_paper) WHERE {
+        ?paper ex:author ?person;
+                ex:year ?year.
+        ?person ex:belong ?team.
+        ?team ex:Name ?teamname.
+  }GROUP BY ?team }
+}</code></pre>
+            </div>
+            <div class="code-right">
+                <h4>Javascript</h4>
+                <pre><code class="language-javascript line-numbers">&lt;div id="barchart_3"&gt;&lt;/div&gt;
+
+const parameters_ex_3 = {
+    endpoint: endpoint_local,
+    query: query_bar_3,
+    type: 'bar',
+    title: "Number of paper and number of person per team",
+    config: [{
+        category: "nb paper",
+        label: "teamname",
+        value: "nb_paper"
+    },
+    {
+        category: "nb person",
+        label: "teamname",
+        value: "nb_person"
+    }
+    ]
+};
+loadChartViz("barchart_3", parameters_ex_3)
+</code></pre>
+            </div>
+        </section>
+        <section class="code-display">
+            <div class="code-left">
+                <h4>Barchart render</h4>
+                <div id="barchart_3" class="chart-div"></div>
+            </div>
+            <div class="code-left"></div>
+        </section>
     </section>
+
+    <script type="module">
+        import loadChartViz from "./modules/visualisationManager.js";
+
+        const endpoint_local = "http://localhost:8080/sparql";
+
+        const query_ex_1 = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix ex:      <http://www.example.org/ontology#>
+
+SELECT ?teamname (count(?person) as ?nb_person) WHERE {
+  ?person ex:belong ?team.
+  ?team ex:Name ?teamname.
+}GROUP BY ?team`
+
+        const parameters_ex_1 = {
+            endpoint: endpoint_local,
+            query: query_ex_1,
+            type: 'bar',
+            title: "Number of people per team",
+            config: [{
+                label: "teamname",
+                value: "nb_person"
+            }]
+        }
+        loadChartViz("barchart_1", parameters_ex_1)
+
+        const query_ex_2 = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex:      <http://www.example.org/ontology#>
+
+SELECT ?teamname ?year (count(?paper) as ?nb_paper) WHERE {
+  ?paper ex:author ?person;
+          ex:year ?year.
+  ?person ex:belong ?team.
+  ?team ex:Name ?teamname.
+}
+GROUP BY ?team ?year`;
+
+        const parameters_ex_2 = {
+            endpoint: endpoint_local,
+            query: query_ex_2,
+            type: 'bar',
+            title: "Number of article per team per year",
+            config: [{
+                category: "teamname",
+                label: "year",
+                value: "nb_paper"
+            }]
+        };
+        loadChartViz("barchart_2", parameters_ex_2)
+
+        const query_bar_3 = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex:      <http://www.example.org/ontology#>
+
+SELECT ?teamname ?nb_person ?nb_paper WHERE{
+  {SELECT ?teamname (count(?person) as ?nb_person) WHERE {
+    ?person ex:belong ?team.
+    ?team ex:Name ?teamname.
+  }GROUP BY ?team}
+  
+  { SELECT ?teamname (count(?paper) as ?nb_paper) WHERE {
+        ?paper ex:author ?person;
+                ex:year ?year.
+        ?person ex:belong ?team.
+        ?team ex:Name ?teamname.
+  }GROUP BY ?team }}`
+
+        const parameters_ex_3 = {
+            endpoint: endpoint_local,
+            query: query_bar_3,
+            type: 'bar',
+            title: "Number of paper and number of person per team",
+            config: [{
+                category: "nb paper",
+                label: "teamname",
+                value: "nb_paper"
+            },
+            {
+                category: "nb person",
+                label: "teamname",
+                value: "nb_person"
+            }
+            ]
+        };
+        loadChartViz("barchart_3", parameters_ex_3)
+    </script>
 </body>
 
 </html>

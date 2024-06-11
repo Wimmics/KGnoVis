@@ -1,3 +1,4 @@
+
 /**
  * This function check if a given category name is a SPARQL variable/binding
  * @param {Header_SPARQL_Result} header 
@@ -5,7 +6,7 @@
  * @returns boolean
  */
 const isSparqlVariable = (header, name) => {
-    if(header["vars"].includes(name)){
+    if (header["vars"].includes(name)) {
         return true;
     }
     return false;
@@ -20,7 +21,7 @@ const isSparqlVariable = (header, name) => {
 const labelExtraction = (results, category) => {
     const categories = [];
     results.forEach(row => {
-        if(!categories.includes(row[category]["value"])){
+        if (!categories.includes(row[category]["value"])) {
             categories.push(row[category]["value"])
         }
     });
@@ -41,30 +42,30 @@ const labelCategoryLinking = (results, config) => {
     let categories = []
 
     config.forEach(conf => {
-        if(!conf.hasOwnProperty("category")){
+        if (!conf.hasOwnProperty("category")) {
             categories.push(`${conf.label} -> ${conf.value}`);
             conf["category"] = `${conf.label} -> ${conf.value}`
-        }else if(isSparqlVariable(header, conf.category)){
+        } else if (isSparqlVariable(header, conf.category)) {
             categories.push(...labelExtraction(body, conf.category));
-        }else{
+        } else {
             categories.push(conf.category);
         }
     })
 
-    for(const row of body){
-        for(const conf of config){
-            let key = conf.label ? row[conf.label]["value"]:""
+    for (const row of body) {
+        for (const conf of config) {
+            let key = conf.label ? row[conf.label]["value"] : ""
 
-            if(!data.hasOwnProperty(key)){
+            if (!data.hasOwnProperty(key)) {
                 data[key] = {}
-                categories.forEach( category => {
+                categories.forEach(category => {
                     data[key][category] = 0
                 })
             }
 
-            if(isSparqlVariable(header, conf.category)){
+            if (isSparqlVariable(header, conf.category)) {
                 data[key][row[conf.category]["value"]] = row[conf.value]["value"]
-            }else{
+            } else {
                 data[key][conf.category] = row[conf.value]["value"]
             }
         }
@@ -85,26 +86,26 @@ const buildSeries = (results, config) => {
     let label = []
 
     let data = labelCategoryLinking(results, config.config)
-    
-    for(let key in data){
+
+    for (let key in data) {
 
         label.push(key)
 
-        for(let subkey in data[key]){
+        for (let subkey in data[key]) {
             let element = series.find(elt => elt.name === subkey)
-            if(element){
-                element.data.push({name : key, value: parseInt(data[key][subkey])})
-            }else{
+            if (element) {
+                element.data.push({ name: key, value: parseInt(data[key][subkey]) })
+            } else {
                 let obj = {
                     name: subkey,
-                    type : 'bar',
+                    type: 'bar',
                     colorBy: 'series',
-                    emphasis : {
-                        focus : 'series'
+                    emphasis: {
+                        focus: 'series'
                     },
-                    data: [{name: key, value: parseInt(data[key][subkey])}]
+                    data: [{ name: key, value: parseInt(data[key][subkey]) }]
                 }
-                if(config.stacked){
+                if (config.stacked) {
                     obj["stack"] = "total";
                 }
                 series.push(obj)
@@ -115,19 +116,21 @@ const buildSeries = (results, config) => {
     return [label, series]
 }
 
-const makeBarChartOption = (data, option, parameters) => {
+const makeBarChartOption = (context, data, option, parameters) => {
     const [label, series_value] = buildSeries(data, parameters);
-    const [axis1, axis2] = parameters.display === "row"?["xAxis", "yAxis"]:["yAxis", "xAxis"]
+    const [axis1, axis2] = parameters.display === "row" ? ["xAxis", "yAxis"] : ["yAxis", "xAxis"]
 
     option[axis1] = [{
-        type: parameters.hasOwnProperty("scale")?parameters.scale:"value"
+        type: parameters.hasOwnProperty("scale") ? parameters.scale : "value"
     }]
     option[axis2] = [{
-        type : "category",
+        type: "category",
         data: label,
     }]
-    
+
     option["series"] = series_value
+
+    return option
 }
 
 export { makeBarChartOption };
