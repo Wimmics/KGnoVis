@@ -134,3 +134,35 @@ const makeBarChartOption = (context, data, option, parameters) => {
 }
 
 export { makeBarChartOption };
+
+
+const parameters = {
+    type: ['barchart', 'stacked barchart', 'multi-set barchart'],
+    visual_mapping: [{
+        id: "labelid",
+        type: "label",
+        variable: 'year',
+        display: {
+            'word-wrapping': 'wrap',
+            color: 'blue'
+        }
+    },
+    {
+        id: "valueid",
+        type: "value",
+        variable: 'nb_paper',
+    },
+    {
+        id: "categoryid",
+        type: "category",
+        variable: 'teamname',
+        display: {
+            color: 'green'
+        }
+    }],
+    aesthetics: {
+        orientations: 'column',
+        scale: 'log'
+    }
+
+}

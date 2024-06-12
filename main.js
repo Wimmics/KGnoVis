@@ -159,19 +159,6 @@ UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpoint . }
 GROUP BY ?endpoint ?sparqlNorm
 ORDER BY ?endpoint ?sparqlNorm`;
 
-const query_deka2 = `SELECT DISTINCT ?endpointUrl (MAX(?rawO) AS ?triples)  (MAX(?raw1) AS ?classes)  (MAX(?raw2) AS ?properties) {
-GRAPH ?g {
-{ ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpointUrl . }
-UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpointUrl . }
-UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpointUrl . }
-?metadata <http://ns.inria.fr/kg/index#curated> ?curated .
-?curated <http://rdfs.org/ns/void#triples> ?rawO .
-?curated <http://rdfs.org/ns/void#triples> ?rawO .
-?curated <http://rdfs.org/ns/void#classes> ?raw1 .
-?curated <http://rdfs.org/ns/void#properties> ?raw2 .
-}
-} GROUP BY ?endpointUrl`
-
 const query_deka3 = `SELECT DISTINCT ?endpointUrl (MAX(?raw2) AS ?properties) {
     GRAPH ?g {
         { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpointUrl . }
@@ -238,9 +225,21 @@ const parameters = {
     }]
 }
 loadChartViz("dekalog-1", parameters);
-displayCode("#parameters-dekalog1", parameters);
+displayCode("#parameters-dekalog1", parameters);*/
 
-/*const parameters2 = {
+/*const query_deka2 = `SELECT DISTINCT ?endpointUrl (MAX(?rawO) AS ?triples)  (MAX(?raw1) AS ?classes)  (MAX(?raw2) AS ?properties) {
+    GRAPH ?g {
+    { ?curated <http://www.w3.org/ns/sparql-service-description#endpoint> ?endpointUrl . }
+    UNION { ?curated <http://rdfs.org/ns/void#sparqlEndpoint> ?endpointUrl . }
+    UNION { ?curated <http://www.w3.org/ns/dcat#endpointURL> ?endpointUrl . }
+    ?metadata <http://ns.inria.fr/kg/index#curated> ?curated .
+    ?curated <http://rdfs.org/ns/void#triples> ?rawO .
+    ?curated <http://rdfs.org/ns/void#triples> ?rawO .
+    ?curated <http://rdfs.org/ns/void#classes> ?raw1 .
+    ?curated <http://rdfs.org/ns/void#properties> ?raw2 .
+    }
+    } GROUP BY ?endpointUrl`
+const parameters2 = {
     endpoint: "http://prod-dekalog.inria.fr/sparql",
     query: query_deka2,
     type: "bar",
@@ -285,7 +284,7 @@ loadChartViz("dekalog-3", parameters3);
 displayCode("#piechart-deka", parameters3);
 
 const parameters4 = {
-    endpoint: "http://54.36.123.165:8890/sparql",
+    endpoint: "http://54.36.123.165:8080/sparql",
     query: query_4,
     type: "graph",
     animation: false,

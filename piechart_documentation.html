@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./../css/prism.css">
+    <link rel="stylesheet" href="./../css/leaflet.css">
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="./lib/echarts.js"></script>
+    <script src="lib/prism.js" defer></script>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
+
+    <script src="https://unpkg.com/topojson@3"></script>
+    <title>SPARQL Visualisation Library</title>
+</head>
+
+<body>
+    <section id="body">
+        <h1>Piechart visualisation</h1>
+        <h2>1. Description of piechart visualisation usage</h2>
+        <p> Extensively used in presentations and offices, Pie Charts help show proportions and percentages between
+            categories, by dividing a circle into proportional segments. Each arc length represents a proportion of each
+            category, while the full circle represents the total sum of all the data, equal to 100%.
+
+            Pie Charts are ideal for giving the reader a quick idea of the proportional distribution of the data.
+            However, the major downsides to pie charts are:
+
+            They cannot show more than a few values, because as the number of values shown increases, the size of each
+            segment/slice becomes smaller. This makes them unsuitable for large datasets with many categories.
+
+            They take up more space than their alternatives, for example, a 100% Stacked Bar Chart. Mainly due to their
+            size and the usual need for a legend.
+
+            They are not great for making accurate comparisons between groups of Pie Charts. This is because it is
+            harder to distinguish the size of items via area when it is for length.
+
+            Despite that, comparing a given category (one slice) within the total of a single Pie Chart, then it can
+            often be more effective. </p>
+        <p>Source: <a href="https://datavizcatalogue.com/methods/pie_chart.html">Dataviz catalog - Pie chart</a></p>
+        <h2>2. How to use</h2>
+        <p>To add a piechart visualisation, you have to define a parameters data-object with the following
+            attributes:
+        </p>
+        <ul>
+            <li>endpoint: the SPARQL endpoint URL to be queried</li>
+            <li>query: The SPARQL query</li>
+            <li>title: A representativ title for the visualisation</li>
+            <li>type: Type "pie" to specified that you want a Piechart visualisation</li>
+            <li>visual_mapping: An array of variable matching that correspond to the different information</li>
+            <li>aesthetics: An array of options to customize the visualisation</li>
+        </ul>
+        <p>The following section will details the different key for config and options parameters.</p>
+        <h3>2.1 - Config paramater</h3>
+        <p></p>
+        <p>- <b>label</b>: string. This parameter specify which SPARQL variable will be used to define the category of
+            the Piechart</p>
+        <pre><code class="language-javascript">config:[{
+    label: 'team'
+}]</code></pre>
+        <p>- <b>value</b>: string. This parameter specify which SPARQL variable will be used to define the value for
+            each category of the Piechart.</p>
+        <pre><code class="language-javascript">config:[{ 
+    value: 'nb_person'
+}]</code></pre>
+        <h3>2.2 - Options parameter</h3>
+        <p>No customisation available.</p>
+        <h2>3. Examples</h2>
+        <section class="code-display">
+            <div class="code-left">
+                <pre><code class="language-sparql line-numbers">PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX ex:   &lt;http://www.example.org/ontology#&gt;
+
+SELECT ?teamname (count(?person) as ?nb_person) WHERE {
+    ?person ex:belong ?team.
+    ?team ex:Name ?teamname.
+}GROUP BY ?team
+                </code></pre>
+            </div>
+            <div class="code-right">
+                <pre><code class="language-javascript line-numbers">&lt;div id="ex-pie"&gt;&lt;/div&gt;
+
+const parameters_ex_pie = {
+    endpoint: endpoint_local,
+    query: query_pie_1,
+    type: 'pie',
+    title: "Number of people per team",
+    config: [{
+        label: "teamname",
+        value: "nb_person"
+    }]
+}
+loadChartViz("ex-pie", parameters_ex_pie)
+                </code></pre>
+            </div>
+        </section>
+        <section class="code-display">
+            <div class="code-left">
+                <div id="ex-pie" class="chart-div"></div>
+            </div>
+            <div class="code-right">
+            </div>
+        </section>
+    </section>
+    <script type="module">
+        import loadChartViz from "./modules/visualisationManager.js";
+
+        const endpoint_local = "http://localhost:8080/sparql";
+
+        const query_pie_1 = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix ex:      <http://www.example.org/ontology#>
+
+SELECT ?teamname (count(?person) as ?nb_person) WHERE {
+  ?person ex:belong ?team.
+  ?team ex:Name ?teamname.
+}GROUP BY ?team`
+
+        const parameters_ex_pie = {
+            endpoint: endpoint_local,
+            query: query_pie_1,
+            type: 'pie',
+            title: "Number of people per team",
+            config: [{
+                label: "teamname",
+                value: "nb_person"
+            }]
+        }
+        loadChartViz("ex-pie", parameters_ex_pie)
+    </script>
+</body>
+
+</html>

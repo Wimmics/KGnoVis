@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/prism.css">
     <link rel="stylesheet" href="css/leaflet.css">
-    <script src="lib/echarts.js" defer></script>
-    <script src="https://d3js.org/d3.v6.js"></script>
-    <script src="lib/leaflet-src.js"></script>
+    <script src="/lib/echarts.js" defer></script>
+    <script src="https://d3js.org/d3.v6.js" defer></script>
+    <script src="/lib/leaflet-src.js" defer></script>
 
     <script src="lib/prism.js" defer></script>
     <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
@@ -30,21 +30,61 @@
             endpoint and
             transformation process for visualisations.
         </p>
+        <h2>Summary</h2>
         <ol>
-            <li>Getting started</li>
             <li>Installation</li>
+            <li>Getting started</li>
             <li>Visualisation
                 <ul>
                     <li><a href="dotmap_documentation.html" target="_blank">Dot map</a></li>
-                    <li><a href="#" target="_blank">Barchart</a></li>
-                    <li><a href="#">Piechart</a></li>
-                    <li><a href="#" target="_blank">Nodelink</a></li>
+                    <li><a href="barchart_documentation.html" target="_blank">Barchart</a></li>
+                    <li><a href="piechart_documentation.html" target="_blank">Piechart</a></li>
+                    <li><a href="nodelink_documentation.html" target="_blank">Nodelink</a></li>
                 </ul>
             </li>
-            <li>
-                Customisation
-            </li>
         </ol>
+        <h2>1. Installation</h2>
+        <p>The library can be download on github: <a href="https://github.com/Sensaku/sparql_lib">sparql lib</a>.</p>
+        <p>To install the library, you need to download and add the folder to your website repository. This library use
+            Echarts, D3.JS and leaflet.</p>
+        <section class="code-display">
+            <div class="code-left">
+                <pre><code class="language-html line-numbers">&lt;link rel="stylesheet" href="css/prism.css"&gt;
+&lt;link rel="stylesheet" href="css/leaflet.css"&gt;
+&lt;script src="/lib/echarts.js" defer>&lt;/script&gt;
+&lt;script src="https://d3js.org/d3.v6.js" defer>&lt;/script&gt;
+&lt;script src="/lib/leaflet-src.js" defer>&lt;/script&gt;</code></pre>
+            </div>
+            <div class="code-right"></div>
+        </section>
+        <h2>2. Getting started</h2>
+        <p>The library is simple to use and only need few line of code to be load. The function that will render the
+            chart is called <code class="language-javascript">loadChartViz(ctx, param)</code>
+            require 2 parameters: (1) "ctx" that is the id without the hashtag of the tag you want to render your chart
+            and (2) 'param' that is an
+            object with the folling parameters.</p>
+        <section class="code-display">
+            <div class="code-left">
+                <pre><code class="language-html line-numbers">&lt;div id="chart-to-render" style="width: 600px; height: 400px;"&gt;&lt;div&gt;
+</code></pre>
+            </div>
+            <div class="code-right">
+                <pre><code class="language-javascript line-numbers">const simple_parameter= {
+    endpoint: "http://localhost:8080/sparql",
+    query: sparql_query,
+    type: 'bar',
+    config: [{
+        label: "teamname",
+        value: "person_name",
+    }],
+    options: [{}]
+}
+loadChartViz("chart-to-render", simple_parameter)
+                </code></pre>
+            </div>
+        </section>
+        <p>All the SPARQL Query is execute inside the function and every chart manage the SPARQL result transformation
+            based on the param object.</p>
     </section>
 
     <div id="map"></div>
@@ -208,8 +248,7 @@ GROUP BY ?endpoint ?sparqlNorm</code>
         category : "nb properties",
         label : "endpointUrl",
         value : "properties"
-    }
-]
+    }]
 }
 loadChartViz("dekalog-2", parameters2)</code>
                 </pre>

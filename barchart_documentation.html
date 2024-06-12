@@ -62,8 +62,9 @@
             <li>config: An array of variable matching that correspond to the different information</li>
             <li>options: An array of options to customize the visualisation</li>
         </ul>
-        <p>The following section will details the different key for config and options parameters.</p>
-        <h3>2.1 - Display parameters</h3>
+        <p>The following section will details the different key for specific barchart parameter, config and options
+            parameters.</p>
+        <h3>2.1 - Specific parameters</h3>
         <p>Few parameters available can customise the display of the barchart:</p>
         <p>- <b>stacked</b>: boolean [true, false] (<i>false by default</i>). Set the display of bar to stacked.<br>
         <pre><code class="language-javascript"> stacked: true </code></pre>
@@ -75,10 +76,53 @@
         </p>
 
         </p>
-        <h3>2.2 - Config parameters</h3>
-        <p>The barchart requieres 2 mandatory keys: (1) <b>category</b> and (2) <b>value</b><br>
-            An extra key <b>label</b> can be specified.</p>
-        <h3>2.3 - Options parameters</h3>
+        <h3>2.2 - Config parameter</h3>
+        <p>The barchart requieres 2 mandatory keys: (1) <b>label</b> and (2) <b>value</b><br>
+            An extra key <b>category</b> can be specified. The config parameter takes an array of object using these key
+        </p>
+        <p>- <b>label</b>: string. This parameter specify which SPARQL variable will be used to define value labels.
+        </p>
+        <pre><code class="language-javascript">config: [{
+    label: 'endpointUrl'
+}]</code></pre>
+        <p>- <b>value</b>: string. This parameter specify which SPARQL variable will be used to define values for
+            labels.
+            This is closely link to the label variable.</p>
+        <pre><code class="language-javascript">config: [{
+    value: 'triples'
+}]
+</code></pre>
+        <p>- <b>category</b>: string. This parameter specify which SPARQL variable will be used to define categories of
+            value for each label (ie, a bar for each label). If the given string is not a SPARQL variable, the string
+            define
+            a unique category of value. If a SPARQL variable define the category, you should only use one Object of
+            SPARQL variable.
+            The visualisation become a multi-set barchart if this parameter is used. </p>
+        <pre><code class="language-javascript">config: [{
+    category: 'number of triples'
+}]
+    </code></pre>
+        <p>The following line of code is a full example of the config parameter with only one object of SPARQL variable.
+        </p>
+        <pre><code class="language-javascript">config: [{
+    label: 'endpointUrl',
+    value: 'triples',
+    category: 'nb_triple'
+}]
+</code></pre>
+        <p>The following line of code is a full example of the config parameter using multiple object of SPARQL
+            variable. The barchart contains 2 kind of bar define by the category.</p>
+        <pre><code class="language-javascript">config: [{
+    label: 'endpointUrl',
+    value: 'triples',
+    category: "number of triples"
+},{
+    label: 'endpointUrl',
+    value: 'classes',
+    category: 'number of classes'
+}]
+</code></pre>
+        <h3>2.3 - Options parameter</h3>
         <p>Currently not implemented</p>
         <h2>3. Examples</h2>
         <h3>3.1 - Simple barchart</h3>

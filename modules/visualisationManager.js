@@ -45,9 +45,10 @@ const makeMandatoryOption = (parameters) => {
  */
 const generateChart = (context, data, parameters) => {
     let option = makeMandatoryOption(parameters)
+    let visualisation
     switch (parameters.type) {
         case 'bar':
-            let visualisation = echarts.init(
+            visualisation = echarts.init(
                 document.querySelector(`#${context}`),
                 null,
                 {
@@ -60,8 +61,32 @@ const generateChart = (context, data, parameters) => {
             visualisation.hideLoading();
             visualisation.setOption(option)
             break;
-        case 'pie': makePieChartOption(data, option, parameters); break;
-        case 'graph': makeNodeLinkChartOption(data, option, parameters); break;
+        case 'pie':
+            visualisation = echarts.init(
+                document.querySelector(`#${context}`),
+                null,
+                {
+                    renderer: 'canvas',
+                    useDirtyRect: false
+                })
+            visualisation.showLoading();
+            makePieChartOption(data, option, parameters);
+            visualisation.hideLoading();
+            visualisation.setOption(option)
+            break;
+        case 'graph':
+            visualisation = echarts.init(
+                document.querySelector(`#${context}`),
+                null,
+                {
+                    renderer: 'canvas',
+                    useDirtyRect: false
+                })
+            visualisation.showLoading();
+            makeNodeLinkChartOption(data, option, parameters);
+            visualisation.hideLoading();
+            visualisation.setOption(option)
+            break;
         case 'treemap': makeTreeMapChartOption(data, option, parameters); break;
         case 'map': makeDotMapOption(context, data, option, parameters); break;
         default: throw new Error("Not implemented yet.");
