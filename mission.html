@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./bordure.css">
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css">
-    <title>Analyse de SparQL</title>
+    <title>Projet Nodelink</title>
 
     <script type="module">
         import {recolt_Data, executeSPARQLRequest, table_creator, color_merger, nodelink_creator, buildNodes, buildLinks, buildLegend} from "./mission.js"
@@ -23,11 +23,15 @@
             }
         })
         .then(response => response.json())
-        .catch(error => console.error(error));
+        .catch(error => console.error(error))
         
         console.log(dataset)
 
-
+        let dataset_bis = await fetch("http://localhost:8082/sparqljs?uri=" + encodeURIComponent(query))
+        .then(response => response.json())
+        .catch(error => console.error(error))
+        
+        console.log(dataset_bis)
 
         /*
         fetch('post_corese.xml')
@@ -83,7 +87,7 @@
         const result_data = dataset.results.bindings
 
         const edges = [
-            {source : "s", target : "city", relation : "p", color_link : "silver"}
+            {source : "team", target : "proportionMenInCity", relation : "totalPeople", color_link : "silver"}
         ]
 
         const nodes = buildNodes(result_data, edges)
@@ -136,7 +140,7 @@
 
         //nodelink_creator(dataset_bis)
 
-        PREFIX ex_ont: <http://example.org/ontology#> 
+PREFIX ex_ont: <http://example.org/ontology#> 
 SELECT ?s ?city
 WHERE {
     ?s ex_ont:city ?city
@@ -152,13 +156,36 @@ WHERE {
     <div style>
         <label for="user_text">Please enter the SparQL request</label><br>
         <textarea id="user_text" name="user_message" rows="10">
+PREFIX ex: <http://example.org/>
+PREFIX ex_ont: <http://example.org/ontology#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-PREFIX ex_ont: <http://example.org/ontology#> 
-SELECT ?s ?city("is in" as ?p)
+SELECT ?team 
+        (COALESCE(?nbMenInCity, 0) AS ?nbMenInCity) 
+        (COALESCE(?totalPeople, 0) AS ?totalPeople) 
+        (COALESCE((?nbMenInCity / ?totalPeople), 0) AS ?proportionMenInCity)
 WHERE {
-    ?s ex_ont:country ?city
+    {
+    SELECT ?team (COUNT(?Person) AS ?totalPeople)
+    WHERE {
+        ?Person ex_ont:team ?team .
+    }
+    GROUP BY ?team
+    }
+    
+    OPTIONAL {
+    SELECT ?team (COUNT(?Person) AS ?nbMenInCity)
+    WHERE {
+        ?Person foaf:gender foaf:Man ;
+                ex_ont:team ?team ;
+                ex_ont:city ex:Nice .
+    }
+    GROUP BY ?team
+    }
 }
-        
+GROUP BY ?team ?nbMenInCity ?totalPeople
+            
+
         </textarea><br>
         <button id="recolt_request">Send</button>
     </div>
@@ -174,6 +201,7 @@ WHERE {
     <div id = "div_labels" height = 150px style = "display: flex;">
         <p id = "labels" style = "display: flex;"></p>
     </div>    
+
 
 </body>
 </html>
