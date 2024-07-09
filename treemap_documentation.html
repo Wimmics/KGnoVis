@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./../css/styles.css">
+    <link rel="stylesheet" href="./../css/prism.css">
+    <link rel="stylesheet" href="./../css/leaflet.css">
+    <script src="./../lib/echarts.js" defer></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="./../lib/leaflet-src.js"></script>
+
+    <script src="lib/prism.js" defer></script>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
+
+    <script src="https://unpkg.com/topojson@3"></script>
+    <title>SPARQL Visualisation Library</title>
+</head>
+
+<body>
+    <section id="body">
+        <h1>Treemap visualisation</h1>
+        <h2>1. Description</h2>
+        <p>Treemaps are an alternative way of visualising the hierarchical structure of a Tree Diagram while also
+            displaying
+            quantities for each category via area size. Each category is assigned a rectangle area with the subcategory
+            rectangles nested inside.
+
+            When a quantity is assigned to a category, its area size is in proportion to that quantity and any other
+            quantities within the same parent category in a part-to-whole relationship. Also, the area size of the
+            parent
+            category is the total of its subcategories. If no quantity has been assigned to a subcategory, then its area
+            is
+            divided equally amongst the other subcategories within the parent category.
+
+            The way rectangles are divided and ordered into sub-rectangles depends on the tiling algorithm used. Many
+            tiling
+            algorithms have been developed, but the "squarified algorithm", which keeps each rectangle as square-like as
+            possible is the one commonly used.
+
+            Ben Shneiderman originally developed Treemaps as a way of visualising a vast file directory on a computer,
+            without taking up too much space on the screen. This makes Treemaps a more compact and space-efficient
+            option
+            for displaying hierarchies, that can give a quick overview of the hierarcal structure. Treemaps are also
+            great
+            at comparing the proportions between categories via their area size.
+
+            The downside to Treemaps is that they doesn't show the hierarchal levels as clearly as other charts that
+            visualise hierarchal data (such as a Tree Diagram or Sunburst Diagram).</p>
+        <p>Source datavizcatalog: <a href="https://datavizcatalogue.com/methods/treemap.html">treemap</a></p>
+        <h2>2. How to use</h2>
+        <div id="tree"></div>
+        <div id="treemap"></div>
+    </section>
+
+    <script type="module">
+        import loadChartViz from "./modules/visualisationManager.js";
+        const query_tree = `prefix zoo:     <http://www.zoomathia.com/2024/zoo#>
+SELECT DISTINCT ?parent ?current ?type ?id ?title ?file WHERE {
+  	GRAPH <http://www.zoomathia.com> {{
+    	?oeuvre a zoo:Oeuvre;
+      		zoo:identifier ?id;
+        	zoo:title ?title;
+    	BIND(?oeuvre as ?parent)
+    BIND(zoo:Oeuvre as ?type)
+    BIND(?oeuvre as ?current)
+    }UNION{
+    	?current a ?type;
+      		zoo:isPartOf+ ?oeuvre;
+  	  		zoo:isPartOf ?parent;
+     		zoo:identifier ?id.
+    	Optional {
+    		?current zoo:title ?title_t.
+  		}
+    	BIND(IF(BOUND(?title_t), ?title_t, "") AS ?title)
+  	}
+    }
+}ORDER BY ?parent ?id`
+
+        const parameters_tree = {
+            endpoint: 'http://localhost:8080/sparql',
+            query: query_tree,
+            title: 'Treemap',
+            type: 'treemap',
+            config: [],
+            options: []
+        }
+        loadChartViz("treemap", parameters_tree)
+
+        const chart_div = document.getElementById("tree")
+        const myChart = echarts.init(chart_div)
+        const result = await executeSPARQLRequest(endpoint, getSummary(req.query.uri))
+        const tree = []
+        const response = {}
+        const idInSet = new Set()
+
+        for (const elt of result.results.bindings) {
+            response[elt.current.value] = {
+                uri: elt.current.value,
+                id: elt.id.value,
+                title: elt.title.value,
+                type: elt.type.value,
+                children: []
+            }
+        }
+
+        for (const elt of result.results.bindings) {
+            if ((elt.current.value === req.query.uri) && (!idInSet.has(elt.current.value))) {
+                tree.push(response[elt.parent.value])
+                idInSet.add(elt.current.value)
+            } else {
+                response[elt.parent.value].children.push(response[elt.current.value])
+            }
+        }
+
+        myChart.setOption(
+            (option = {
+                tooltip: {
+                    trigger: 'item',
+                    triggerOn: 'mousemove'
+                },
+                legend: {
+                    top: '2%',
+                    left: '3%',
+                    orient: 'vertical',
+                    data: [
+                        {
+                            name: 'tree1',
+                            icon: 'rectangle'
+                        },
+                        {
+                            name: 'tree2',
+                            icon: 'rectangle'
+                        }
+                    ],
+                    borderColor: '#c23531'
+                },
+                series: [
+                    {
+                        type: 'tree',
+                        name: 'tree1',
+                        data: [data],
+                        top: '5%',
+                        left: '7%',
+                        bottom: '2%',
+                        right: '60%',
+                        symbolSize: 7,
+                        label: {
+                            position: 'left',
+                            verticalAlign: 'middle',
+                            align: 'right'
+                        },
+                        leaves: {
+                            label: {
+                                position: 'right',
+                                verticalAlign: 'middle',
+                                align: 'left'
+                            }
+                        },
+                        emphasis: {
+                            focus: 'descendant'
+                        },
+                        expandAndCollapse: true,
+                        animationDuration: 550,
+                        animationDurationUpdate: 750
+                    },
+                    {
+                        type: 'tree',
+                        name: 'tree2',
+                        data: [data2],
+                        top: '20%',
+                        left: '60%',
+                        bottom: '22%',
+                        right: '18%',
+                        symbolSize: 7,
+                        label: {
+                            position: 'left',
+                            verticalAlign: 'middle',
+                            align: 'right'
+                        },
+                        leaves: {
+                            label: {
+                                position: 'right',
+                                verticalAlign: 'middle',
+                                align: 'left'
+                            }
+                        },
+                        expandAndCollapse: true,
+                        emphasis: {
+                            focus: 'descendant'
+                        },
+                        animationDuration: 550,
+                        animationDurationUpdate: 750
+                    }
+                ]
+            })
+        );
+    </script>
+</body>
+
+</html>

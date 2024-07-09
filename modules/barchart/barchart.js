@@ -135,7 +135,7 @@ const makeBarChartOption = (context, data, option, parameters) => {
 
 export { makeBarChartOption };
 
-
+/*
 const parameters = {
     type: ['barchart', 'stacked barchart', 'multi-set barchart'],
     visual_mapping: [{
@@ -150,19 +150,76 @@ const parameters = {
     {
         id: "valueid",
         type: "value",
-        variable: 'nb_paper',
+        variable: 'nb_paper'
     },
     {
         id: "categoryid",
         type: "category",
         variable: 'teamname',
         display: {
-            color: 'green'
+            color: 'RdYlBu'(palette red, yellow, blue)
         }
     }],
     aesthetics: {
         orientations: 'column',
         scale: 'log'
     }
-
-}
+}*/
+/*
+const parameters = {
+    type: 'multi-set barchart',
+    visual_mapping: [{
+        id: "labelid",
+        type: "label",
+        variable: 'endpointUrl',
+        display: {
+            'word-wrapping': 'wrap',
+        }
+    },
+    {
+        id: "triplesid",
+        type: "value",
+        variable: 'triples'
+    },
+    {
+        id: "classesid",
+        type: "value",
+        variable: 'classes'
+    },
+    {
+        id: "propertiesid",
+        type: "value",
+        variable: 'properties'
+    },
+    {
+        id: "series1id",
+        type: "series",
+        label_matching: 'labelid',
+        value_matching: 'triplesid'
+        display: {
+            color: 'RdYlBu' (palette red,yellow,blue)
+        }
+    },
+    {
+        id: "series2id",
+        type: "series",
+        label_matching: 'labelid',
+        value_matching: 'classesid'
+        display: {
+            color: 'RdYlBu' (palette red,yellow,blue)
+        }
+    },
+    {
+        id: "series3id",
+        type: "series",
+        label_matching: 'labelid',
+        value_matching: 'propertiesid'
+        display: {
+            color: 'RdYlBu' (palette red,yellow,blue)
+        }
+    }],
+    aesthetics: {
+        orientations: 'column',
+        scale: 'log'
+    }
+}*/
