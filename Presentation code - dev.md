@@ -1,7 +1,5 @@
 This library is a javascript library created in order to facilitate the creation of visualizations to represent the result of SPARQL queries. When used, a website page is temporarily created, allowing the user to submit a SPARQL request, and obtain the results in a table and in a node-link diagram. Later, a graph pattern will be added to the page.
 
-# Développer graph pattern
-
 This document focus on the code, and is directed toward a Javascript developper that wishes to reuse the code.
 
 # Website presentation
