@@ -99,9 +99,9 @@ function buildNodes(edge, node_colors) { // Call a dataset and a list of pattern
             zoom : false
         }
 
-        if (!(nodeAlreadyExist(node1, nodes))) {
+        if (!(nodeAlreadyExist(node1, nodes))) { // Check if the node already exist thanks to the function called.
             nodes.push(node1)
-        } else {
+        } else { // If the node already exist, and is a target, change its category to mix (so both subject and target)
             let old_node = nodes.find(node => node.id === node1.id)
             if (old_node.place === "target") {
                 old_node.place = "mix"
@@ -116,16 +116,16 @@ function buildNodes(edge, node_colors) { // Call a dataset and a list of pattern
 
     try {
         node2 = {
-            id : edge.object,
+            id : edge.object,//
             label : edge.object,
             color : node_colors[1],
             place : "target",
             zoom : false
         }
 
-        if (!(nodeAlreadyExist(node2, nodes))) {
+        if (!(nodeAlreadyExist(node2, nodes))) { // Check if the node already exist thanks to the function called.
             nodes.push(node2)
-        } else {
+        } else { // If the node already exist, and is a subject, change its category to mix (so both subject and target)
             let old_node = nodes.find(node => node.id === node2.id)
             if (old_node.place === "source") {
                 old_node.place = "mix"
@@ -139,8 +139,7 @@ function buildNodes(edge, node_colors) { // Call a dataset and a list of pattern
     return nodes
 }
 
-function buildLinks(edge, link_color){
-
+function buildLinks(edge, link_color){ // Call a dataset and a list of patterns. For each pattern and row in the dataset, create all the unique links.
     const links = []
     let link
 
@@ -158,7 +157,7 @@ function buildLinks(edge, link_color){
             color : link_color
         }
 
-        if (!(linkAlreadyExist(link, links))) {
+        if (!(linkAlreadyExist(link, links))) { // Check if the link already exist thanks to the function called.
             links.push(link)
         }
 
@@ -168,6 +167,18 @@ function buildLinks(edge, link_color){
 
     return links
 }
+
+/*
+The next function is the function creating the nodelink. It calls a dataset and a long list of optionnal parameters (ie they all have a default parameter).
+
+Node_colors and mixed_color grants the user the choice of the color of the nodes. The first color of node_colors is the source, the second the target.
+Mixed_color is the color of nodes that are both source and target in the edges.
+The default parameter of mixed_color is null because it allows to use the color_merger function.
+Strength is the repulsive force between the nodes.
+Width and height are the dimensions of the svg.
+node_named and link_named let the user choose if he wants to see the name of the nodes above the graph
+node_zoom allow to zoom on node when the user click on them, and zoom strengh define at which point the node is zoomed.
+*/
 
 function nodelink_creator(data, triples, nomgraph, node_colors = ["red", "blue"], link_color = "gold", mixed_color = null, strength = -50, width = 400, height = 400, node_named = true, link_named = true, node_zoom = true, zoom_strenght = 2, number_ticks = 500) {
 
@@ -313,6 +324,12 @@ function nodelink_creator(data, triples, nomgraph, node_colors = ["red", "blue"]
     
 }
 
+/*
+
+This function creates the pattern graph, allowing the user to understand the nodelink graph and what the links and nodes means.
+
+*/
+
 function graph_pattern(dataset, triples, node_colors = ["red", "blue"], link_color = "gold", strength = -50, width = null, height = null) {
 
     // Initialisation
@@ -322,11 +339,12 @@ function graph_pattern(dataset, triples, node_colors = ["red", "blue"], link_col
 
     const margin = {top: 5, right: 5, bottom: 5, left: 5}
 
-    const nb_graphs = triples.length
+    const nb_graphs = triples.length + 1
 
-    // Création des SVG
+    let width_used, height_used
 
-    /*let width_used, height_used
+    // Choose the height and width depending of the number of graphs required if there is no specific width or height given.
+    // It allows the dimensions to always be around the right size to represent everything.
 
     if (width === null) { 
         width_used = nb_graphs*100
@@ -338,11 +356,9 @@ function graph_pattern(dataset, triples, node_colors = ["red", "blue"], link_col
         height_used = nb_graphs*100
     } else {
         height_used = height
-    }*/
+    }
 
-
-    let width_used = 100
-    let height_used = 100
+    // Creation of the SVG
 
     const svg_total = d3.select("#pattern_graph") 
         .attr("width", width_used + margin.left + margin.right)
@@ -353,41 +369,39 @@ function graph_pattern(dataset, triples, node_colors = ["red", "blue"], link_col
 
     let colors = ["blue", "red", "green", "purple"]
 
-    let parent = svg_total.append("svg")
-        .attr("id", "svg_enfant_0")
-        .attr("x", width_used*0.1)
-        .attr("y", height_used*0.1)
-        .attr("width", width_used*0.5)
-        .attr("height", height_used*0.5)
-        .attr("viewBox", "0 0 50 50")
-        .attr("style", `border: 1px solid ${colors[0]};`)
+    // Creation of the sub SVGs that will contain all the patterns.
+
+    let currentGroup = svg_total.append("g")
+        .attr("id", "main_group")
+        .attr("class", "main_group")
 
     console.log(nb_graphs)
-    let i=1
 
-    do {
-        // Calcul de la taille réduite et le décalage pour chaque SVG imbriqué
+    for (let i = 1; i <= nb_graphs; i++) {
+        // Creation of the new sub-groups with dynamic translation
+        currentGroup = currentGroup.append("g")
+            .attr("id", "group" + i)
+            .attr("transform", "translate(" + (20 * i) + "," + (20 * i) + ")");
+        
         let scale = (nb_graphs - i) / nb_graphs
         console.log(scale)
         let color = colors[i % colors.length]
-        console.log(width_used)
-        console.log(height_used)
 
-        // Création du nouveau svg
+        // Adding a rectangle to see the group
+        currentGroup.append("rect")
+            .attr("x", -10)
+            .attr("y", -10)
+            .attr("width", 40 + 20 * i)
+            .attr("height", 40 + 20 * i)
+            .style("fill", "none")
+            .style("stroke", color)
+            .style("stroke-width", 2)
+        
 
-        let enfant = parent.append("svg")
-        .attr("id", "svg_enfant_" + i)
-        .attr("x", width_used*scale)
-        .attr("y", height_used*scale)
-        .attr("width", width2*scale)
-        .attr("height", height2*scale)
-        .attr("style", `border: 1px solid ${color};`)
+    }
 
-        parent = enfant
 
-        i++
-
-    } while (i < nb_graphs+1)
+    // Doesn't work yet
 
     for (let i = nb_graphs-1; i >= 0; i--) {
         let nomgraph = "svg_enfant_" +i
