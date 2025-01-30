@@ -2,17 +2,18 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 const couleurs = ["green", "crimson", "silver", "gold", "steelblue"]
 
+
 const barchart_creator = (config_barchart) => {
 
     console.log(config_barchart)
 
     let donnees = config_barchart.data
 
-    let width = config_barchart.options.hasOwnProperty("width") ? config_barchart.options.width : 400
-    let height = config_barchart.options.hasOwnProperty("height") ? config_barchart.options.height : 400
-    let vertical_bar = config_barchart.options.hasOwnProperty("vertical_bar") ? config_barchart.options.vertical_bar : true
-    let scale = config_barchart.options.hasOwnProperty("scale") ? config_barchart.options.scale: "linear"
-    let colors = config_barchart.options.hasOwnProperty("colors") ? config_barchart.options.colors : [0]
+    let width = config_barchart?.options?.width ?? 400
+    let height = config_barchart?.options?.height ?? 400
+    let vertical_bar = config_barchart?.options?.vertical_bar ?? true
+    let scale = config_barchart.options.scale ?? "linear"
+    let colors = config_barchart.options.colors ?? 0
 
     const margin = {left : 5, top : 5, bottom : 5, right : 5}
     const svg = d3.select("#d3_visualisation").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
@@ -538,19 +539,23 @@ function nodelink_creator(config_nodelink) {
     }
 
 const visualisation = (config) => {
-
-      if (config.type === "barchart") { 
-        barchart_creator(config)
-      } else if (config.type === "stackedchart") {
-        stackedchart_creator(config)
-      } else if (config.type === "piechart") {
-        piechart_creator(config)
-      } else if (config.type === "nodelink") {
-        nodelink_creator(config)
-      } else {
-        console.error("Le type ne correspond pas aux différentes visualisations possibles")
-      }
-
+    console.log("Loading visualisation: ", config.type)
+    switch(config.type){
+    case "barchart":
+        barchart_creator(config); 
+        break;
+    case "stackedchart":
+        stackedchart_creator(config); 
+        break;
+    case "piechart":
+        piechart_creator(config); 
+        break;
+    case "nodelink":
+        nodelink_creator(config); 
+        break;
+    default:
+        console.error("No valid type of vizualisation given")
+    }
 }
 
 export default visualisation;
