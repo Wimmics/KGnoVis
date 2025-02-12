@@ -112,22 +112,22 @@ SELECT ?teamname ?person_name ?paper WHERE {
 
 Few parameters available can customise the display of the nodelink.
 
-- animation: boolean [true, false] (false by default). This parameter specify if the render should be animated or not.
+- **animation**: boolean [true, false] (false by default). This parameter specify if the render should be animated or not.
 ```js
 animation: true
 ```
-- oriented: boolean [true, false] (false by default).
+- **oriented**: boolean [true, false] (false by default).
 ```js
 oriented: true
 ```
-- display: string [force, circular] (force by default). This parameter specify the render algorithm used to display the nodelink.
+- **display**: string [force, circular] (force by default). This parameter specify the render algorithm used to display the nodelink.
 ```js
-oriented: true
+display: "force"
 ```
 
 The nodelink visualisation requiere 2 mandatory keys: (1) the source and (2) the target. The definition of a graph is based on the edge definition with the source and target of this edge. The library automatically build the set of nodes by extracting them from the source and target variable. A extra key relation can be specified to name the label of the edge. The config parameter takes an array of object.
 
-- source: string. The source key specify which SPARQL variable will be used to define the source nodes of the graph.
+- **source**: string. The source key specify which SPARQL variable will be used to define the source nodes of the graph.
 
 ```js
 config: [{
@@ -135,7 +135,7 @@ config: [{
 }]
 ```
 
-- target: string. The target key specify which SPARQL will be used to define the target nodes of the graph.
+- **target**: string. The target key specify which SPARQL will be used to define the target nodes of the graph.
 
 ```js
 config: [{
@@ -143,7 +143,7 @@ config: [{
 }]
 ```
 
-- relation: string (Optional). The relation key specify which SPARQL variable will be used to define the label of the edge. You can define a name which is not a SPARQL variable.
+- **relation**: string (Optional). The relation key specify which SPARQL variable will be used to define the label of the edge. You can define a name which is not a SPARQL variable.
 
 ```js
 config: [{
