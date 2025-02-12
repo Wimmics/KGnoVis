@@ -1,6 +1,5 @@
 
 const GEOJSON_FILE_PATH = "../../lib/countries.geo.json"
-let scale = 170
 let width = 1024
 let height = 660
 let projection = d3.geoMercator().center([0, 40])
@@ -41,7 +40,6 @@ const drawSvgMap = async (context, data) => {
 
     mapGroup.selectAll("path")
         .data(dataGeojsonPath.features)
-        //.data(topojson.feature(dataGeojsonPath, dataGeojsonPath.objects.countries).features)
         .join("path")
         .attr('class', 'map-tiles')
         .attr("fill", "#b8b8b8")
@@ -88,11 +86,8 @@ const zoomTransformation = (e) => {
         .duration(50)
         .attr('transform', e.transform)
 
-    //const zoomPath = d3.geoPath().projection(projection.scale(e.transform * scale).translate([width / 2, height / 2]))
     const current_radius = d3.selectAll(".user-dot").attr("r")
     d3.selectAll(".user-dot").attr('transform', e.transform).attr('r', current_radius)
-    //.attr("cx", d => projection([+d.coordinate.longitude, +d.coordinate.latitude])[0])
-    //.attr("cy", d => projection([+d.coordinate.longitude, +d.coordinate.latitude])[1])
 }
 
 
