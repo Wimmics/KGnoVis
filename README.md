@@ -261,6 +261,56 @@ options: [{
 
 #### Piechart [e-charts]
 
+Extensively used in presentations and offices, Pie Charts help show proportions and percentages between categories, by dividing a circle into proportional segments. Each arc length represents a proportion of each category, while the full circle represents the total sum of all the data, equal to 100%. Pie Charts are ideal for giving the reader a quick idea of the proportional distribution of the data. However, the major downsides to pie charts are: They cannot show more than a few values, because as the number of values shown increases, the size of each segment/slice becomes smaller. This makes them unsuitable for large datasets with many categories. They take up more space than their alternatives, for example, a 100% Stacked Bar Chart. Mainly due to their size and the usual need for a legend. They are not great for making accurate comparisons between groups of Pie Charts. This is because it is harder to distinguish the size of items via area when it is for length. Despite that, comparing a given category (one slice) within the total of a single Pie Chart, then it can often be more effective.
+
+Source: [Dataviz catalog - Pie chart](https://datavizcatalogue.com/methods/pie_chart.html)
+
+```js
+<div id="ex-pie"></div>
+
+const parameters_ex_pie = {
+    endpoint: endpoint_local,
+    query: query_pie_1,
+    type: 'pie',
+    title: "Number of people per team",
+    config: [{
+        label: "teamname",
+        value: "nb_person"
+    }]
+}
+
+loadChartViz("ex-pie", parameters_ex_pie)
+```
+
+```SPARQL
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex:   <http://www.example.org/ontology#>
+
+SELECT ?teamname (count(?person) as ?nb_person) WHERE {
+    ?person ex:belong ?team.
+    ?team ex:Name ?teamname.
+}GROUP BY ?team
+```
+
+__Config paramater__:
+
+- label: string. Specify label values using SPARQL Variable
+
+```js
+config:[{
+    label: 'team'
+}]
+```
+
+- value: string. Specify numeric values using SPARQL variable
+
+```js
+config:[{ 
+    value: 'nb_person'
+}]
+```
+
 ### d3 engine
 
 #### Dotmap [d3]
