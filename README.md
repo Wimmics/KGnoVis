@@ -108,7 +108,7 @@ config: [{
 }]
 ```
 
-- **value**: string. Spécify numeric values using SPARQL variable.
+- **value**: string. Specify numeric values using SPARQL variable.
 
 ```js
 config: [{
@@ -116,7 +116,7 @@ config: [{
 }]
 ```
 
-- **category**: string. Spécify set of values using SPARQL variable.
+- **category**: string. Specify set of values using SPARQL variable.
 ```js
 config: [{
     category: 'number of triples'
