@@ -52,14 +52,99 @@ loadChartViz("chart-to-render", simple_parameter)
 ```
 
 ## documentation
-
-### e-charts
+### e-charts engine
 
 #### Barchart [e-charts]
 
 Also known as Bar Graph or Column Graph. A Bar Chart uses either horizontal or vertical bars (column chart) to show discrete, numerical comparisons across categories. One axis of the chart shows the specific categories being compared and the other axis represents a discrete value scale. Bar Charts are distinguished from Histograms, as they do not display continuous developments over an interval. Instead, Bar Chart's discrete data is categorical and therefore answers the question of "how many?" in each category.
 
 Source: [Dataviz Catalog - Barchart](https://datavizcatalogue.com/methods/bar_chart.html)
+
+```js
+const parameters_ex_1 = {
+    endpoint: endpoint_local,
+    query: query_ex_1,
+    type: 'bar',
+    title: "Number of people per team",
+    config: [{
+        label: "teamname",
+        value: "nb_person"
+    }]
+}
+```
+
+```SPARQL
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix ex:      <http://www.example.org/ontology#>
+
+SELECT ?teamname (count(?person) as ?nb_person) WHERE {
+    ?person ex:belong ?team.
+    ?team ex:Name ?teamname.
+}GROUP BY ?team
+```
+
+__Specific parameters__:
+
+- **stacked**: boolean [true, false] (false by default). Stack all bar of the category
+```js
+ stacked: true 
+```
+- **scale**: string [linear, log] ('linear' by default). Change the scale base of bar value.
+```js
+ scale: 'log' 
+```
+- **display**: string [row, column] ('column' by default). Change orientation of barchart.
+```js
+ display: 'row' 
+```
+__Config parameter__:
+
+- **label**: string. Specify label values using the SPARQL variable.
+
+```js
+config: [{
+    label: 'endpointUrl'
+}]
+```
+
+- **value**: string. Spécify numeric values using SPARQL variable.
+
+```js
+config: [{
+    value: 'triples'
+}]
+```
+
+- **category**: string. Spécify set of values using SPARQL variable.
+```js
+config: [{
+    category: 'number of triples'
+}]
+```
+
+Example with one pair of SPARQL variable
+
+```js
+config: [{
+    label: 'endpointUrl',
+    value: 'triples',
+    category: 'nb_triple'
+}]
+```
+
+Example with multiple pair of SPARQL variable (**multi-set barchart**):
+```js
+config: [{
+    label: 'endpointUrl',
+    value: 'triples',
+    category: "number of triples"
+},{
+    label: 'endpointUrl',
+    value: 'classes',
+    category: 'number of classes'
+}]
+```
 
 #### Nodelink [e-charts]
 
@@ -176,7 +261,7 @@ options: [{
 
 #### Piechart [e-charts]
 
-### d3
+### d3 engine
 
 #### Dotmap [d3]
 
